@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="max-w-3xl mx-auto">
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+            <div class="px-4 py-5 sm:p-6">
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">Analysis Results</h1>
+
+                <!-- Result Card -->
+                <div class="bg-gray-50 rounded-lg p-6 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Image Preview -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Uploaded X-Ray</h3>
+                            <div class="relative aspect-w-4 aspect-h-3 rounded-lg overflow-hidden bg-gray-100">
+                                <img src="{{ image_url }}" alt="Uploaded X-Ray" class="object-cover">
+                            </div>
+                        </div>
+
+                        <!-- Prediction Details -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Prediction Details</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="text-sm text-gray-500">Classification</p>
+                                    <p class="mt-1 text-xl font-semibold {% if prediction == 'NORMAL' %}text-green-600{% else %}text-red-600{% endif %}">
+                                        {{ prediction }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Confidence Score</p>
+                                    <div class="mt-1">
+                                        <div class="relative pt-1">
+                                            <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
+                                                <div class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center progress-bar {% if prediction == 'NORMAL' %}progress-bar-normal{% else %}progress-bar-pneumonia{% endif %}" data-width="{{ confidence }}"></div>
+                                            </div>
+                                            <p class="mt-2 text-xl font-semibold text-gray-900">{{ confidence }}%</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pt-4">
+                                    <p class="text-sm text-gray-500">Analysis Timestamp</p>
+                                    <p class="mt-1 text-gray-900">{{ timestamp|date:"F j, Y, g:i a" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medical Disclaimer -->
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-yellow-800">Medical Disclaimer</h3>
+                            <div class="mt-2 text-sm text-yellow-700">
+                                <p>
+                                    This AI-assisted diagnosis is for research purposes only and should not be used as the sole basis for medical decisions.
+                                    Please consult with qualified healthcare professionals for proper medical diagnosis and treatment.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mt-8 flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+                    <a href="{% url 'home' %}" class="inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <svg class="mr-2 -ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        Back to Home
+                    </a>
+                    <button onclick="window.print()" class="inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <svg class="mr-2 -ml-1 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                        </svg>
+                        Print Results
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('[data-width]').forEach(function(el) {
+            el.style.width = el.dataset.width + '%';
+        });
+    });
+</script>
+
+<style>
+    .progress-bar { height: 100%; transition: width 0.3s; }
+    .progress-bar-normal { background-color: #10b981; }
+    .progress-bar-pneumonia { background-color: #ef4444; }
+
+    [data-theme="dark"] .bg-white {
+        background-color: var(--card-bg);
+    }
+
+    [data-theme="dark"] .bg-gray-50 {
+        background-color: #1f2937;
+    }
+
+    [data-theme="dark"] .text-gray-900 {
+        color: var(--text-color);
+    }
+
+    [data-theme="dark"] .text-gray-500 {
+        color: #9ca3af;
+    }
+
+    [data-theme="dark"] .text-gray-700 {
+        color: #d1d5db;
+    }
+
+    [data-theme="dark"] .border-gray-300 {
+        border-color: #4b5563;
+    }
+
+    [data-theme="dark"] .bg-gray-200 {
+        background-color: #374151;
+    }
+
+    [data-theme="dark"] .bg-yellow-50 {
+        background-color: #78350f;
+    }
+
+    [data-theme="dark"] .text-yellow-800 {
+        color: #fcd34d;
+    }
+
+    [data-theme="dark"] .text-yellow-700 {
+        color: #fbbf24;
+    }
+
+    [data-theme="dark"] .border-yellow-400 {
+        border-color: #fbbf24;
+    }
+</style>
+{% endblock %} 

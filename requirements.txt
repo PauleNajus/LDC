@@ -1,0 +1,14 @@
+django==5.0.1
+tensorflow==2.15.0
+opencv-python==4.9.0.80
+numpy==1.26.3
+pillow==10.2.0
+scikit-learn==1.4.0
+pandas==2.1.4
+python-dotenv==1.0.0
+django-tailwind==3.8.0
+gunicorn==21.2.0
+whitenoise==6.6.0
+django-crispy-forms==2.1
+crispy-tailwind==0.5.0
+django-browser-reload==1.12.1 

@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content">
+    <div style="text-align: center; padding: 4rem 0;">
+        <h1 style="font-size: 2.5rem; font-weight: bold; color: var(--text-color); margin-bottom: 1rem;">
+            Lung Disease Classifier
+        </h1>
+        <p style="font-size: 1.25rem; color: var(--text-color); opacity: 0.7; max-width: 36rem; margin: 0 auto;">
+            Upload a chest X-ray image to detect pneumonia using our advanced AI model.
+        </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 1024px; margin: 0 auto;">
+        <!-- Upload Form -->
+        <div class="card">
+            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem; color: var(--text-color);">Upload X-Ray Image</h2>
+            <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 1rem;">
+                {% csrf_token %}
+                <div class="upload-zone" style="border: 2px dashed var(--border-color); border-radius: 0.5rem; padding: 2rem; text-align: center;">
+                    <svg class="upload-icon" style="width: 3rem; height: 3rem; margin: 0 auto;" fill="none" stroke="currentColor" viewBox="0 0 48 48">
+                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <div style="margin-top: 1rem;">
+                        <label for="file-upload" class="btn btn-primary" style="display: inline-block;">
+                            Choose File
+                            <input id="file-upload" name="image" type="file" accept="image/*" required style="display: none;">
+                        </label>
+                        <p class="text-muted" style="margin-top: 0.5rem; font-size: 0.875rem;">
+                            PNG, JPG, GIF up to 10MB
+                        </p>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    Analyze Image
+                </button>
+            </form>
+        </div>
+
+        <!-- Recent Predictions -->
+        <div class="card">
+            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem; color: var(--text-color);">Recent Predictions</h2>
+            {% if recent_predictions %}
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                {% for prediction in recent_predictions %}
+                <div class="prediction-item" style="border-radius: 0.5rem; padding: 1rem;">
+                    <div style="display: flex; gap: 1rem; align-items: start;">
+                        <img src="{{ prediction.image.url }}" alt="X-ray image" style="width: 6rem; height: 6rem; object-fit: cover; border-radius: 0.5rem;">
+                        <div style="flex-grow: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <p style="font-weight: 500; color: var(--text-color);">
+                                    Prediction: <span class="{% if prediction.prediction == 'NORMAL' %}prediction-normal{% else %}prediction-pneumonia{% endif %}">{{ prediction.prediction }}</span>
+                                </p>
+                                <p style="font-size: 0.875rem; color: #9ca3af;">
+                                    {{ prediction.uploaded_at|date:"Y-m-d H:i" }}
+                                </p>
+                            </div>
+
+                            <!-- Class Probabilities -->
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 0.75rem;">
+                                <div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="font-size: 0.75rem; color: #6b7280;">Normal</span>
+                                        <span style="font-size: 0.75rem; color: #6b7280;">{{ prediction.normal_probability|floatformat:1 }}%</span>
+                                    </div>
+                                    <div style="height: 0.25rem; background-color: #e5e7eb; border-radius: 0.125rem; overflow: hidden;">
+                                        <div class="progress-bar-normal" data-width="{{ prediction.normal_probability }}" style="height: 100%; transition: width 0.3s;"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="font-size: 0.75rem; color: #6b7280;">Pneumonia</span>
+                                        <span style="font-size: 0.75rem; color: #6b7280;">{{ prediction.pneumonia_probability|floatformat:1 }}%</span>
+                                    </div>
+                                    <div style="height: 0.25rem; background-color: #e5e7eb; border-radius: 0.125rem; overflow: hidden;">
+                                        <div class="progress-bar-pneumonia" data-width="{{ prediction.pneumonia_probability }}" style="height: 100%; transition: width 0.3s;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Additional Info -->
+                            <div style="display: flex; gap: 1rem; font-size: 0.75rem; color: #6b7280;">
+                                <span>Size: {{ prediction.image_size }}</span>
+                                <span>•</span>
+                                <span>Format: {% if prediction.image.url|slice:"-4:"|lower == "jpeg" %}JPEG{% else %}{{ prediction.image.url|slice:"-3:"|upper }}{% endif %}</span>
+                                <span>•</span>
+                                <span>Processing Time: {{ prediction.processing_time|floatformat:3 }}s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div style="text-align: center; padding: 3rem 0;">
+                <svg style="width: 3rem; height: 3rem; margin: 0 auto; color: #9ca3af;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <h3 style="margin-top: 0.5rem; font-weight: 500; color: var(--text-color);">No predictions yet</h3>
+                <p style="color: #6b7280;">Upload an X-ray image to get started.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div style="padding: 4rem 0;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+            <div class="card">
+                <div style="color: var(--primary-color); margin-bottom: 1rem;">
+                    <svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h3 style="font-size: 1.25rem; font-weight: 500; color: var(--text-color);">High Accuracy</h3>
+                <p style="color: #6b7280; margin-top: 0.5rem;">
+                    Our model achieves high accuracy in detecting pneumonia from chest X-rays.
+                </p>
+            </div>
+            <div class="card">
+                <div style="color: var(--primary-color); margin-bottom: 1rem;">
+                    <svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <h3 style="font-size: 1.25rem; font-weight: 500; color: var(--text-color);">Fast Processing</h3>
+                <p style="color: #6b7280; margin-top: 0.5rem;">
+                    Get instant results with our optimized deep learning model.
+                </p>
+            </div>
+            <div class="card">
+                <div style="color: var(--primary-color); margin-bottom: 1rem;">
+                    <svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <h3 style="font-size: 1.25rem; font-weight: 500; color: var(--text-color);">Secure Analysis</h3>
+                <p style="color: #6b7280; margin-top: 0.5rem;">
+                    Your data is processed securely and never stored without permission.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add file name display when a file is selected
+    document.getElementById('file-upload').addEventListener('change', function(e) {
+        const fileName = e.target.files[0]?.name;
+        if (fileName) {
+            const label = this.previousElementSibling;
+            label.textContent = fileName;
+        }
+    });
+
+    // Set progress bar widths
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('[data-width]').forEach(function(el) {
+            el.style.width = el.dataset.width + '%';
+        });
+    });
+</script>
+
+<style>
+    .prediction-normal { color: #10b981; }
+    .prediction-pneumonia { color: #ef4444; }
+    .progress-bar-normal { background-color: #10b981; }
+    .progress-bar-pneumonia { background-color: #ef4444; }
+
+    [data-theme="dark"] .card {
+        background-color: var(--card-bg);
+    }
+
+    [data-theme="dark"] .prediction-item {
+        background-color: #1f2937;
+    }
+
+    [data-theme="dark"] .text-muted {
+        color: #9ca3af;
+    }
+
+    [data-theme="dark"] .upload-zone {
+        border-color: #4b5563;
+    }
+
+    [data-theme="dark"] .upload-icon {
+        color: #6b7280;
+    }
+</style>
+{% endblock %} 
