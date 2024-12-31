@@ -3,6 +3,15 @@
 {% block title %}Home - Lung Disease Classifier{% endblock %}
 
 {% block content %}
+<style>
+    .progress-bar[data-value]::before {
+        content: attr(data-value) '%';
+    }
+    .progress {
+        height: 20px;
+    }
+</style>
+
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <!-- Main Title and Description -->
@@ -179,10 +188,7 @@
                             <div class="mb-2">
                                 <small class="text-muted">Normal Probability:</small>
                                 <div class="progress">
-                                    <div class="progress-bar bg-success" role="progressbar" 
-                                         style="width: {{ prediction.normal_probability|floatformat:2 }}%" 
-                                         aria-valuenow="{{ prediction.normal_probability|floatformat:2 }}" 
-                                         aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar bg-success" role="progressbar" style='width:{{ prediction.normal_probability|floatformat:2 }}%'>
                                         {{ prediction.normal_probability|floatformat:2 }}%
                                     </div>
                                 </div>
@@ -190,10 +196,7 @@
                             <div class="mb-2">
                                 <small class="text-muted">Pneumonia Probability:</small>
                                 <div class="progress">
-                                    <div class="progress-bar bg-danger" role="progressbar" 
-                                         style="width: {{ prediction.pneumonia_probability|floatformat:2 }}%" 
-                                         aria-valuenow="{{ prediction.pneumonia_probability|floatformat:2 }}" 
-                                         aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar bg-danger" role="progressbar" style='width:{{ prediction.pneumonia_probability|floatformat:2 }}%'>
                                         {{ prediction.pneumonia_probability|floatformat:2 }}%
                                     </div>
                                 </div>
