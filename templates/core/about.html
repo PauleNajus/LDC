@@ -1,58 +1,116 @@
 {% extends 'base.html' %}
 
+{% block title %}About - Lung Disease Classifier{% endblock %}
+
 {% block content %}
-<div class="content">
-    <div style="text-align: center; padding: 4rem 0;">
-        <h1 style="font-size: 2.5rem; font-weight: bold; color: var(--text-color); margin-bottom: 1rem;">
-            About the Project
-        </h1>
-        <p style="font-size: 1.25rem; color: #6b7280; max-width: 36rem; margin: 0 auto;">
-            Learn about the technology behind our lung disease classification system.
-        </p>
-    </div>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Main Title and Description -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 mb-3">About the Project</h1>
+            <p class="lead text-muted">
+                Learn about the technology behind our lung disease classification system.
+            </p>
+        </div>
 
-    <div style="max-width: 768px; margin: 0 auto;">
-        <div class="card">
-            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem;">Model Information</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
-                {% for key, value in model_info.items %}
-                <div style="background-color: #f9fafb; padding: 1rem; border-radius: 0.5rem;">
-                    <h3 style="font-weight: 500; color: var(--text-color); margin-bottom: 0.5rem;">{{ key }}</h3>
-                    <p style="color: #6b7280;">{{ value }}</p>
+        <!-- Model Information -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title h4 mb-4">Model Information</h2>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="info-block">
+                            <h3 class="h5">Architecture</h3>
+                            <p class="text-muted mb-0">Convolutional Neural Network (CNN)</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="info-block">
+                            <h3 class="h5">Framework</h3>
+                            <p class="text-muted mb-0">PyTorch 2.5.1</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="info-block">
+                            <h3 class="h5">Input Size</h3>
+                            <p class="text-muted mb-0">224x224 pixels</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="info-block">
+                            <h3 class="h5">Classes</h3>
+                            <p class="text-muted mb-0">Normal, Pneumonia</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="info-block">
+                            <h3 class="h5">Training Dataset</h3>
+                            <p class="text-muted mb-0">Chest X-Ray Images</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="info-block">
+                            <h3 class="h5">GPU Acceleration</h3>
+                            <p class="text-muted mb-0">CUDA (if available)</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="info-block">
+                            <h3 class="h5">Model Size</h3>
+                            <p class="text-muted mb-0">~25MB</p>
+                        </div>
+                    </div>
                 </div>
-                {% endfor %}
             </div>
         </div>
 
-        <div class="card" style="margin-top: 2rem;">
-            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem;">How It Works</h2>
-            <div style="color: #4b5563; line-height: 1.6;">
-                <p style="margin-bottom: 1rem;">
-                    Our lung disease classifier uses a deep learning model based on Convolutional Neural Networks (CNN) to analyze chest X-ray images and detect signs of pneumonia.
+        <!-- How It Works -->
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title h4 mb-4">How It Works</h2>
+                <p class="mb-4">
+                    Our lung disease classifier uses a deep learning model based on Convolutional Neural Networks (CNN) to 
+                    analyze chest X-ray images and detect signs of pneumonia.
                 </p>
-                <p style="margin-bottom: 1rem;">
-                    The model has been trained on a large dataset of chest X-ray images, learning to identify patterns and features that are indicative of pneumonia. When you upload an image, it goes through the following process:
+                <p class="mb-4">
+                    The model has been trained on a large dataset of chest X-ray images, learning to identify patterns and 
+                    features that are indicative of pneumonia. When you upload an image, it goes through the following process:
                 </p>
-                <ol style="list-style-type: decimal; margin-left: 1.5rem; margin-bottom: 1rem;">
-                    <li style="margin-bottom: 0.5rem;">Image preprocessing and normalization</li>
-                    <li style="margin-bottom: 0.5rem;">Feature extraction using CNN layers</li>
-                    <li style="margin-bottom: 0.5rem;">Classification based on learned patterns</li>
-                    <li style="margin-bottom: 0.5rem;">Confidence score calculation</li>
+                <ol class="process-list">
+                    <li class="mb-2">Image preprocessing and normalization</li>
+                    <li class="mb-2">Feature extraction using CNN layers</li>
+                    <li>Classification based on learned patterns</li>
                 </ol>
-                <p>
-                    The result provides both a classification (Normal or Pneumonia) and a confidence score to help healthcare professionals in their diagnosis.
-                </p>
-            </div>
-        </div>
-
-        <div class="card" style="margin-top: 2rem;">
-            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1.5rem;">Important Note</h2>
-            <div style="background-color: #fff3cd; color: #856404; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #ffeeba;">
-                <p>
-                    This tool is intended to assist healthcare professionals and should not be used as the sole basis for diagnosis. Always consult with qualified medical professionals for proper diagnosis and treatment.
-                </p>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .info-block {
+        padding: 1rem;
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        height: 100%;
+    }
+
+    .info-block h3 {
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .process-list {
+        padding-left: 1.5rem;
+        color: var(--text-color);
+    }
+
+    [data-theme="dark"] .info-block {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    [data-theme="dark"] .process-list {
+        color: var(--text-color);
+    }
+</style>
 {% endblock %} 

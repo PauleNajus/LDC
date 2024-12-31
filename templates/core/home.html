@@ -30,7 +30,9 @@
                         <input type="file" name="image" id="id_image" accept="image/*,.dcm" class="d-none" required>
                     </div>
                     <div id="preview-container" class="text-center mb-3" style="display: none;">
-                        <img id="image-preview" class="img-fluid rounded" style="max-height: 300px;" alt="Preview">
+                        <img id="image-preview" class="img-fluid rounded" style="max-height: 300px;" 
+                             src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                             alt="Preview">
                     </div>
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="fas fa-microscope me-2"></i>Analyze Image
@@ -64,7 +66,7 @@
                         <i class="fas fa-bolt info-icon"></i>
                         Fast Processing
                     </h5>
-                    <p class="card-text">Results in seconds using RTX 4080 GPU acceleration.</p>
+                    <p class="card-text">Optimized with PyTorch JIT and parallel processing for rapid inference.</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
@@ -82,26 +84,45 @@
         {% if recent_predictions %}
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title mb-4">
-                    <i class="fas fa-history info-icon"></i>
-                    Recent Predictions
-                </h5>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-history info-icon"></i>
+                        Recent Predictions
+                    </h5>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-primary btn-sm filter-btn active" data-filter="all">
+                            All
+                        </button>
+                        <button type="button" class="btn btn-outline-success btn-sm filter-btn" data-filter="normal">
+                            Normal
+                        </button>
+                        <button type="button" class="btn btn-outline-danger btn-sm filter-btn" data-filter="pneumonia">
+                            Pneumonia
+                        </button>
+                    </div>
+                </div>
                 {% for prediction in recent_predictions %}
-                <div class="prediction-card">
+                <div class="prediction-card" data-prediction="{{ prediction.prediction|lower }}">
                     <div class="row align-items-center">
                         <div class="col-md-3">
                             <img src="{{ prediction.image.url }}" class="prediction-image img-fluid" alt="X-ray">
                         </div>
                         <div class="col-md-9">
-                            <h6 class="mb-2">Prediction: {{ prediction.prediction }}</h6>
+                            <h6 class="mb-2">Prediction: 
+                                {% if prediction.prediction == 'NORMAL' %}
+                                <span class="text-success">{{ prediction.prediction }}</span>
+                                {% else %}
+                                <span class="text-danger">{{ prediction.prediction }}</span>
+                                {% endif %}
+                            </h6>
                             <div class="mb-2">
                                 <small class="text-muted">Normal Probability:</small>
                                 <div class="progress">
                                     <div class="progress-bar bg-success" role="progressbar" 
-                                         style="width: {{ prediction.normal_probability }}%" 
-                                         aria-valuenow="{{ prediction.normal_probability }}" 
+                                         style="width: {{ prediction.normal_probability|floatformat:2 }}%" 
+                                         aria-valuenow="{{ prediction.normal_probability|floatformat:2 }}" 
                                          aria-valuemin="0" aria-valuemax="100">
-                                        {{ prediction.normal_probability }}%
+                                        {{ prediction.normal_probability|floatformat:2 }}%
                                     </div>
                                 </div>
                             </div>
@@ -109,17 +130,17 @@
                                 <small class="text-muted">Pneumonia Probability:</small>
                                 <div class="progress">
                                     <div class="progress-bar bg-danger" role="progressbar" 
-                                         style="width: {{ prediction.pneumonia_probability }}%" 
-                                         aria-valuenow="{{ prediction.pneumonia_probability }}" 
+                                         style="width: {{ prediction.pneumonia_probability|floatformat:2 }}%" 
+                                         aria-valuenow="{{ prediction.pneumonia_probability|floatformat:2 }}" 
                                          aria-valuemin="0" aria-valuemax="100">
-                                        {{ prediction.pneumonia_probability }}%
+                                        {{ prediction.pneumonia_probability|floatformat:2 }}%
                                     </div>
                                 </div>
                             </div>
                             <small class="text-muted">
                                 <i class="fas fa-clock me-1"></i>{{ prediction.uploaded_at|timesince }} ago
                                 <i class="fas fa-image ms-3 me-1"></i>{{ prediction.image_size }}
-                                <i class="fas fa-file-image ms-3 me-1"></i>{{ prediction.image.url|slice:"-3:"|upper }}
+                                <i class="fas fa-file-image ms-3 me-1"></i>{{ prediction.get_extension|upper }}
                                 <i class="fas fa-stopwatch ms-3 me-1"></i>{{ prediction.processing_time|floatformat:2 }}s
                             </small>
                         </div>
@@ -199,5 +220,29 @@
             reader.readAsDataURL(file);
         }
     }
+
+    // Filter functionality for predictions
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const predictionCards = document.querySelectorAll('.prediction-card');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            const filter = button.getAttribute('data-filter');
+            
+            predictionCards.forEach(card => {
+                if (filter === 'all') {
+                    card.style.display = 'block';
+                } else {
+                    const prediction = card.getAttribute('data-prediction');
+                    card.style.display = prediction === filter ? 'block' : 'none';
+                }
+            });
+        });
+    });
 </script>
 {% endblock %} 

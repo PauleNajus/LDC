@@ -20,6 +20,11 @@ class XRayImage(models.Model):
     def __str__(self):
         return f"XRay Image - {self.uploaded_at}"
 
+    def get_extension(self):
+        """Get the file extension without the dot."""
+        name = self.image.name
+        return name.split('.')[-1] if '.' in name else ''
+
 class LungClassifierModel(nn.Module):
     def __init__(self):
         super(LungClassifierModel, self).__init__()
