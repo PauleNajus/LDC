@@ -9,6 +9,12 @@ import time
 
 class XRayImage(models.Model):
     image = models.ImageField(upload_to='xray_images/')
+    patient_name = models.CharField(max_length=100, blank=True, default="No data")
+    patient_surname = models.CharField(max_length=100, blank=True, default="No data")
+    patient_id = models.CharField(max_length=50, blank=True, default="No data")
+    patient_date_of_birth = models.CharField(max_length=20, blank=True, default="No data")
+    patient_gender = models.CharField(max_length=20, blank=True, default="No data")
+    xray_date = models.CharField(max_length=20, blank=True, default="No data")
     prediction = models.CharField(max_length=20, blank=True)
     confidence = models.FloatField(default=0.0)
     normal_probability = models.FloatField(default=0.0)
@@ -24,6 +30,15 @@ class XRayImage(models.Model):
         """Get the file extension without the dot."""
         name = self.image.name
         return name.split('.')[-1] if '.' in name else ''
+
+    def get_file_size_mb(self):
+        """Get the file size in MB with 2 decimal places."""
+        try:
+            size_bytes = self.image.size
+            size_mb = size_bytes / (1024 * 1024)  # Convert to MB
+            return f"{size_mb:.2f}"
+        except:
+            return "0.00"
 
 class LungClassifierModel(nn.Module):
     def __init__(self):
