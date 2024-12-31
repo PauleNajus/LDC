@@ -43,4 +43,7 @@ static/
 
 # OS
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Dataset
+Chest_X-Ray_Images_(Pneumonia)_2_classes/ 
