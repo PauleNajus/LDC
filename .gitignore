@@ -46,4 +46,9 @@ static/
 Thumbs.db
 
 # Dataset
-Chest_X-Ray_Images_(Pneumonia)_2_classes/ 
+Chest_X-Ray_Images_(Pneumonia)_2_classes/
+
+# Model files
+models/*.pth
+models/*.keras
+models/*.h5 
