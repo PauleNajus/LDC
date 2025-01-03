@@ -433,12 +433,21 @@ def train_model(data_dir, epochs=30, batch_size=BATCH_SIZE, n_folds=5):
 
 if __name__ == '__main__':
     try:
-        data_dir = os.path.join(project_root, 'Chest_X-Ray_Images_(Pneumonia)_2_classes', 'chest_xray')
+        import argparse
+        parser = argparse.ArgumentParser(description='Train the lung classifier model')
+        parser.add_argument('--data_dir', type=str, help='Path to the dataset directory')
+        parser.add_argument('--epochs', type=int, default=30, help='Number of epochs')
+        parser.add_argument('--batch_size', type=int, default=BATCH_SIZE, help='Batch size')
+        parser.add_argument('--n_folds', type=int, default=5, help='Number of folds for cross-validation')
+        args = parser.parse_args()
+        
+        # Use provided data_dir or fall back to default
+        data_dir = args.data_dir if args.data_dir else os.path.join(project_root, 'data', 'Chest_X-Ray_Images_(Pneumonia)_2_classes', 'chest_xray')
         if not os.path.exists(data_dir):
             raise ValueError(f"Dataset directory not found: {data_dir}")
             
         print(f"Training with data from: {data_dir}")
-        train_model(data_dir)
+        train_model(data_dir, epochs=args.epochs, batch_size=args.batch_size, n_folds=args.n_folds)
         
     except Exception as e:
         print(f"\nFatal error: {str(e)}")
