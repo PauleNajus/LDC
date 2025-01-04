@@ -1,11 +1,23 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 import os
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
 from PIL import Image
 import time
+
+class User(AbstractUser):
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    email = models.EmailField(unique=True)
+    date_joined = models.DateTimeField(auto_now_add=True)
+    last_login = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.username
 
 class XRayImage(models.Model):
     image = models.ImageField(upload_to='xray_images/')

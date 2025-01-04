@@ -3,9 +3,15 @@ from django.contrib import messages
 from django.utils import timezone
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.core.exceptions import ValidationError
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth import logout
+from django.urls import reverse_lazy
+from django.views import View
 from .models import XRayImage
 from .models import LungClassifier
 from datetime import datetime
+import os
 
 def format_date(date_str):
     """Format date to Lithuanian format or return 'No data' if empty"""
@@ -18,7 +24,20 @@ def format_date(date_str):
     except ValueError:
         return "No data"
 
-@ensure_csrf_cookie
+class CustomLoginView(LoginView):
+    template_name = 'core/login.html'
+    success_url = reverse_lazy('core:home')
+
+class CustomLogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('core:login')
+    
+    def post(self, request):
+        logout(request)
+        return redirect('core:login')
+
+@login_required
 def home(request):
     try:
         if request.method == 'POST':
@@ -78,6 +97,7 @@ def home(request):
         messages.error(request, f'An unexpected error occurred: {str(e)}')
         return render(request, 'core/home.html', {'recent_predictions': []})
 
+@login_required
 def about(request):
     model_info = {
         'Architecture': 'Convolutional Neural Network (CNN)',
@@ -90,6 +110,7 @@ def about(request):
     }
     return render(request, 'core/about.html', {'model_info': model_info})
 
+@login_required
 def result(request, prediction_id):
     xray = get_object_or_404(XRayImage, id=prediction_id)
     context = {
@@ -100,6 +121,7 @@ def result(request, prediction_id):
     }
     return render(request, 'core/result.html', context)
 
+@login_required
 def delete_prediction(request, prediction_id):
     try:
         xray = get_object_or_404(XRayImage, id=prediction_id)

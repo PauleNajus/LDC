@@ -134,3 +134,11 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
 
 # Model settings
 MODEL_PATH = BASE_DIR / 'models' / 'lung_classifier_model.pth'
+
+# Custom user model
+AUTH_USER_MODEL = 'core.User'
+
+# Login URLs
+LOGIN_REDIRECT_URL = 'core:home'
+LOGOUT_REDIRECT_URL = 'core:home'
+LOGIN_URL = 'core:login'
