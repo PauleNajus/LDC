@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}About - Lung Disease Classifier{% endblock %}
 
@@ -65,7 +66,7 @@
         </div>
 
         <!-- How It Works -->
-        <div class="card">
+        <div class="card mb-4">
             <div class="card-body">
                 <h2 class="card-title h4 mb-4">How It Works</h2>
                 <p class="mb-4">
@@ -81,6 +82,46 @@
                     <li class="mb-2">Feature extraction using CNN layers</li>
                     <li>Classification based on learned patterns</li>
                 </ol>
+            </div>
+        </div>
+
+        <!-- Training Performance -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title h4 mb-4">Training Performance</h2>
+                
+                <!-- Overall Training History -->
+                <div class="mb-5">
+                    <h3 class="h5 mb-3">Overall Training History</h3>
+                    <div class="text-center">
+                        <img src="{% static 'training_history.png' %}" alt="Overall Training History" class="img-fluid training-plot mb-2">
+                        <p class="text-muted">Model's learning progression showing accuracy and loss metrics over training epochs.</p>
+                    </div>
+                </div>
+
+                <!-- Cross-Validation Results -->
+                <div class="mb-5">
+                    <h3 class="h5 mb-3">5-Fold Cross-Validation Results</h3>
+                    <div class="row">
+                        {% for i in '12345'|make_list %}
+                        <div class="col-md-6 mb-4">
+                            <div class="text-center">
+                                <img src="{% static 'training_history_fold_'|add:i|add:'.png' %}" alt="Training History Fold {{ i }}" class="img-fluid training-plot mb-2">
+                                <p class="text-muted">Fold {{ i }} performance metrics</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Confusion Matrix -->
+                <div>
+                    <h3 class="h5 mb-3">Model Evaluation</h3>
+                    <div class="text-center">
+                        <img src="{% static 'confusion_matrix.png' %}" alt="Confusion Matrix" class="img-fluid training-plot mb-2" style="max-width: 500px;">
+                        <p class="text-muted">Confusion matrix showing the model's classification performance across different categories.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -105,12 +146,24 @@
         color: var(--text-color);
     }
 
+    .training-plot {
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: white;
+        padding: 10px;
+    }
+
     [data-theme="dark"] .info-block {
         border-color: rgba(255, 255, 255, 0.1);
     }
 
     [data-theme="dark"] .process-list {
         color: var(--text-color);
+    }
+
+    [data-theme="dark"] .training-plot {
+        background-color: #2d3748;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 </style>
 {% endblock %} 
