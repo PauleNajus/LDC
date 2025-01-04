@@ -28,26 +28,31 @@ class LungClassifierModel(nn.Module):
     def __init__(self):
         super(LungClassifierModel, self).__init__()
         
-        # Initial convolution block
+        # Enhanced initial convolution block
         self.initial_conv = nn.Sequential(
-            nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3),
-            nn.BatchNorm2d(64),
+            nn.Conv2d(3, 96, kernel_size=7, stride=2, padding=3),
+            nn.BatchNorm2d(96),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
         )
         
-        # Residual blocks
-        self.layer1 = self._make_layer(64, 64, 2)
-        self.layer2 = self._make_layer(64, 128, 2, stride=2)
-        self.layer3 = self._make_layer(128, 256, 2, stride=2)
-        self.layer4 = self._make_layer(256, 512, 2, stride=2)
+        # Deeper residual blocks with more channels
+        self.layer1 = self._make_layer(96, 96, 3)
+        self.layer2 = self._make_layer(96, 192, 4, stride=2)
+        self.layer3 = self._make_layer(192, 384, 6, stride=2)
+        self.layer4 = self._make_layer(384, 768, 3, stride=2)
         
-        # Global average pooling and classifier
+        # Enhanced classifier with dropout
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         self.classifier = nn.Sequential(
-            nn.Dropout(0.5),
+            nn.Dropout(0.4),
+            nn.Linear(768, 512),
+            nn.ReLU(inplace=True),
+            nn.BatchNorm1d(512),
+            nn.Dropout(0.4),
             nn.Linear(512, 256),
             nn.ReLU(inplace=True),
+            nn.BatchNorm1d(256),
             nn.Dropout(0.3),
             nn.Linear(256, 1)
         )
@@ -123,11 +128,15 @@ if torch.cuda.is_available():
     print(f"Memory Available: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f} GB")
 
 # Optimized parameters for RTX 4080 12GB
-BATCH_SIZE = 256  # Increased for RTX 4080 12GB
-ACCUMULATION_STEPS = 2  # Gradient accumulation for effective batch size of 512
-NUM_WORKERS = 12  # Increased for i9
+BATCH_SIZE = 128  # Optimized for RTX 4080 12GB with larger model
+ACCUMULATION_STEPS = 1  # No need for accumulation with optimized batch size
+NUM_WORKERS = 12  # Optimized for modern CPU
 PIN_MEMORY = True
-PREFETCH_FACTOR = 4  # Increased prefetch for faster data loading
+PREFETCH_FACTOR = 4
+PATIENCE = 15  # Early stopping patience
+MIN_EPOCHS = 50  # Minimum number of epochs before early stopping
+MAX_EPOCHS = 200  # Maximum number of epochs
+TARGET_ACCURACY = 0.98  # Target accuracy threshold
 
 class XRayDataset(Dataset):
     def __init__(self, root_dir, transform=None):
@@ -219,11 +228,12 @@ def validate_one_fold(model, val_loader, criterion, device):
 
     return val_loss / len(val_loader), val_correct / val_total
 
-def train_model(data_dir, epochs=30, batch_size=BATCH_SIZE, n_folds=5):
+def train_model(data_dir, epochs=MAX_EPOCHS, batch_size=BATCH_SIZE, n_folds=5):
     print(f"\nInitializing training with:")
-    print(f"- Epochs: {epochs}")
-    print(f"- Batch size: {batch_size} (effective batch size: {batch_size * ACCUMULATION_STEPS})")
-    print(f"- Workers: {NUM_WORKERS}")
+    print(f"- Max Epochs: {epochs}")
+    print(f"- Batch size: {batch_size}")
+    print(f"- Target Accuracy: {TARGET_ACCURACY * 100}%")
+    print(f"- Early Stopping Patience: {PATIENCE}")
     print(f"- Device: {device}")
     print(f"- Number of folds: {n_folds}")
 
@@ -235,19 +245,22 @@ def train_model(data_dir, epochs=30, batch_size=BATCH_SIZE, n_folds=5):
 
     # Enhanced data augmentation
     train_transform = A.Compose([
-        A.RandomResizedCrop(224, 224, scale=(0.8, 1.0)),
+        A.RandomResizedCrop(224, 224, scale=(0.7, 1.0)),
         A.HorizontalFlip(p=0.5),
-        A.RandomBrightnessContrast(p=0.2),
-        A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=15, p=0.5),
+        A.VerticalFlip(p=0.1),
+        A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.3),
+        A.ShiftScaleRotate(shift_limit=0.2, scale_limit=0.2, rotate_limit=30, p=0.5),
         A.OneOf([
-            A.GaussNoise(p=1),
-            A.GaussianBlur(p=1),
-            A.MotionBlur(p=1),
-        ], p=0.2),
+            A.GaussNoise(var_limit=(10.0, 50.0), p=1),
+            A.GaussianBlur(blur_limit=(3, 7), p=1),
+            A.MotionBlur(blur_limit=(3, 7), p=1),
+        ], p=0.3),
         A.OneOf([
-            A.OpticalDistortion(p=1),
-            A.GridDistortion(p=1),
-        ], p=0.2),
+            A.OpticalDistortion(distort_limit=0.2, p=1),
+            A.GridDistortion(distort_limit=0.2, p=1),
+            A.ElasticTransform(alpha=120, sigma=120 * 0.05, alpha_affine=120 * 0.03, p=1)
+        ], p=0.3),
+        A.CoarseDropout(max_holes=8, max_height=32, max_width=32, min_holes=5, fill_value=0, p=0.3),
         A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ToTensorV2(),
     ])
@@ -305,22 +318,22 @@ def train_model(data_dir, epochs=30, batch_size=BATCH_SIZE, n_folds=5):
             if torch.cuda.device_count() > 1:
                 model = nn.DataParallel(model)
 
-            criterion = nn.BCEWithLogitsLoss()
+            criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([1.2]).to(device))
             optimizer = optim.AdamW(
                 model.parameters(),
-                lr=0.001,
-                weight_decay=0.01,
+                lr=0.0005,
+                weight_decay=0.02,
                 betas=(0.9, 0.999),
                 eps=1e-8
             )
             
-            # Learning rate scheduler
+            # Enhanced learning rate scheduler
             scheduler = optim.lr_scheduler.OneCycleLR(
                 optimizer,
-                max_lr=0.001,
+                max_lr=0.002,
                 epochs=epochs,
-                steps_per_epoch=len(train_loader) // ACCUMULATION_STEPS,
-                pct_start=0.3,
+                steps_per_epoch=len(train_loader),
+                pct_start=0.2,
                 anneal_strategy='cos',
                 div_factor=25.0,
                 final_div_factor=1000.0
@@ -336,6 +349,8 @@ def train_model(data_dir, epochs=30, batch_size=BATCH_SIZE, n_folds=5):
             }
 
             best_val_acc = 0.0
+            patience_counter = 0
+            best_epoch = 0
             
             # Training loop for fold
             for epoch in range(epochs):
@@ -360,13 +375,27 @@ def train_model(data_dir, epochs=30, batch_size=BATCH_SIZE, n_folds=5):
                 print(f'Train Loss: {train_loss:.4f}, Train Acc: {train_acc * 100:.2f}%')
                 print(f'Val Loss: {val_loss:.4f}, Val Acc: {val_acc * 100:.2f}%')
                 
-                # Save best model for fold
+                # Save best model and check early stopping
                 if val_acc > best_val_acc:
                     best_val_acc = val_acc
+                    best_epoch = epoch
+                    patience_counter = 0
                     torch.save(
                         model.state_dict(),
                         os.path.join(model_dir, f'best_model_fold_{fold + 1}.pth')
                     )
+                else:
+                    patience_counter += 1
+
+                # Check if we've reached target accuracy
+                if val_acc >= TARGET_ACCURACY and epoch >= MIN_EPOCHS:
+                    print(f"\nReached target accuracy of {TARGET_ACCURACY * 100}% at epoch {epoch + 1}")
+                    break
+
+                # Early stopping check
+                if patience_counter >= PATIENCE and epoch >= MIN_EPOCHS:
+                    print(f"\nEarly stopping triggered. Best validation accuracy: {best_val_acc * 100:.2f}% at epoch {best_epoch + 1}")
+                    break
             
             # Store fold results
             fold_results.append({
@@ -436,7 +465,7 @@ if __name__ == '__main__':
         import argparse
         parser = argparse.ArgumentParser(description='Train the lung classifier model')
         parser.add_argument('--data_dir', type=str, help='Path to the dataset directory')
-        parser.add_argument('--epochs', type=int, default=30, help='Number of epochs')
+        parser.add_argument('--epochs', type=int, default=MAX_EPOCHS, help='Number of epochs')
         parser.add_argument('--batch_size', type=int, default=BATCH_SIZE, help='Batch size')
         parser.add_argument('--n_folds', type=int, default=5, help='Number of folds for cross-validation')
         args = parser.parse_args()
