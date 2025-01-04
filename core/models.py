@@ -1,12 +1,17 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth import get_user_model
 import os
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
 from PIL import Image
 import time
+
+def get_default_user():
+    User = get_user_model()
+    return User.objects.first()
 
 class User(AbstractUser):
     first_name = models.CharField(max_length=30)
@@ -21,18 +26,18 @@ class User(AbstractUser):
 
 class XRayImage(models.Model):
     image = models.ImageField(upload_to='xray_images/')
-    patient_name = models.CharField(max_length=100, blank=True, default="No data")
-    patient_surname = models.CharField(max_length=100, blank=True, default="No data")
-    patient_id = models.CharField(max_length=50, blank=True, default="No data")
-    patient_date_of_birth = models.CharField(max_length=20, blank=True, default="No data")
-    patient_gender = models.CharField(max_length=20, blank=True, default="No data")
-    xray_date = models.CharField(max_length=20, blank=True, default="No data")
-    prediction = models.CharField(max_length=20, blank=True)
+    patient_name = models.CharField(max_length=100, default="No data")
+    patient_surname = models.CharField(max_length=100, default="No data")
+    patient_id = models.CharField(max_length=50, default="No data")
+    patient_date_of_birth = models.CharField(max_length=20, default="No data")
+    patient_gender = models.CharField(max_length=20, default="No data")
+    xray_date = models.CharField(max_length=20, default="No data")
+    prediction = models.CharField(max_length=20, blank=True, default="No data")
     confidence = models.FloatField(default=0.0)
     normal_probability = models.FloatField(default=0.0)
     pneumonia_probability = models.FloatField(default=0.0)
     processing_time = models.FloatField(default=0.0)  # in seconds
-    image_size = models.CharField(max_length=50, blank=True)  # store as "WxH"
+    image_size = models.CharField(max_length=50, default="No data")  # store as "WxH"
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -8,6 +8,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import logout
 from django.urls import reverse_lazy
 from django.views import View
+from django.core.paginator import Paginator
 from .models import XRayImage
 from .models import LungClassifier
 from datetime import datetime
@@ -58,11 +59,11 @@ def home(request):
                 # Create XRayImage instance with patient information
                 xray = XRayImage.objects.create(
                     image=image,
-                    patient_name=request.POST.get('patient_name', 'No data'),
-                    patient_surname=request.POST.get('patient_surname', 'No data'),
-                    patient_id=request.POST.get('patient_id', 'No data'),
+                    patient_name=request.POST.get('patient_name') or "No data",
+                    patient_surname=request.POST.get('patient_surname') or "No data",
+                    patient_id=request.POST.get('patient_id') or "No data",
                     patient_date_of_birth=birth_date,
-                    patient_gender=request.POST.get('patient_gender', 'No data'),
+                    patient_gender=request.POST.get('patient_gender') or "No data",
                     xray_date=xray_date,
                     uploaded_at=timezone.now()
                 )
@@ -90,8 +91,22 @@ def home(request):
                 messages.error(request, f'Error processing image: {str(e)}')
                 return redirect('core:home')
 
-        recent_predictions = XRayImage.objects.order_by('-uploaded_at')[:6]
-        return render(request, 'core/home.html', {'recent_predictions': recent_predictions})
+        # Get page number from request
+        page = request.GET.get('page', 1)
+        
+        # Get all predictions ordered by upload date
+        all_predictions = XRayImage.objects.order_by('-uploaded_at')
+        
+        # Create paginator with 100 items per page
+        paginator = Paginator(all_predictions, 100)
+        
+        # Get the current page
+        recent_predictions = paginator.get_page(page)
+        
+        return render(request, 'core/home.html', {
+            'recent_predictions': recent_predictions,
+            'has_more': recent_predictions.has_next()
+        })
     
     except Exception as e:
         messages.error(request, f'An unexpected error occurred: {str(e)}')
