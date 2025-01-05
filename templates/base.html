@@ -246,6 +246,41 @@
         .theme-switcher i {
             font-size: 1.2rem;
         }
+
+        .dropdown-menu {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .dropdown-item {
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+        }
+
+        [data-theme="dark"] .dropdown-menu {
+            background-color: var(--card-bg);
+            border-color: var(--border-color);
+        }
+
+        [data-theme="dark"] .dropdown-item {
+            color: var(--text-color);
+        }
+
+        [data-theme="dark"] .dropdown-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
         
         @media (max-width: 768px) {
             .main-container {
@@ -277,7 +312,28 @@
                 <span><i class="fas fa-lungs me-2" aria-hidden="true"></i>LDC</span>
             </a>
             <div class="d-flex align-items-center">
-                <button class="theme-switcher" id="theme-switcher" title="Switch theme">
+                <div class="dropdown">
+                    <button class="theme-switcher dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Change language">
+                        <i class="fas fa-language" aria-hidden="true"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                        <li>
+                            <form action="{% url 'set_language' %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="language" value="en">
+                                <button type="submit" class="dropdown-item">English</button>
+                            </form>
+                        </li>
+                        <li>
+                            <form action="{% url 'set_language' %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="language" value="lt">
+                                <button type="submit" class="dropdown-item">Lithuanian</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                <button class="theme-switcher ms-2" id="theme-switcher" title="Switch theme">
                     <i class="fas fa-sun" aria-hidden="true"></i>
                 </button>
                 <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

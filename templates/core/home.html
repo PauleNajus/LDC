@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Home - Lung Disease Classifier{% endblock %}
+{% block title %}{% trans "Home - Lung Disease Classifier" %}{% endblock %}
 
 {% block content %}
 <style>
@@ -22,10 +23,12 @@
     <div class="col-lg-8">
         <!-- Main Title and Description -->
         <div class="text-center mb-5">
-            <h1 class="display-4 mb-3">Lung Disease Classifier</h1>
+            <h1 class="display-4 mb-3">{% trans "Lung Disease Classifier" %}</h1>
             <p class="lead text-muted">
+                {% blocktrans trimmed %}
                 Upload a chest X-ray image to detect pneumonia using our advanced deep learning model.
                 Accuracy: 96.13% (validated through 5-fold cross-validation)
+                {% endblocktrans %}
             </p>
         </div>
 
@@ -34,48 +37,48 @@
             <div class="card-body">
                 <h5 class="card-title mb-3">
                     <i class="fas fa-upload info-icon"></i>
-                    Upload X-Ray Image
+                    {% trans "Upload X-Ray Image" %}
                 </h5>
                 <form method="post" enctype="multipart/form-data" class="mb-3">
                     {% csrf_token %}
                     <!-- Patient Information -->
                     <div class="row mb-3">
                         <div class="col-md-6 mb-2">
-                            <label class="form-label small text-muted">Patient Name</label>
-                            <input type="text" name="patient_name" class="form-control" placeholder="Patient Name">
+                            <label class="form-label small text-muted">{% trans "Patient Name" %}</label>
+                            <input type="text" name="patient_name" class="form-control" placeholder="{% trans 'Patient Name' %}">
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label class="form-label small text-muted">Patient Surname</label>
-                            <input type="text" name="patient_surname" class="form-control" placeholder="Patient Surname">
+                            <label class="form-label small text-muted">{% trans "Patient Surname" %}</label>
+                            <input type="text" name="patient_surname" class="form-control" placeholder="{% trans 'Patient Surname' %}">
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label class="form-label small text-muted">Patient ID</label>
-                            <input type="text" name="patient_id" class="form-control" placeholder="Patient ID">
+                            <label class="form-label small text-muted">{% trans "Patient ID" %}</label>
+                            <input type="text" name="patient_id" class="form-control" placeholder="{% trans 'Patient ID' %}">
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label class="form-label small text-muted">Patient Date of Birth (YYYY-MM-DD)</label>
+                            <label class="form-label small text-muted">{% trans "Patient Date of Birth (YYYY-MM-DD)" %}</label>
                             <input type="text" 
                                    name="patient_date_of_birth" 
                                    class="form-control date-input" 
-                                   placeholder="YYYY-MM-DD"
+                                   placeholder="{% trans 'YYYY-MM-DD' %}"
                                    maxlength="10"
                                    oninput="formatDate(this)"
                                    onkeypress="return isNumberOrDash(event)">
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label class="form-label small text-muted">Patient Gender</label>
+                            <label class="form-label small text-muted">{% trans "Patient Gender" %}</label>
                             <select name="patient_gender" class="form-select">
-                                <option value="">Select Gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
+                                <option value="">{% trans "Select Gender" %}</option>
+                                <option value="Male">{% trans "Male" %}</option>
+                                <option value="Female">{% trans "Female" %}</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <label class="form-label small text-muted">X-Ray Date (YYYY-MM-DD)</label>
+                            <label class="form-label small text-muted">{% trans "X-Ray Date (YYYY-MM-DD)" %}</label>
                             <input type="text" 
                                    name="xray_date" 
                                    class="form-control date-input" 
-                                   placeholder="YYYY-MM-DD"
+                                   placeholder="{% trans 'YYYY-MM-DD' %}"
                                    maxlength="10"
                                    oninput="formatDate(this)"
                                    onkeypress="return isNumberOrDash(event)">
@@ -83,17 +86,17 @@
                     </div>
                     <div class="upload-area mb-3" id="drop-zone" onclick="document.getElementById('id_image').click()">
                         <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
-                        <h5>Drag & Drop or Click to Upload</h5>
-                        <p class="text-muted">Supported formats: JPEG, PNG, DICOM</p>
+                        <h5>{% trans "Drag & Drop or Click to Upload" %}</h5>
+                        <p class="text-muted">{% trans "Supported formats: JPEG, PNG, DICOM" %}</p>
                         <input type="file" name="image" id="id_image" accept="image/*,.dcm" class="d-none" required>
                     </div>
                     <div id="preview-container" class="text-center mb-3" style="display: none;">
                         <img id="image-preview" class="img-fluid rounded" style="max-height: 300px;" 
                              src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
-                             alt="Preview">
+                             alt="{% trans 'Preview' %}">
                     </div>
                     <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-microscope me-2"></i>Analyze Image
+                        <i class="fas fa-microscope me-2"></i>{% trans "Analyze Image" %}
                     </button>
                 </form>
             </div>
@@ -102,9 +105,9 @@
         <!-- Loading Spinner -->
         <div class="loading-spinner">
             <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+                <span class="visually-hidden">{% trans "Loading..." %}</span>
             </div>
-            <p class="mt-2">Analyzing your X-ray image...</p>
+            <p class="mt-2">{% trans "Analyzing your X-ray image..." %}</p>
         </div>
 
         <!-- Information Cards -->
@@ -113,27 +116,27 @@
                 <div class="stats-card">
                     <h5 class="card-title">
                         <i class="fas fa-chart-line info-icon"></i>
-                        High Accuracy
+                        {% trans "High Accuracy" %}
                     </h5>
-                    <p class="card-text">96.13% accuracy with cross-validation and ensemble learning.</p>
+                    <p class="card-text">{% trans "96.13% accuracy with cross-validation and ensemble learning." %}</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
                 <div class="stats-card">
                     <h5 class="card-title">
                         <i class="fas fa-bolt info-icon"></i>
-                        Fast Processing
+                        {% trans "Fast Processing" %}
                     </h5>
-                    <p class="card-text">Optimized with PyTorch JIT and parallel processing for rapid inference.</p>
+                    <p class="card-text">{% trans "Optimized with PyTorch JIT and parallel processing for rapid inference." %}</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
                 <div class="stats-card">
                     <h5 class="card-title">
                         <i class="fas fa-chart-bar info-icon"></i>
-                        Detailed Analysis
+                        {% trans "Detailed Analysis" %}
                     </h5>
-                    <p class="card-text">Comprehensive probability scores and visualization.</p>
+                    <p class="card-text">{% trans "Comprehensive probability scores and visualization." %}</p>
                 </div>
             </div>
         </div>
@@ -145,17 +148,17 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h5 class="card-title mb-0">
                         <i class="fas fa-history info-icon"></i>
-                        Recent Predictions
+                        {% trans "Recent Predictions" %}
                     </h5>
                     <div class="btn-group">
                         <button type="button" class="btn btn-outline-primary btn-sm filter-btn active" data-filter="all">
-                            All
+                            {% trans "All" %}
                         </button>
                         <button type="button" class="btn btn-outline-success btn-sm filter-btn" data-filter="normal">
-                            Normal
+                            {% trans "Normal" %}
                         </button>
                         <button type="button" class="btn btn-outline-danger btn-sm filter-btn" data-filter="pneumonia">
-                            Pneumonia
+                            {% trans "Pneumonia" %}
                         </button>
                     </div>
                 </div>
@@ -164,36 +167,36 @@
                     <div class="row align-items-center">
                         <div class="col-md-3">
                             <div class="position-relative" style="width: 120%;">
-                                <img src="{{ prediction.image.url }}" class="prediction-image img-fluid rounded" alt="X-ray">
+                                <img src="{{ prediction.image.url }}" class="prediction-image img-fluid rounded" alt="{% trans 'X-ray' %}">
                             </div>
                         </div>
                         <div class="col-md-9">
                             <!-- Patient Information -->
                             <div class="mb-3">
-                                <h6 class="mb-2">Patient Information:</h6>
+                                <h6 class="mb-2">{% trans "Patient Information:" %}</h6>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <small class="text-muted">Name:</small> {{ prediction.patient_name }}<br>
-                                        <small class="text-muted">Surname:</small> {{ prediction.patient_surname }}<br>
-                                        <small class="text-muted">Patient ID:</small> {{ prediction.patient_id }}
+                                        <small class="text-muted">{% trans "Name:" %}</small> {{ prediction.patient_name }}<br>
+                                        <small class="text-muted">{% trans "Surname:" %}</small> {{ prediction.patient_surname }}<br>
+                                        <small class="text-muted">{% trans "Patient ID:" %}</small> {{ prediction.patient_id }}
                                     </div>
                                     <div class="col-md-6">
-                                        <small class="text-muted">Gender:</small> {{ prediction.patient_gender }}<br>
-                                        <small class="text-muted">Date of Birth:</small> {{ prediction.patient_date_of_birth }}<br>
-                                        <small class="text-muted">X-Ray Date:</small> {{ prediction.xray_date }}
+                                        <small class="text-muted">{% trans "Gender:" %}</small> {{ prediction.patient_gender }}<br>
+                                        <small class="text-muted">{% trans "Date of Birth:" %}</small> {{ prediction.patient_date_of_birth }}<br>
+                                        <small class="text-muted">{% trans "X-Ray Date:" %}</small> {{ prediction.xray_date }}
                                     </div>
                                 </div>
                             </div>
                             <!-- Prediction Results -->
-                            <h6 class="mb-2">Prediction: 
+                            <h6 class="mb-2">{% trans "Prediction:" %} 
                                 {% if prediction.prediction == 'NORMAL' %}
-                                <span class="text-success">{{ prediction.prediction }}</span>
+                                <span class="text-success">{% trans prediction.prediction %}</span>
                                 {% else %}
-                                <span class="text-danger">{{ prediction.prediction }}</span>
+                                <span class="text-danger">{% trans prediction.prediction %}</span>
                                 {% endif %}
                             </h6>
                             <div class="mb-2">
-                                <small class="text-muted">Normal Probability:</small>
+                                <small class="text-muted">{% trans "Normal Probability:" %}</small>
                                 <div class="progress">
                                     <div class="progress-bar bg-success progress-bar-normal" 
                                          role="progressbar"
@@ -206,7 +209,7 @@
                                 </div>
                             </div>
                             <div class="mb-2">
-                                <small class="text-muted">Pneumonia Probability:</small>
+                                <small class="text-muted">{% trans "Pneumonia Probability:" %}</small>
                                 <div class="progress">
                                     <div class="progress-bar bg-danger progress-bar-pneumonia" 
                                          role="progressbar"
@@ -219,20 +222,20 @@
                                 </div>
                             </div>
                             <small class="text-muted">
-                                <i class="fas fa-clock me-1"></i>{{ prediction.uploaded_at|timesince }} ago
+                                <i class="fas fa-clock me-1"></i>{{ prediction.uploaded_at|timesince }} {% trans "ago" %}
                                 <i class="fas fa-image ms-3 me-1"></i>{{ prediction.image_size }}
                                 <i class="fas fa-file-image ms-3 me-1"></i>{{ prediction.get_extension|upper }}
-                                <i class="fas fa-weight-hanging ms-3 me-1"></i>{{ prediction.get_file_size_mb }} MB
-                                <i class="fas fa-stopwatch ms-3 me-1"></i>{{ prediction.processing_time|floatformat:2 }}s
+                                <i class="fas fa-weight-hanging ms-3 me-1"></i>{{ prediction.get_file_size_mb }} {% trans "MB" %}
+                                <i class="fas fa-stopwatch ms-3 me-1"></i>{{ prediction.processing_time|floatformat:2 }}{% trans "s" %}
                             </small>
                             <!-- Delete Button -->
                             <div class="mt-2">
                                 <form method="post" action="{% url 'core:delete_prediction' prediction.id %}" 
-                                      onsubmit="return confirm('Are you sure you want to delete this record?');" 
+                                      onsubmit="return confirm('{% trans 'Are you sure you want to delete this record?' %}');" 
                                       style="display: inline;">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-outline-danger btn-sm">
-                                        <i class="fas fa-trash-alt me-1"></i>Delete Record
+                                        <i class="fas fa-trash-alt me-1"></i>{% trans "Delete Record" %}
                                     </button>
                                 </form>
                             </div>
@@ -243,7 +246,7 @@
                 {% if has_more %}
                     <div class="text-center mt-4">
                         <a href="?page={{ recent_predictions.next_page_number }}" class="btn btn-outline-primary">
-                            <i class="fas fa-sync me-2"></i>Load More Records
+                            <i class="fas fa-sync me-2"></i>{% trans "Load More Records" %}
                         </a>
                     </div>
                 {% endif %}

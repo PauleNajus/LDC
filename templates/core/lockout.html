@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Account Locked" %}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+    <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+        <div class="absolute inset-0 bg-gradient-to-r from-red-400 to-red-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+        <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+            <div class="max-w-md mx-auto">
+                <div class="divide-y divide-gray-200">
+                    <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                        <div class="text-center mb-8">
+                            <i class="fas fa-lock text-6xl text-red-500 mb-4"></i>
+                            <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                                {% trans "Account Temporarily Locked" %}
+                            </h1>
+                            <p class="text-gray-600">
+                                {% trans "For security reasons, your account has been temporarily locked due to multiple failed login attempts." %}
+                            </p>
+                        </div>
+                        
+                        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-circle text-red-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-red-700">
+                                        {% trans "Please wait for the cooldown period to expire before attempting to log in again." %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 space-y-4">
+                            <div class="text-center">
+                                <p class="text-sm text-gray-600">
+                                    {% trans "If you believe this is a mistake or need immediate assistance, please contact our support team." %}
+                                </p>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <a href="{% url 'core:password_reset' %}" class="block w-full text-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                    {% trans "Reset Password" %}
+                                </a>
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <a href="{% url 'core:home' %}" class="text-sm text-red-600 hover:text-red-500">
+                                    {% trans "Return to Home" %}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Countdown timer for lockout period
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const lockoutEnd = new Date("{{ lockout_time }}").getTime();
+        const timeLeft = lockoutEnd - now;
+        
+        if (timeLeft > 0) {
+            const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            
+            document.getElementById("countdown").innerHTML = 
+                `${hours}h ${minutes}m ${seconds}s`;
+        } else {
+            document.getElementById("countdown").innerHTML = "{% trans 'Lockout expired' %}";
+            setTimeout(() => window.location.reload(), 1000);
+        }
+    }
+    
+    // Update countdown every second
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+</script>
+{% endblock %} 

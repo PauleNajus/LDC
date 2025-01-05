@@ -1,12 +1,9 @@
 {
     "venvPath": ".",
-    "venv": ".venv",
-    "reportMissingImports": false,
-    "pythonVersion": "3.11",
-    "typeCheckingMode": "basic",
-    "reportOptionalMemberAccess": false,
-    "reportOperatorIssue": false,
-    "reportAttributeAccessIssue": false,
-    "include": ["core"],
-    "extraPaths": ["."]
+    "venv": ".venv_new",
+    "extraPaths": [
+        ".venv_new/Lib/site-packages"
+    ],
+    "reportMissingImports": true,
+    "reportMissingTypeStubs": false
 } 
