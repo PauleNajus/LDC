@@ -8,17 +8,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-05 19:28+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2025-01-05 22:30+0200\n"
+"PO-Revision-Date: 2025-01-05 22:30+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: Lithuanian <LL@li.org>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
-"1 : n % 1 != 0 ? 2: 3);\n"
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : "
+"n % 1 != 0 ? 2: 3);\n"
+
+
 #: .\core\forms.py:25
 msgid "First Name"
 msgstr "Vardas"
@@ -62,7 +64,7 @@ msgstr "Gimimo data negali būti ateityje"
 
 #: .\core\forms.py:54
 msgid "Date of birth is too far in the past"
-msgstr "Gimimo data yra per sena"
+msgstr "Gimimo data yra per toli praeityje"
 
 #: .\core\forms.py:70
 msgid "X-ray date cannot be in the future"
@@ -70,15 +72,15 @@ msgstr "Rentgeno data negali būti ateityje"
 
 #: .\core\forms.py:75
 msgid "X-ray date is too old (maximum 10 years old)"
-msgstr "Rentgeno data yra per sena (maksimaliai 10 metų senumo)"
+msgstr "Rentgeno data yra per sena (daugiausiai 10 metų senumo)"
 
 #: .\core\forms.py:80
 msgid "X-ray date cannot be before date of birth"
-msgstr "Rentgeno data negali būti ankstesnė nei gimimo data"
+msgstr "Rentgeno data negali būti ankstesnė už gimimo datą"
 
 #: .\core\forms.py:92
 msgid "Name can only contain letters and spaces"
-msgstr "Vardas gali turėti tik raides ir tarpus"
+msgstr "Vardą galima rašyti tik raidėmis ir tarpais"
 
 #: .\core\forms.py:96
 msgid "Name must be at least 2 characters long"
@@ -86,7 +88,7 @@ msgstr "Vardas turi būti bent 2 simbolių ilgio"
 
 #: .\core\forms.py:108
 msgid "Surname can only contain letters, spaces, and hyphens"
-msgstr "Pavardė gali turėti tik raides, tarpus ir brūkšnelius"
+msgstr "Pavardę galima rašyti tik raidėmis, tarpais ir brūkšniais"
 
 #: .\core\forms.py:112
 msgid "Surname must be at least 2 characters long"
@@ -94,7 +96,7 @@ msgstr "Pavardė turi būti bent 2 simbolių ilgio"
 
 #: .\core\forms.py:124
 msgid "Patient ID can only contain letters, numbers, and hyphens"
-msgstr "Paciento ID gali turėti tik raides, skaičius ir brūkšnelius"
+msgstr "Paciento ID gali būti sudarytas tik iš raidžių, skaitmenų ir brūkšnelių"
 
 #: .\core\forms.py:128
 msgid "Patient ID must be at least 3 characters long"
@@ -102,7 +104,7 @@ msgstr "Paciento ID turi būti bent 3 simbolių ilgio"
 
 #: .\core\forms.py:137
 msgid "Image file size must be less than 10MB"
-msgstr "Nuotraukos dydis turi būti mažesnis nei 10MB"
+msgstr "Nuotraukos failo dydis turi būti mažesnis nei 10MB"
 
 #: .\core\forms.py:142
 msgid "Only JPG and PNG files are allowed"
@@ -114,7 +116,7 @@ msgstr "kalbos pasirinkimas"
 
 #: .\core\models.py:52
 msgid "Preferred language for the user interface."
-msgstr "Pageidaujama vartotojo sąsajos kalba."
+msgstr "Pageidautina sąsajos kalba."
 
 #: .\core\models.py:56
 msgid "user"
@@ -126,25 +128,24 @@ msgstr "vartotojai"
 
 #: .\core\validators.py:33
 msgid "Password must contain at least one uppercase letter."
-msgstr "Slaptažodyje turi būti bent viena didžioji raidė."
+msgstr "Slaptažodis turi turėti bent vieną didžiąją raidę."
 
 #: .\core\validators.py:39
 msgid "Password must contain at least one lowercase letter."
-msgstr "Slaptažodyje turi būti bent viena mažoji raidė."
+msgstr "Slaptažodis turi turėti bent vieną mažąją raidę."
 
 #: .\core\validators.py:45
 msgid "Password must contain at least one digit."
-msgstr "Slaptažodyje turi būti bent vienas skaitmuo."
+msgstr "Slaptažodis turi turėti bent vieną skaitmenį."
 
 #: .\core\validators.py:51
 msgid ""
 "Password must contain at least one special character (!@#$%^&*(),.?\":{}|<>)."
-msgstr ""
-"Slaptažodyje turi būti bent vienas specialus simbolis (!@#$%^&*(),.?\":{}|<>)."
+msgstr "Slaptažodis turi turėti bent vieną specialų simbolį (!@#$%^&*(),.?\":{}|<>)."
 
 #: .\core\validators.py:70
 msgid "Password contains a common pattern that is too easy to guess."
-msgstr "Slaptažodyje yra dažnai naudojama kombinacija, kurią lengva atspėti."
+msgstr "Slaptažodyje yra dažnai sutinkamas raštas, kurį lengva atspėti."
 
 #: .\core\validators.py:76
 msgid ""
@@ -152,13 +153,13 @@ msgid ""
 "letter, one digit, and one special character. It cannot contain common "
 "patterns like '123' or 'password'."
 msgstr ""
-"Jūsų slaptažodyje turi būti bent: viena didžioji raidė, viena mažoji "
-"raidė, vienas skaitmuo ir vienas specialus simbolis. Jame negali būti "
-"dažnai naudojamų kombinacijų, tokių kaip '123' ar 'password'."
+"Jūsų slaptažodyje turi būti bent viena didžioji raidė, viena mažoji raidė, "
+"vienas skaitmuo ir vienas specialus simbolis. Jis negali turėti įprastų raštų, "
+"tokių kaip '123' ar 'password'."
 
 #: .\core\validators.py:115
 msgid "Password cannot contain parts of your email address."
-msgstr "Slaptažodyje negali būti el. pašto adreso dalių."
+msgstr "Slaptažodyje negali būti dalių iš jūsų el. pašto adreso."
 
 #: .\core\validators.py:122
 #, python-format
@@ -170,13 +171,13 @@ msgid ""
 "Your password cannot contain your personal information (such as username, "
 "name, or email address)."
 msgstr ""
-"Jūsų slaptažodyje negali būti asmeninės informacijos (pvz., vartotojo vardo, "
+"Jūsų slaptažodyje negali būti asmeninės informacijos (pvz., naudotojo vardo, "
 "vardo ar el. pašto adreso)."
 
 #: .\core\validators.py:165
 #, python-format
 msgid "Password cannot contain more than %(max_repeats)d repeated characters."
-msgstr "Slaptažodyje negali būti daugiau nei %(max_repeats)d pasikartojančių simbolių."
+msgstr "Slaptažodyje negali būti daugiau nei %(max_repeats)d iš eilės pasikartojančių simbolių."
 
 #: .\core\validators.py:184
 #, python-format
@@ -184,8 +185,8 @@ msgid ""
 "Password cannot contain keyboard pattern '%(pattern)s' from %(layout)s "
 "layout."
 msgstr ""
-"Slaptažodyje negali būti klaviatūros kombinacijos '%(pattern)s' iš %(layout)s "
-"išdėstymo."
+"Slaptažodyje negali būti klaviatūros rašto „%(pattern)s“, kuris naudojamas "
+"%(layout)s išdėstyme."
 
 #: .\core\validators.py:196
 #, python-format
@@ -193,8 +194,8 @@ msgid ""
 "Password cannot contain reversed keyboard pattern '%(pattern)s' from "
 "%(layout)s layout."
 msgstr ""
-"Slaptažodyje negali būti atvirkštinės klaviatūros kombinacijos '%(pattern)s' "
-"iš %(layout)s išdėstymo."
+"Slaptažodyje negali būti atvirkštinio klaviatūros rašto „%(pattern)s“, kuris "
+"naudojamas %(layout)s išdėstyme."
 
 #: .\core\validators.py:206
 #, python-format
@@ -202,8 +203,9 @@ msgid ""
 "Your password cannot contain more than %(max_repeats)d repeated characters "
 "or common keyboard patterns from standard layouts."
 msgstr ""
-"Jūsų slaptažodyje negali būti daugiau nei %(max_repeats)d pasikartojančių "
-"simbolių ar dažnų klaviatūros kombinacijų iš standartinių išdėstymų."
+"Jūsų slaptažodyje negali būti daugiau nei %(max_repeats)d iš eilės "
+"pasikartojančių simbolių ar dažnų klaviatūros raštų iš standartinių "
+"išdėstymų."
 
 #: .\core\views.py:120
 msgid "X-ray image processed successfully."
@@ -211,23 +213,23 @@ msgstr "Rentgeno nuotrauka sėkmingai apdorota."
 
 #: .\core\views.py:125
 msgid "Error processing X-ray image. Please try again."
-msgstr "Klaida apdorojant rentgeno nuotrauką. Bandykite dar kartą."
+msgstr "Įvyko klaida apdorojant rentgeno nuotrauką. Bandykite dar kartą."
 
 #: .\core\views.py:128
 msgid "Please correct the errors below."
-msgstr "Ištaisykite žemiau esančias klaidas."
+msgstr "Prašome ištaisyti klaidas žemiau."
 
 #: .\core\views.py:164
 msgid "You do not have permission to view this result."
-msgstr "Jūs neturite teisės peržiūrėti šio rezultato."
+msgstr "Neturite teisės peržiūrėti šio rezultato."
 
 #: .\core\views.py:170
 msgid "Error retrieving prediction results."
-msgstr "Klaida gaunant prognozės rezultatus."
+msgstr "Įvyko klaida gaunant prognozės rezultatus."
 
 #: .\core\views.py:181
 msgid "You do not have permission to delete this prediction."
-msgstr "Jūs neturite teisės ištrinti šios prognozės."
+msgstr "Neturite teisės ištrinti šios prognozės."
 
 #: .\core\views.py:186
 msgid "Prediction deleted successfully."
@@ -235,7 +237,7 @@ msgstr "Prognozė sėkmingai ištrinta."
 
 #: .\core\views.py:191
 msgid "Error deleting prediction."
-msgstr "Klaida trinant prognozę."
+msgstr "Įvyko klaida trinant prognozę."
 
 #: .\templates\core\base.html:21 .\templates\core\login.html:9
 msgid "Logo"
@@ -243,7 +245,7 @@ msgstr "Logotipas"
 
 #: .\templates\core\base.html:32
 msgid "Home"
-msgstr "Pradžia"
+msgstr "Pradinis"
 
 #: .\templates\core\base.html:33
 msgid "About"
@@ -260,7 +262,7 @@ msgstr "Prisijungti"
 
 #: .\templates\core\base.html:69
 msgid "Created by Paulius Bundza, Vilnius Tech. All rights reserved."
-msgstr "Sukūrė Paulius Bundza, Vilnius Tech. Visos teisės saugomos."
+msgstr "Sukūrė Paulius Bundza, Vilniaus Tech. Visos teisės saugomos."
 
 #: .\templates\core\email\old_password.html:53
 #: .\templates\core\email\old_password.txt:2
@@ -277,7 +279,7 @@ msgstr "Sveiki"
 #: .\templates\core\email\old_password.html:59
 #: .\templates\core\email\old_password.txt:6
 msgid "This is a friendly reminder that your password has not been changed in"
-msgstr "Tai draugiškas priminimas, kad jūsų slaptažodis nebuvo keistas"
+msgstr "Primename, kad jūsų slaptažodis nebuvo keistas jau"
 
 #: .\templates\core\email\old_password.html:59
 #: .\templates\core\email\old_password.txt:6
@@ -290,13 +292,13 @@ msgid ""
 "For security reasons, we recommend changing your password regularly. This "
 "helps protect your account from unauthorized access."
 msgstr ""
-"Saugumo sumetimais rekomenduojame reguliariai keisti slaptažodį. Tai "
+"Dėl saugumo sumetimų rekomenduojame reguliariai keisti slaptažodį. Tai "
 "padeda apsaugoti jūsų paskyrą nuo neteisėtos prieigos."
 
 #: .\templates\core\email\old_password.html:63
 #: .\templates\core\email\old_password.txt:10
 msgid "When creating your new password, please ensure it:"
-msgstr "Kurdami naują slaptažodį, įsitikinkite, kad jis:"
+msgstr "Kuriant naują slaptažodį įsitikinkite, kad jis:"
 
 #: .\templates\core\email\old_password.html:65
 #: .\templates\core\email\old_password.txt:11
@@ -311,17 +313,17 @@ msgstr "Turi didžiąsias ir mažąsias raides"
 #: .\templates\core\email\old_password.html:67
 #: .\templates\core\email\old_password.txt:13
 msgid "Includes numbers and special characters"
-msgstr "Turi skaičius ir specialius simbolius"
+msgstr "Turi skaitmenis ir specialius simbolius"
 
 #: .\templates\core\email\old_password.html:68
 #: .\templates\core\email\old_password.txt:14
 msgid "Is not similar to your previous passwords"
-msgstr "Nėra panašus į ankstesnius slaptažodžius"
+msgstr "Nėra panašus į jūsų ankstesnius slaptažodžius"
 
 #: .\templates\core\email\old_password.html:69
 #: .\templates\core\email\old_password.txt:15
 msgid "Does not contain common patterns or personal information"
-msgstr "Neturi dažnų kombinacijų ar asmeninės informacijos"
+msgstr "Neturi įprastų raštų ar asmeninės informacijos"
 
 #: .\templates\core\email\old_password.html:73
 #: .\templates\core\email\weak_password.html:77
@@ -331,7 +333,7 @@ msgstr "Keisti slaptažodį dabar"
 #: .\templates\core\email\old_password.html:76
 #: .\templates\core\email\old_password.txt:20
 msgid "If you've recently changed your password, you can ignore this message."
-msgstr "Jei neseniai keitėte slaptažodį, galite ignoruoti šį pranešimą."
+msgstr "Jei neseniai pakeitėte slaptažodį, galite ignoruoti šį pranešimą."
 
 #: .\templates\core\email\old_password.html:80
 #: .\templates\core\email\old_password.txt:22
@@ -340,14 +342,14 @@ msgstr "Jei neseniai keitėte slaptažodį, galite ignoruoti šį pranešimą."
 msgid ""
 "This is an automated security message. Please do not reply to this email."
 msgstr ""
-"Tai automatinis saugumo pranešimas. Prašome neatsakyti į šį el. laišką."
+"Tai yra automatinis saugumo pranešimas. Prašome neatsakinėti į šį el. laišką."
 
 #: .\templates\core\email\old_password.html:81
 #: .\templates\core\email\old_password.txt:23
 #: .\templates\core\email\weak_password.html:85
 #: .\templates\core\email\weak_password.txt:25
 msgid "If you need assistance, please contact our support team."
-msgstr "Jei reikia pagalbos, susisiekite su mūsų pagalbos komanda."
+msgstr "Jeigu jums reikia pagalbos, kreipkitės į mūsų palaikymo komandą."
 
 #: .\templates\core\email\old_password.txt:17
 #: .\templates\core\email\weak_password.txt:19
@@ -357,7 +359,7 @@ msgstr "Norėdami pakeisti slaptažodį, apsilankykite:"
 #: .\templates\core\email\weak_password.html:53
 #: .\templates\core\email\weak_password.txt:2
 msgid "Security Alert"
-msgstr "Saugumo įspėjimas"
+msgstr "Saugumo pranešimas"
 
 #: .\templates\core\email\weak_password.html:59
 #: .\templates\core\email\weak_password.txt:6
@@ -372,7 +374,7 @@ msgstr ""
 #: .\templates\core\email\weak_password.html:61
 #: .\templates\core\email\weak_password.txt:8
 msgid "Issues with your current password:"
-msgstr "Problemos su dabartiniu slaptažodžiu:"
+msgstr "Jūsų dabartinio slaptažodžio trūkumai:"
 
 #: .\templates\core\email\weak_password.html:68
 #: .\templates\core\email\weak_password.txt:13
@@ -380,8 +382,8 @@ msgid ""
 "To protect your account, please update your password as soon as possible. "
 "Your new password should:"
 msgstr ""
-"Norėdami apsaugoti savo paskyrą, kuo greičiau atnaujinkite slaptažodį. "
-"Jūsų naujas slaptažodis turėtų:"
+"Kad apsaugotumėte savo paskyrą, atnaujinkite slaptažodį kuo greičiau. "
+"Naujasis slaptažodis turėtų:"
 
 #: .\templates\core\email\weak_password.html:70
 #: .\templates\core\email\weak_password.txt:14
@@ -396,12 +398,12 @@ msgstr "Turėti didžiąsias ir mažąsias raides"
 #: .\templates\core\email\weak_password.html:72
 #: .\templates\core\email\weak_password.txt:16
 msgid "Include numbers and special characters"
-msgstr "Turėti skaičius ir specialius simbolius"
+msgstr "Turėti skaitmenis ir specialius simbolius"
 
 #: .\templates\core\email\weak_password.html:73
 #: .\templates\core\email\weak_password.txt:17
 msgid "Not contain common patterns or personal information"
-msgstr "Neturėti dažnų kombinacijų ar asmeninės informacijos"
+msgstr "Nerodyti dažnų raštų ar asmeninės informacijos"
 
 #: .\templates\core\email\weak_password.html:80
 #: .\templates\core\email\weak_password.txt:22
@@ -409,12 +411,12 @@ msgid ""
 "If you did not request this security check, please contact our support team "
 "immediately."
 msgstr ""
-"Jei neprašėte šio saugumo patikrinimo, nedelsiant susisiekite su mūsų "
-"pagalbos komanda."
+"Jei neprašėte šio saugumo patikrinimo, nedelsdami kreipkitės į mūsų palaikymo "
+"komandą."
 
 #: .\templates\core\home.html:4
 msgid "Home - Lung Disease Classifier"
-msgstr "Pradžia - Plaučių ligų klasifikatorius"
+msgstr "Pradinis - Plaučių ligų klasifikatorius"
 
 #: .\templates\core\home.html:26
 msgid "Lung Disease Classifier"
@@ -426,9 +428,9 @@ msgid ""
 "Upload a chest X-ray image to detect pneumonia using our advanced deep "
 "learning model. Accuracy: 96.13%% (validated through 5-fold cross-validation)"
 msgstr ""
-"Įkelkite krūtinės rentgeno nuotrauką pneumonijai aptikti naudojant mūsų "
-"pažangų giliojo mokymosi modelį. Tikslumas: 96,13%% (patvirtinta 5 kartų "
-"kryžminiu patikrinimu)"
+"Įkelkite krūtinės rentgeno nuotrauką, kad aptiktumėte pneumoniją naudodami "
+"mūsų pažangų gilaus mokymosi modelį. Tikslumas: 96,13%% (patvirtinta naudojant "
+"5 kartų kryžminį patikrinimą)"
 
 #: .\templates\core\home.html:40
 msgid "Upload X-Ray Image"
@@ -444,11 +446,11 @@ msgstr "Paciento pavardė"
 
 #: .\templates\core\home.html:59
 msgid "Patient Date of Birth (YYYY-MM-DD)"
-msgstr "Paciento gimimo data (MMMM-MM-DD)"
+msgstr "Paciento gimimo data (YYYY-MM-DD)"
 
 #: .\templates\core\home.html:63 .\templates\core\home.html:81
 msgid "YYYY-MM-DD"
-msgstr "MMMM-MM-DD"
+msgstr "YYYY-MM-DD"
 
 #: .\templates\core\home.html:69
 msgid "Patient Gender"
@@ -468,11 +470,11 @@ msgstr "Moteris"
 
 #: .\templates\core\home.html:77
 msgid "X-Ray Date (YYYY-MM-DD)"
-msgstr "Rentgeno data (MMMM-MM-DD)"
+msgstr "Rentgeno data (YYYY-MM-DD)"
 
 #: .\templates\core\home.html:89
 msgid "Drag & Drop or Click to Upload"
-msgstr "Tempkite ir paleiskite arba spustelėkite, kad įkeltumėte"
+msgstr "Nuvilkite ar spustelėkite, kad įkeltumėte"
 
 #: .\templates\core\home.html:90
 msgid "Supported formats: JPEG, PNG, DICOM"
@@ -496,7 +498,7 @@ msgstr "Analizuojama jūsų rentgeno nuotrauka..."
 
 #: .\templates\core\home.html:119
 msgid "High Accuracy"
-msgstr "Aukštas tikslumas"
+msgstr "Didelis tikslumas"
 
 #: .\templates\core\home.html:121
 #, python-format
@@ -509,19 +511,19 @@ msgstr "Greitas apdorojimas"
 
 #: .\templates\core\home.html:130
 msgid "Optimized with PyTorch JIT and parallel processing for rapid inference."
-msgstr "Optimizuota su PyTorch JIT ir lygiagrečiu apdorojimu greitai analizei."
+msgstr "Optimizuota su PyTorch JIT ir lygiagrečiu apdorojimu greitam rezultatui."
 
 #: .\templates\core\home.html:137
 msgid "Detailed Analysis"
-msgstr "Išsami analizė"
+msgstr "Detali analizė"
 
 #: .\templates\core\home.html:139
 msgid "Comprehensive probability scores and visualization."
-msgstr "Išsamūs tikimybių įvertinimai ir vizualizacija."
+msgstr "Išsamūs tikimybių rodikliai ir vizualizacijos."
 
 #: .\templates\core\home.html:151
 msgid "Recent Predictions"
-msgstr "Naujausi prognozavimai"
+msgstr "Naujausios prognozės"
 
 #: .\templates\core\home.html:155
 msgid "All"
@@ -573,7 +575,7 @@ msgstr "Prognozė:"
 
 #: .\templates\core\home.html:199
 msgid "Normal Probability:"
-msgstr "Normalumo tikimybė:"
+msgstr "Normali tikimybė:"
 
 #: .\templates\core\home.html:212
 msgid "Pneumonia Probability:"
@@ -605,35 +607,34 @@ msgstr "Įkelti daugiau įrašų"
 
 #: .\templates\core\lockout.html:5
 msgid "Account Locked"
-msgstr "Paskyra užblokuota"
+msgstr "Paskyra užrakinta"
 
 #: .\templates\core\lockout.html:18
 msgid "Account Temporarily Locked"
-msgstr "Paskyra laikinai užblokuota"
+msgstr "Paskyra laikinai užrakinta"
 
 #: .\templates\core\lockout.html:21
 msgid ""
 "For security reasons, your account has been temporarily locked due to "
 "multiple failed login attempts."
 msgstr ""
-"Saugumo sumetimais jūsų paskyra buvo laikinai užblokuota dėl "
-"kelių nesėkmingų bandymų prisijungti."
+"Dėl saugumo sumetimų jūsų paskyra laikinai užrakinta, nes kelis kartus "
+"nesėkmingai prisijungta."
 
 #: .\templates\core\lockout.html:32
 msgid ""
 "Please wait for the cooldown period to expire before attempting to log in "
 "again."
 msgstr ""
-"Prašome palaukti, kol pasibaigs atvėsimo laikotarpis, prieš bandant "
-"prisijungti dar kartą."
+"Palaukite, kol pasibaigs laukimo laikas, prieš bandant prisijungti dar kartą."
 
 #: .\templates\core\lockout.html:41
 msgid ""
-"If you believe this is a mistake or need immediate assistance, please "
-"contact our support team."
+"If you believe this is a mistake or need immediate assistance, please contact "
+"our support team."
 msgstr ""
-"Jei manote, kad tai klaida, arba reikia skubios pagalbos, "
-"susisiekite su mūsų pagalbos komanda."
+"Jeigu manote, kad tai klaida, arba jums reikia skubios pagalbos, susisiekite "
+"su mūsų palaikymo komanda."
 
 #: .\templates\core\lockout.html:47 .\templates\core\password_reset.html:6
 msgid "Reset Password"
@@ -642,11 +643,11 @@ msgstr "Atstatyti slaptažodį"
 #: .\templates\core\lockout.html:53
 #: .\templates\core\password_reset_complete.html:32
 msgid "Return to Home"
-msgstr "Grįžti į pradžią"
+msgstr "Grįžti į pagrindinį puslapį"
 
 #: .\templates\core\lockout.html:81
 msgid "Lockout expired"
-msgstr "Blokavimas baigėsi"
+msgstr "Užrakinimo laikas pasibaigė"
 
 #: .\templates\core\login.html:16
 msgid "Username"
@@ -666,11 +667,11 @@ msgstr "Atstatykite savo slaptažodį"
 
 #: .\templates\core\password_reset.html:22
 msgid ""
-"Enter your email address below, and we'll send you instructions for setting "
-"a new password."
+"Enter your email address below, and we'll send you instructions for setting a "
+"new password."
 msgstr ""
-"Įveskite savo el. pašto adresą žemiau, ir mes atsiųsime jums "
-"instrukcijas naujo slaptažodžio nustatymui."
+"Įveskite savo el. pašto adresą žemiau ir mes atsiųsime nurodymus, kaip "
+"nustatyti naują slaptažodį."
 
 #: .\templates\core\password_reset.html:32
 msgid "Send Reset Link"
@@ -679,7 +680,7 @@ msgstr "Siųsti atstatymo nuorodą"
 #: .\templates\core\password_reset.html:39
 #: .\templates\core\password_reset_confirm.html:65
 msgid "Back to Login"
-msgstr "Grįžti į prisijungimą"
+msgstr "Atgal į prisijungimą"
 
 #: .\templates\core\password_reset_complete.html:5
 #: .\templates\core\password_reset_complete.html:18
@@ -688,7 +689,7 @@ msgstr "Slaptažodžio atstatymas baigtas"
 
 #: .\templates\core\password_reset_complete.html:21
 msgid "Your password has been set. You may go ahead and log in now."
-msgstr "Jūsų slaptažodis nustatytas. Galite prisijungti dabar."
+msgstr "Jūsų slaptažodis nustatytas. Dabar galite prisijungti."
 
 #: .\templates\core\password_reset_complete.html:27
 msgid "Log In"
@@ -701,15 +702,15 @@ msgstr "Nustatyti naują slaptažodį"
 
 #: .\templates\core\password_reset_confirm.html:22
 msgid "Password Reset Link Invalid"
-msgstr "Slaptažodžio atstatymo nuoroda negalioja"
+msgstr "Slaptažodžio atstatymo nuoroda neteisinga"
 
 #: .\templates\core\password_reset_confirm.html:29
 msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
 msgstr ""
-"Įveskite savo naują slaptažodį du kartus, kad galėtume patikrinti, "
-"ar teisingai jį įvedėte."
+"Prašome įvesti naują slaptažodį du kartus, kad patikrintume, ar teisingai jį "
+"suvedėte."
 
 #: .\templates\core\password_reset_confirm.html:38
 msgid "Change My Password"
@@ -720,8 +721,8 @@ msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used. Please request a new password reset."
 msgstr ""
-"Slaptažodžio atstatymo nuoroda negalioja, galbūt todėl, kad ji jau buvo "
-"panaudota. Prašome prašyti naujo slaptažodžio atstatymo."
+"Slaptažodžio atstatymo nuoroda neteisinga, galbūt ji jau buvo panaudota. "
+"Prašome pateikti naują slaptažodžio atstatymo užklausą."
 
 #: .\templates\core\password_reset_confirm.html:58
 msgid "Request New Reset Link"
@@ -729,27 +730,27 @@ msgstr "Prašyti naujos atstatymo nuorodos"
 
 #: .\templates\core\password_reset_done.html:5
 msgid "Password Reset Email Sent"
-msgstr "Slaptažodžio atstatymo el. laiškas išsiųstas"
+msgstr "Laiškas dėl slaptažodžio atstatymo išsiųstas"
 
 #: .\templates\core\password_reset_done.html:18
 msgid "Check Your Email"
-msgstr "Patikrinkite savo el. paštą"
+msgstr "Pasitikrinkite savo el. paštą"
 
 #: .\templates\core\password_reset_done.html:21
 msgid ""
 "We've emailed you instructions for setting your password. You should receive "
 "them shortly."
 msgstr ""
-"Išsiuntėme jums instrukcijas slaptažodžio nustatymui. Turėtumėte "
-"jas gauti netrukus."
+"El. paštu išsiuntėme nurodymus, kaip nustatyti slaptažodį. Turėtumėte juos "
+"netrukus gauti."
 
 #: .\templates\core\password_reset_done.html:32
 msgid ""
 "If you don't receive an email, please make sure you've entered the address "
 "you registered with, and check your spam folder."
 msgstr ""
-"Jei negaunate el. laiško, įsitikinkite, kad įvedėte adresą, "
-"kurį naudojote registracijai, ir patikrinkite savo šlamšto aplanką."
+"Jei negavote laiško, įsitikinkite, kad įvedėte registracijos metu nurodytą el. "
+"pašto adresą, ir patikrinkite šlamšto aplanką."
 
 #: .\templates\core\password_reset_done.html:40
 msgid "Return to Login"
@@ -757,7 +758,7 @@ msgstr "Grįžti į prisijungimą"
 
 #: .\templates\core\password_reset_done.html:45
 msgid "Contact Support"
-msgstr "Susisiekti su pagalba"
+msgstr "Susisiekti su palaikymo komanda"
 
 #: .\templates\core\password_reset_email.html:2
 #, python-format
@@ -765,27 +766,1315 @@ msgid ""
 "You're receiving this email because you requested a password reset for your "
 "user account at %(site_name)s."
 msgstr ""
-"Jūs gavote šį el. laišką, nes prašėte atstatyti slaptažodį savo "
-"vartotojo paskyrai svetainėje %(site_name)s."
+"Gavote šį laišką, nes paprašėte atstatyti slaptažodį savo paskyrai tinklapyje "
+"%(site_name)s."
 
 #: .\templates\core\password_reset_email.html:4
 msgid "Please go to the following page and choose a new password:"
-msgstr ""
+msgstr "Prašome atidaryti šį puslapį ir pasirinkti naują slaptažodį:"
 
 #: .\templates\core\password_reset_email.html:9
 msgid "Your username, in case you've forgotten:"
-msgstr ""
+msgstr "Jūsų vartotojo vardas, jei jį pamiršote:"
 
 #: .\templates\core\password_reset_email.html:11
 msgid "Thanks for using our site!"
-msgstr ""
+msgstr "Dėkojame, kad naudojatės mūsų svetaine!"
 
 #: .\templates\core\password_reset_email.html:13
 #, python-format
 msgid "The %(site_name)s team"
-msgstr ""
+msgstr "%(site_name)s komanda"
 
 #: .\templates\core\password_reset_subject.txt:2
 #, python-format
 msgid "Password reset on %(site_name)s"
+msgstr "Slaptažodžio atstatymas svetainėje %(site_name)s"
+
+#: .\venv\Lib\site-packages\django\contrib\messages\apps.py:16
+msgid "Messages"
+msgstr "Pranešimai"
+
+#: .\venv\Lib\site-packages\django\contrib\sitemaps\apps.py:8
+msgid "Site Maps"
+msgstr "Svetainės žemėlapiai"
+
+#: .\venv\Lib\site-packages\django\contrib\staticfiles\apps.py:9
+msgid "Static Files"
+msgstr "Statiniai failai"
+
+#: .\venv\Lib\site-packages\django\contrib\syndication\apps.py:7
+msgid "Syndication"
+msgstr "Sindikavimas"
+
+#. Translators: String used to replace omitted page numbers in elided page
+#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
+#: .\venv\Lib\site-packages\django\core\paginator.py:30
+msgid "…"
+msgstr "…"
+
+#: .\venv\Lib\site-packages\django\core\paginator.py:32
+msgid "That page number is not an integer"
+msgstr "Puslapio numeris nėra sveikas skaičius"
+
+#: .\venv\Lib\site-packages\django\core\paginator.py:33
+msgid "That page number is less than 1"
+msgstr "Puslapio numeris mažesnis už 1"
+
+#: .\venv\Lib\site-packages\django\core\paginator.py:34
+msgid "That page contains no results"
+msgstr "Tame puslapyje nėra rezultatų"
+
+#: .\venv\Lib\site-packages\django\core\validators.py:22
+msgid "Enter a valid value."
+msgstr "Įveskite tinkamą reikšmę."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:70
+msgid "Enter a valid domain name."
+msgstr "Įveskite teisingą domeno pavadinimą."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:155
+#: .\venv\Lib\site-packages\django\forms\fields.py:768
+msgid "Enter a valid URL."
+msgstr "Įveskite teisingą URL."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:216
+msgid "Enter a valid integer."
+msgstr "Įveskite teisingą sveikąjį skaičių."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:227
+msgid "Enter a valid email address."
+msgstr "Įveskite teisingą el. pašto adresą."
+
+#. Translators: "letters" means latin letters: a-z and A-Z.
+#: .\venv\Lib\site-packages\django\core\validators.py:310
+msgid ""
+"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
 msgstr ""
+"Įveskite tinkamą „slug“, sudarytą iš raidžių, skaitmenų, pabraukimo brūkšnelių "
+"ar brūkšnelių."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:318
+msgid ""
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
+"hyphens."
+msgstr ""
+"Įveskite tinkamą „slug“, sudarytą iš „Unicode“ raidžių, skaitmenų, "
+"pabraukimo brūkšnelių ar brūkšnelių."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:330
+#: .\venv\Lib\site-packages\django\core\validators.py:339
+#: .\venv\Lib\site-packages\django\core\validators.py:353
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2215
+#, python-format
+msgid "Enter a valid %(protocol)s address."
+msgstr "Įveskite teisingą %(protocol)s adresą."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:332
+msgid "IPv4"
+msgstr "IPv4"
+
+#: .\venv\Lib\site-packages\django\core\validators.py:341
+#: .\venv\Lib\site-packages\django\utils\ipv6.py:30
+msgid "IPv6"
+msgstr "IPv6"
+
+#: .\venv\Lib\site-packages\django\core\validators.py:355
+msgid "IPv4 or IPv6"
+msgstr "IPv4 arba IPv6"
+
+#: .\venv\Lib\site-packages\django\core\validators.py:396
+msgid "Enter only digits separated by commas."
+msgstr "Įveskite tik skaitmenis, atskirtus kableliais."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:402
+#, python-format
+msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+msgstr "Užtikrinkite, kad ši vertė yra %(limit_value)s (dabar yra %(show_value)s)."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:437
+#, python-format
+msgid "Ensure this value is less than or equal to %(limit_value)s."
+msgstr "Užtikrinkite, kad ši vertė yra mažesnė arba lygi %(limit_value)s."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:446
+#, python-format
+msgid "Ensure this value is greater than or equal to %(limit_value)s."
+msgstr "Užtikrinkite, kad ši vertė yra didesnė arba lygi %(limit_value)s."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:455
+#, python-format
+msgid "Ensure this value is a multiple of step size %(limit_value)s."
+msgstr "Užtikrinkite, kad ši vertė yra kartotinis su žingsniu %(limit_value)s."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:462
+#, python-format
+msgid ""
+"Ensure this value is a multiple of step size %(limit_value)s, starting from "
+"%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
+msgstr ""
+"Užtikrinkite, kad ši vertė yra kartotinis su žingsniu %(limit_value)s, "
+"pradedant nuo %(offset)s, pvz. %(offset)s, %(valid_value1)s, %(valid_value2)s "
+"ir t. t."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:494
+#, python-format
+msgid ""
+"Ensure this value has at least %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at least %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] "Užtikrinkite, kad ši vertė turi bent %(limit_value)d simbolį (dabar turi %(show_value)d)."
+msgstr[1] "Užtikrinkite, kad ši vertė turi bent %(limit_value)d simbolių (dabar turi %(show_value)d)."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:512
+#, python-format
+msgid ""
+"Ensure this value has at most %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at most %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] "Užtikrinkite, kad ši vertė turi daugiausiai %(limit_value)d simbolį (dabar turi %(show_value)d)."
+msgstr[1] "Užtikrinkite, kad ši vertė turi daugiausiai %(limit_value)d simbolių (dabar turi %(show_value)d)."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:535
+#: .\venv\Lib\site-packages\django\forms\fields.py:359
+#: .\venv\Lib\site-packages\django\forms\fields.py:398
+msgid "Enter a number."
+msgstr "Įveskite skaičių."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:537
+#, python-format
+msgid "Ensure that there are no more than %(max)s digit in total."
+msgid_plural "Ensure that there are no more than %(max)s digits in total."
+msgstr[0] "Užtikrinkite, kad iš viso nebūtų daugiau nei %(max)s skaitmuo."
+msgstr[1] "Užtikrinkite, kad iš viso nebūtų daugiau nei %(max)s skaitmenų."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:542
+#, python-format
+msgid "Ensure that there are no more than %(max)s decimal place."
+msgid_plural "Ensure that there are no more than %(max)s decimal places."
+msgstr[0] "Užtikrinkite, kad nebūtų daugiau nei %(max)s dešimtainė pozicija."
+msgstr[1] "Užtikrinkite, kad nebūtų daugiau nei %(max)s dešimtainės pozicijos."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:547
+#, python-format
+msgid ""
+"Ensure that there are no more than %(max)s digit before the decimal point."
+msgid_plural ""
+"Ensure that there are no more than %(max)s digits before the decimal point."
+msgstr[0] "Užtikrinkite, kad prieš dešimtainę dalį nebūtų daugiau nei %(max)s skaitmuo."
+msgstr[1] "Užtikrinkite, kad prieš dešimtainę dalį nebūtų daugiau nei %(max)s skaitmenų."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:618
+#, python-format
+msgid ""
+"File extension “%(extension)s” is not allowed. Allowed extensions are: "
+"%(allowed_extensions)s."
+msgstr ""
+"Failo plėtinys „%(extension)s“ yra neleidžiamas. Leidžiami plėtiniai: "
+"%(allowed_extensions)s."
+
+#: .\venv\Lib\site-packages\django\core\validators.py:680
+msgid "Null characters are not allowed."
+msgstr "Nuliniai simboliai neleidžiami."
+
+#: .\venv\Lib\site-packages\django\db\models\base.py:1572
+#: .\venv\Lib\site-packages\django\forms\models.py:908
+msgid "and"
+msgstr "ir"
+
+#: .\venv\Lib\site-packages\django\db\models\base.py:1574
+#, python-format
+msgid "%(model_name)s with this %(field_labels)s already exists."
+msgstr "%(model_name)s su šiuo %(field_labels)s jau egzistuoja."
+
+#: .\venv\Lib\site-packages\django\db\models\constraints.py:22
+#, python-format
+msgid "Constraint “%(name)s” is violated."
+msgstr "Pažeista apribojimo sąlyga „%(name)s“."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:134
+#, python-format
+msgid "Value %(value)r is not a valid choice."
+msgstr "Reikšmė %(value)r nėra tinkamas pasirinkimas."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:135
+msgid "This field cannot be null."
+msgstr "Šis laukas negali būti tuščias."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:136
+msgid "This field cannot be blank."
+msgstr "Šis laukas negali būti tuščias."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:137
+#, python-format
+msgid "%(model_name)s with this %(field_label)s already exists."
+msgstr "%(model_name)s su šiuo %(field_label)s jau egzistuoja."
+
+#. Translators: The 'lookup_type' is one of 'date', 'year' or
+#. 'month'. Eg: "Title must be unique for pub_date year"
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:141
+#, python-format
+msgid ""
+"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+msgstr ""
+"%(field_label)s turi būti unikalus, kai %(date_field_label)s yra "
+"%(lookup_type)s."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:180
+#, python-format
+msgid "Field of type: %(field_type)s"
+msgstr "Lauko tipas: %(field_type)s"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1156
+#, python-format
+msgid "“%(value)s” value must be either True or False."
+msgstr "„%(value)s“ reikšmė turi būti True arba False."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1157
+#, python-format
+msgid "“%(value)s” value must be either True, False, or None."
+msgstr "„%(value)s“ reikšmė turi būti True, False arba None."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1159
+msgid "Boolean (Either True or False)"
+msgstr "Loginis (True arba False)"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1209
+#, python-format
+msgid "String (up to %(max_length)s)"
+msgstr "Tekstas (iki %(max_length)s)"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1211
+msgid "String (unlimited)"
+msgstr "Tekstas (neribotas)"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1320
+msgid "Comma-separated integers"
+msgstr "Sveikieji skaičiai, atskirti kableliais"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1421
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+"format."
+msgstr ""
+"„%(value)s“ reikšmė turi netinkamą datos formatą. Turi būti YYYY-MM-DD "
+"formatas."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1425
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1560
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
+"date."
+msgstr ""
+"„%(value)s“ reikšmė atitinka YYYY-MM-DD formatą, tačiau data yra negaliojanti."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1429
+msgid "Date (without time)"
+msgstr "Data (be laiko)"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1556
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD "
+"HH:MM[:ss[.uuuuuu]][TZ] format."
+msgstr ""
+"„%(value)s“ reikšmė turi netinkamą formatą. Turi būti YYYY-MM-DD "
+"HH:MM[:ss[.uuuuuu]][TZ] formatas."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1564
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ]) "
+"but it is an invalid date/time."
+msgstr ""
+"„%(value)s“ reikšmė atitinka formatą (YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ]), "
+"tačiau data/laikas yra neteisingi."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1569
+msgid "Date (with time)"
+msgstr "Data (su laiku)"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1696
+#, python-format
+msgid "“%(value)s” value must be a decimal number."
+msgstr "„%(value)s“ turi būti dešimtainis skaičius."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1698
+msgid "Decimal number"
+msgstr "Dešimtainis skaičius"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1859
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:]ss[."
+"uuuuuu] format."
+msgstr ""
+"„%(value)s“ reikšmė turi netinkamą formatą. Turi būti [DD] [[HH:]MM:]ss[."
+"uuuuuu] formatas."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1863
+msgid "Duration"
+msgstr "Trukmė"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1915
+msgid "Email address"
+msgstr "El. pašto adresas"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1940
+msgid "File path"
+msgstr "Failo kelias"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2018
+#, python-format
+msgid "“%(value)s” value must be a float."
+msgstr "„%(value)s“ reikšmė turi būti plaukiojantis skaičius (float)."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2020
+msgid "Floating point number"
+msgstr "Slankiojo kablelio skaičius"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2060
+#, python-format
+msgid "“%(value)s” value must be an integer."
+msgstr "„%(value)s“ reikšmė turi būti sveikasis skaičius."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2062
+msgid "Integer"
+msgstr "Sveikasis skaičius"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2158
+msgid "Big (8 byte) integer"
+msgstr "Didelis (8 baitų) sveikasis skaičius"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2175
+msgid "Small integer"
+msgstr "Mažas sveikasis skaičius"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2183
+msgid "IPv4 address"
+msgstr "IPv4 adresas"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2214
+msgid "IP address"
+msgstr "IP adresas"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2305
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2306
+#, python-format
+msgid "“%(value)s” value must be either None, True or False."
+msgstr "„%(value)s“ reikšmė turi būti None, True arba False."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2308
+msgid "Boolean (Either True, False or None)"
+msgstr "Loginis (True, False arba None)"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2359
+msgid "Positive big integer"
+msgstr "Teigiamas didelis sveikasis skaičius"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2374
+msgid "Positive integer"
+msgstr "Teigiamas sveikasis skaičius"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2389
+msgid "Positive small integer"
+msgstr "Teigiamas mažas sveikasis skaičius"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2405
+#, python-format
+msgid "Slug (up to %(max_length)s)"
+msgstr "Trumpinys (iki %(max_length)s)"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2441
+msgid "Text"
+msgstr "Tekstas"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2521
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"format."
+msgstr ""
+"„%(value)s“ reikšmė turi netinkamą formatą. Turi būti HH:MM[:ss[.uuuuuu]] "
+"formatas."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2525
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"invalid time."
+msgstr ""
+"„%(value)s“ reikšmė atitinka formatą (HH:MM[:ss[.uuuuuu]]), tačiau laikas yra "
+"neteisingas."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2529
+msgid "Time"
+msgstr "Laikas"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2637
+msgid "URL"
+msgstr "URL"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2661
+msgid "Raw binary data"
+msgstr "Neapdoroti dvejetainiai duomenys"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2726
+#, python-format
+msgid "“%(value)s” is not a valid UUID."
+msgstr "„%(value)s“ nėra validus UUID."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2728
+msgid "Universally unique identifier"
+msgstr "Visuotinai unikalus identifikatorius"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\files.py:244
+msgid "File"
+msgstr "Failas"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\files.py:420
+msgid "Image"
+msgstr "Nuotrauka"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\json.py:24
+msgid "A JSON object"
+msgstr "JSON objektas"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\json.py:26
+msgid "Value must be valid JSON."
+msgstr "Reikšmė turi būti teisingas JSON."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\related.py:932
+#, python-format
+msgid "%(model)s instance with %(field)s %(value)r does not exist."
+msgstr ""
+"%(model)s egzempliorius su %(field)s = %(value)r neegzistuoja."
+
+#: .\venv\Lib\site-packages\django\db\models\fields\related.py:934
+msgid "Foreign Key (type determined by related field)"
+msgstr "Užsienio raktas (tipas nustatomas pagal susijusį lauką)"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\related.py:1228
+msgid "One-to-one relationship"
+msgstr "Vienas su vienu sąryšis"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\related.py:1285
+#, python-format
+msgid "%(from)s-%(to)s relationship"
+msgstr "%(from)s-%(to)s sąryšis"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\related.py:1287
+#, python-format
+msgid "%(from)s-%(to)s relationships"
+msgstr "%(from)s-%(to)s sąryšiai"
+
+#: .\venv\Lib\site-packages\django\db\models\fields\related.py:1335
+msgid "Many-to-many relationship"
+msgstr "Daugelis su daugeliu sąryšis"
+
+#. Translators: If found as last label character, these punctuation
+#. characters will prevent the default label_suffix to be appended to the label
+#: .\venv\Lib\site-packages\django\forms\boundfield.py:185
+msgid ":?.!"
+msgstr ":?.!"
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:95
+msgid "This field is required."
+msgstr "Šis laukas yra privalomas."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:308
+msgid "Enter a whole number."
+msgstr "Įveskite sveikąjį skaičių."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:479
+#: .\venv\Lib\site-packages\django\forms\fields.py:1260
+msgid "Enter a valid date."
+msgstr "Įveskite tinkamą datą."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:502
+#: .\venv\Lib\site-packages\django\forms\fields.py:1261
+msgid "Enter a valid time."
+msgstr "Įveskite tinkamą laiką."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:529
+msgid "Enter a valid date/time."
+msgstr "Įveskite tinkamą datą ir laiką."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:563
+msgid "Enter a valid duration."
+msgstr "Įveskite tinkamą trukmę."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:564
+#, python-brace-format
+msgid "The number of days must be between {min_days} and {max_days}."
+msgstr "Dienų skaičius turi būti tarp {min_days} ir {max_days}."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:633
+msgid "No file was submitted. Check the encoding type on the form."
+msgstr "Nebuvo pateiktas joks failas. Patikrinkite formos kodavimo tipą."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:634
+msgid "No file was submitted."
+msgstr "Nebuvo pateiktas failas."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:635
+msgid "The submitted file is empty."
+msgstr "Pateiktas failas yra tuščias."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:637
+#, python-format
+msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid_plural ""
+"Ensure this filename has at most %(max)d characters (it has %(length)d)."
+msgstr[0] ""
+"Įsitikinkite, kad failo pavadinime yra daugiausiai %(max)d simbolis (yra "
+"%(length)d)."
+msgstr[1] ""
+"Įsitikinkite, kad failo pavadinime yra daugiausiai %(max)d simbolių (yra "
+"%(length)d)."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:642
+msgid "Please either submit a file or check the clear checkbox, not both."
+msgstr ""
+"Prašome arba pateikti failą, arba pažymėti langelį dėl išvalymo, bet ne abu "
+"kartu."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:710
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr ""
+"Įkelkite tinkamą nuotrauką. Įkeltas failas nėra nuotrauka arba ji sugadinta."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:882
+#: .\venv\Lib\site-packages\django\forms\fields.py:968
+#: .\venv\Lib\site-packages\django\forms\models.py:1592
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr ""
+"Pasirinkite teisingą variantą. %(value)s nėra iš galimų variantų."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:970
+#: .\venv\Lib\site-packages\django\forms\fields.py:1089
+#: .\venv\Lib\site-packages\django\forms\models.py:1590
+msgid "Enter a list of values."
+msgstr "Įveskite reikšmių sąrašą."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:1090
+msgid "Enter a complete value."
+msgstr "Įveskite pilną reikšmę."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:1329
+msgid "Enter a valid UUID."
+msgstr "Įveskite teisingą UUID."
+
+#: .\venv\Lib\site-packages\django\forms\fields.py:1359
+msgid "Enter a valid JSON."
+msgstr "Įveskite teisingą JSON."
+
+#. Translators: This is the default suffix added to form field labels
+#: .\venv\Lib\site-packages\django\forms\forms.py:94
+msgid ":"
+msgstr ""
+
+#: .\venv\Lib\site-packages\django\forms\forms.py:230
+#, python-format
+msgid "(Hidden field %(name)s) %(error)s"
+msgstr "(Paslėptas laukas %(name)s) %(error)s"
+
+#: .\venv\Lib\site-packages\django\forms\formsets.py:61
+#, python-format
+msgid ""
+"ManagementForm data is missing or has been tampered with. Missing fields: "
+"%(field_names)s. You may need to file a bug report if the issue persists."
+msgstr ""
+"Trūksta ManagementForm duomenų arba jie buvo pakeisti. Trūkstami laukai: "
+"%(field_names)s. Jei problema išlieka, gali reikėti pranešti apie klaidą."
+
+#: .\venv\Lib\site-packages\django\forms\formsets.py:65
+#, python-format
+msgid "Please submit at most %(num)d form."
+msgid_plural "Please submit at most %(num)d forms."
+msgstr[0] "Pateikite ne daugiau kaip %(num)d formą."
+msgstr[1] "Pateikite ne daugiau kaip %(num)d formas."
+
+#: .\venv\Lib\site-packages\django\forms\formsets.py:70
+#, python-format
+msgid "Please submit at least %(num)d form."
+msgid_plural "Please submit at least %(num)d forms."
+msgstr[0] "Pateikite bent %(num)d formą."
+msgstr[1] "Pateikite bent %(num)d formas."
+
+#: .\venv\Lib\site-packages\django\forms\formsets.py:484
+#: .\venv\Lib\site-packages\django\forms\formsets.py:491
+msgid "Order"
+msgstr "Eilės tvarka"
+
+#: .\venv\Lib\site-packages\django\forms\formsets.py:499
+msgid "Delete"
+msgstr "Ištrinti"
+
+#: .\venv\Lib\site-packages\django\forms\models.py:901
+#, python-format
+msgid "Please correct the duplicate data for %(field)s."
+msgstr "Prašome ištaisyti pasikartojančius duomenis lauke %(field)s."
+
+#: .\venv\Lib\site-packages\django\forms\models.py:906
+#, python-format
+msgid "Please correct the duplicate data for %(field)s, which must be unique."
+msgstr ""
+"Prašome ištaisyti pasikartojančius duomenis lauke %(field)s, kurie turi būti "
+"unikalūs."
+
+#: .\venv\Lib\site-packages\django\forms\models.py:913
+#, python-format
+msgid ""
+"Please correct the duplicate data for %(field_name)s which must be unique "
+"for the %(lookup)s in %(date_field)s."
+msgstr ""
+"Prašome ištaisyti pasikartojančius duomenis lauke %(field_name)s, kurie turi "
+"būti unikalūs, kai %(lookup)s yra laukelyje %(date_field)s."
+
+#: .\venv\Lib\site-packages\django\forms\models.py:922
+msgid "Please correct the duplicate values below."
+msgstr "Prašome ištaisyti žemiau esančias pasikartojančias reikšmes."
+
+#: .\venv\Lib\site-packages\django\forms\models.py:1359
+msgid "The inline value did not match the parent instance."
+msgstr "Įterpto lauko reikšmė nesutampa su pagrindiniu egzemplioriumi."
+
+#: .\venv\Lib\site-packages\django\forms\models.py:1450
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr "Pasirinkite tinkamą variantą. Šis variantas nėra iš galimų."
+
+#: .\venv\Lib\site-packages\django\forms\models.py:1594
+#, python-format
+msgid "“%(pk)s” is not a valid value."
+msgstr "„%(pk)s“ nėra tinkama reikšmė."
+
+#: .\venv\Lib\site-packages\django\forms\utils.py:227
+#, python-format
+msgid ""
+"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
+"may be ambiguous or it may not exist."
+msgstr ""
+"%(datetime)s nepavyko interpretuoti laiko juostoje %(current_timezone)s; tai "
+"gali būti dviprasmiška arba laikas gali neegzistuoti."
+
+#: .\venv\Lib\site-packages\django\forms\widgets.py:461
+msgid "Clear"
+msgstr "Išvalyti"
+
+#: .\venv\Lib\site-packages\django\forms\widgets.py:462
+msgid "Currently"
+msgstr "Šiuo metu"
+
+#: .\venv\Lib\site-packages\django\forms\widgets.py:463
+msgid "Change"
+msgstr "Keisti"
+
+#: .\venv\Lib\site-packages\django\forms\widgets.py:800
+msgid "Unknown"
+msgstr "Nežinomas"
+
+#: .\venv\Lib\site-packages\django\forms\widgets.py:801
+msgid "Yes"
+msgstr "Taip"
+
+#: .\venv\Lib\site-packages\django\forms\widgets.py:802
+msgid "No"
+msgstr "Ne"
+
+#. Translators: This string is used as a separator between list elements
+#: .\venv\Lib\site-packages\django\template\defaultfilters.py:873
+msgid "yes,no,maybe"
+msgstr "taip,ne,galbūt"
+
+#: .\venv\Lib\site-packages\django\template\defaultfilters.py:903
+#: .\venv\Lib\site-packages\django\template\defaultfilters.py:920
+#, python-format
+msgid "%(size)d byte"
+msgid_plural "%(size)d bytes"
+msgstr[0] "%(size)d baitas"
+msgstr[1] "%(size)d baitai"
+
+#: .\venv\Lib\site-packages\django\template\defaultfilters.py:922
+#, python-format
+msgid "%s KB"
+msgstr "%s KB"
+
+#: .\venv\Lib\site-packages\django\template\defaultfilters.py:924
+#, python-format
+msgid "%s MB"
+msgstr "%s MB"
+
+#: .\venv\Lib\site-packages\django\template\defaultfilters.py:926
+#, python-format
+msgid "%s GB"
+msgstr "%s GB"
+
+#: .\venv\Lib\site-packages\django\template\defaultfilters.py:928
+#, python-format
+msgid "%s TB"
+msgstr "%s TB"
+
+#: .\venv\Lib\site-packages\django\template\defaultfilters.py:930
+#, python-format
+msgid "%s PB"
+msgstr "%s PB"
+
+#: .\venv\Lib\site-packages\django\utils\dateformat.py:74
+msgid "p.m."
+msgstr "p. p."
+
+#: .\venv\Lib\site-packages\django\utils\dateformat.py:75
+msgid "a.m."
+msgstr "r. p."
+
+#: .\venv\Lib\site-packages\django\utils\dateformat.py:80
+msgid "PM"
+msgstr "PM"
+
+#: .\venv\Lib\site-packages\django\utils\dateformat.py:81
+msgid "AM"
+msgstr "AM"
+
+#: .\venv\Lib\site-packages\django\utils\dateformat.py:153
+msgid "midnight"
+msgstr "vidurnaktis"
+
+#: .\venv\Lib\site-packages\django\utils\dateformat.py:155
+msgid "noon"
+msgstr "vidurdienis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:7
+msgid "Monday"
+msgstr "Pirmadienis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:8
+msgid "Tuesday"
+msgstr "Antradienis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:9
+msgid "Wednesday"
+msgstr "Trečiadienis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:10
+msgid "Thursday"
+msgstr "Ketvirtadienis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:11
+msgid "Friday"
+msgstr "Penktadienis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:12
+msgid "Saturday"
+msgstr "Šeštadienis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:13
+msgid "Sunday"
+msgstr "Sekmadienis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:16
+msgid "Mon"
+msgstr "Pir"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:17
+msgid "Tue"
+msgstr "Ant"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:18
+msgid "Wed"
+msgstr "Tre"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:19
+msgid "Thu"
+msgstr "Ket"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:20
+msgid "Fri"
+msgstr "Pen"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:21
+msgid "Sat"
+msgstr "Šeš"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:22
+msgid "Sun"
+msgstr "Sek"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:25
+msgid "January"
+msgstr "Sausis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:26
+msgid "February"
+msgstr "Vasaris"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:27
+msgid "March"
+msgstr "Kovas"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:28
+msgid "April"
+msgstr "Balandis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:29
+msgid "May"
+msgstr "Gegužė"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:30
+msgid "June"
+msgstr "Birželis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:31
+msgid "July"
+msgstr "Liepa"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:32
+msgid "August"
+msgstr "Rugpjūtis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:33
+msgid "September"
+msgstr "Rugsėjis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:34
+msgid "October"
+msgstr "Spalis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:35
+msgid "November"
+msgstr "Lapkritis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:36
+msgid "December"
+msgstr "Gruodis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:39
+msgid "jan"
+msgstr "saus."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:40
+msgid "feb"
+msgstr "vas."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:41
+msgid "mar"
+msgstr "kov."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:42
+msgid "apr"
+msgstr "bal."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:43
+msgid "may"
+msgstr "geg."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:44
+msgid "jun"
+msgstr "birž."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:45
+msgid "jul"
+msgstr "liep."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:46
+msgid "aug"
+msgstr "rgp."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:47
+msgid "sep"
+msgstr "rugs."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:48
+msgid "oct"
+msgstr "spl."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:49
+msgid "nov"
+msgstr "lapkr."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:50
+msgid "dec"
+msgstr "grd."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:53
+msgctxt "abbrev. month"
+msgid "Jan."
+msgstr "Sau."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:54
+msgctxt "abbrev. month"
+msgid "Feb."
+msgstr "Vas."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:55
+msgctxt "abbrev. month"
+msgid "March"
+msgstr "Kov."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:56
+msgctxt "abbrev. month"
+msgid "April"
+msgstr "Bal."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:57
+msgctxt "abbrev. month"
+msgid "May"
+msgstr "Geg."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:58
+msgctxt "abbrev. month"
+msgid "June"
+msgstr "Birž."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:59
+msgctxt "abbrev. month"
+msgid "July"
+msgstr "Liep."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:60
+msgctxt "abbrev. month"
+msgid "Aug."
+msgstr "Rgp."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:61
+msgctxt "abbrev. month"
+msgid "Sept."
+msgstr "Rugs."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:62
+msgctxt "abbrev. month"
+msgid "Oct."
+msgstr "Spl."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:63
+msgctxt "abbrev. month"
+msgid "Nov."
+msgstr "Lapkr."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:64
+msgctxt "abbrev. month"
+msgid "Dec."
+msgstr "Grd."
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:67
+msgctxt "alt. month"
+msgid "January"
+msgstr "Sausis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:68
+msgctxt "alt. month"
+msgid "February"
+msgstr "Vasaris"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:69
+msgctxt "alt. month"
+msgid "March"
+msgstr "Kovas"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:70
+msgctxt "alt. month"
+msgid "April"
+msgstr "Balandis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:71
+msgctxt "alt. month"
+msgid "May"
+msgstr "Gegužė"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:72
+msgctxt "alt. month"
+msgid "June"
+msgstr "Birželis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:73
+msgctxt "alt. month"
+msgid "July"
+msgstr "Liepa"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:74
+msgctxt "alt. month"
+msgid "August"
+msgstr "Rugpjūtis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:75
+msgctxt "alt. month"
+msgid "September"
+msgstr "Rugsėjis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:76
+msgctxt "alt. month"
+msgid "October"
+msgstr "Spalis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:77
+msgctxt "alt. month"
+msgid "November"
+msgstr "Lapkritis"
+
+#: .\venv\Lib\site-packages\django\utils\dates.py:78
+msgctxt "alt. month"
+msgid "December"
+msgstr "Gruodis"
+
+#: .\venv\Lib\site-packages\django\utils\ipv6.py:8
+msgid "This is not a valid IPv6 address."
+msgstr "Tai nėra tinkamas IPv6 adresas."
+
+#: .\venv\Lib\site-packages\django\utils\text.py:75
+#, python-format
+msgctxt "String to return when truncating text"
+msgid "%(truncated_text)s…"
+msgstr "%(truncated_text)s…"
+
+#: .\venv\Lib\site-packages\django\utils\text.py:286
+msgid "or"
+msgstr "arba"
+
+#. Translators: This string is used as a separator between list elements
+#: .\venv\Lib\site-packages\django\utils\text.py:305
+#: .\venv\Lib\site-packages\django\utils\timesince.py:135
+msgid ", "
+msgstr ", "
+
+#: .\venv\Lib\site-packages\django\utils\timesince.py:8
+#, python-format
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] "%(num)d metai"
+msgstr[1] "%(num)d metai"
+
+#: .\venv\Lib\site-packages\django\utils\timesince.py:9
+#, python-format
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] "%(num)d mėnuo"
+msgstr[1] "%(num)d mėnesiai"
+
+#: .\venv\Lib\site-packages\django\utils\timesince.py:10
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] "%(num)d savaitė"
+msgstr[1] "%(num)d savaitės"
+
+#: .\venv\Lib\site-packages\django\utils\timesince.py:11
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] "%(num)d diena"
+msgstr[1] "%(num)d dienos"
+
+#: .\venv\Lib\site-packages\django\utils\timesince.py:12
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] "%(num)d valanda"
+msgstr[1] "%(num)d valandos"
+
+#: .\venv\Lib\site-packages\django\utils\timesince.py:13
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] "%(num)d minutė"
+msgstr[1] "%(num)d minutės"
+
+#: .\venv\Lib\site-packages\django\views\csrf.py:29
+msgid "Forbidden"
+msgstr "Uždrausta"
+
+#: .\venv\Lib\site-packages\django\views\csrf.py:30
+msgid "CSRF verification failed. Request aborted."
+msgstr "CSRF patikra nepavyko. Uždaryti užklausą."
+
+#: .\venv\Lib\site-packages\django\views\csrf.py:34
+msgid ""
+"You are seeing this message because this HTTPS site requires a “Referer "
+"header” to be sent by your web browser, but none was sent. This header is "
+"required for security reasons, to ensure that your browser is not being "
+"hijacked by third parties."
+msgstr ""
+"Matote šį pranešimą, nes ši HTTPS svetainė reikalauja, kad jūsų naršyklė "
+"siųstų „Referer“ antraštę, tačiau ji nebuvo nusiųsta. Ši antraštė reikalinga "
+"saugumo sumetimais, kad jūsų naršyklė nebūtų perimta trečiųjų šalių."
+
+#: .\venv\Lib\site-packages\django\views\csrf.py:40
+msgid ""
+"If you have configured your browser to disable “Referer” headers, please re-"
+"enable them, at least for this site, or for HTTPS connections, or for “same-"
+"origin” requests."
+msgstr ""
+"Jei konfigūravote savo naršyklę, kad ji nesiųstų „Referer“ antraščių, "
+"prašome įjungti jas bent jau šiai svetainei, HTTPS ryšiams arba „same-origin“ "
+"užklausoms."
+
+#: .\venv\Lib\site-packages\django\views\csrf.py:45
+msgid ""
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
+"including the “Referrer-Policy: no-referrer” header, please remove them. The "
+"CSRF protection requires the “Referer” header to do strict referer checking. "
+"If you’re concerned about privacy, use alternatives like <a rel=\"noreferrer\" "
+"…> for links to third-party sites."
+msgstr ""
+"Jei naudojate <meta name=\"referrer\" content=\"no-referrer\"> žymą arba "
+"pridėjote antraštę „Referrer-Policy: no-referrer“, pašalinkite jas. CSRF "
+"apsauga reikalauja „Referer“ antraštės griežtam patikrinimui. Jei nerimaujate "
+"dėl privatumo, naudokite alternatyvas, pvz., <a rel=\"noreferrer\" …> "
+"nuorodoms į trečiųjų šalių svetaines."
+
+#: .\venv\Lib\site-packages\django\views\csrf.py:54
+msgid ""
+"You are seeing this message because this site requires a CSRF cookie when "
+"submitting forms. This cookie is required for security reasons, to ensure "
+"that your browser is not being hijacked by third parties."
+msgstr ""
+"Matote šį pranešimą, nes ši svetainė reikalauja CSRF slapuko teikiant formas. "
+"Šis slapukas reikalingas saugumo sumetimais, kad jūsų naršyklė nebūtų "
+"perimta trečiųjų šalių."
+
+#: .\venv\Lib\site-packages\django\views\csrf.py:60
+msgid ""
+"If you have configured your browser to disable cookies, please re-enable "
+"them, at least for this site, or for “same-origin” requests."
+msgstr ""
+"Jei nustatėte savo naršyklėje slapukų išjungimą, prašome juos įjungti, bent "
+"jau šioje svetainėje arba „same-origin“ užklausoms."
+
+#: .\venv\Lib\site-packages\django\views\csrf.py:66
+msgid "More information is available with DEBUG=True."
+msgstr "Daugiau informacijos pasiekiama, jei nustatyta DEBUG=True."
+
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:44
+msgid "No year specified"
+msgstr "Nenurodyti metai"
+
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:64
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:115
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:214
+msgid "Date out of range"
+msgstr "Data už leistino intervalo"
+
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:94
+msgid "No month specified"
+msgstr "Nenurodytas mėnuo"
+
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:147
+msgid "No day specified"
+msgstr "Nenurodyta diena"
+
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:194
+msgid "No week specified"
+msgstr "Nenurodyta savaitė"
+
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:349
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:380
+#, python-format
+msgid "No %(verbose_name_plural)s available"
+msgstr "Nėra jokių %(verbose_name_plural)s"
+
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:652
+#, python-format
+msgid ""
+"Future %(verbose_name_plural)s not available because "
+"%(class_name)s.allow_future is False."
+msgstr ""
+"Būsimi %(verbose_name_plural)s nepasiekiami, nes %(class_name)s.allow_future "
+"yra False."
+
+#: .\venv\Lib\site-packages\django\views\generic\dates.py:692
+#, python-format
+msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+msgstr "Neteisinga datos eilutė „%(datestr)s“ pagal formatą „%(format)s“"
+
+#: .\venv\Lib\site-packages\django\views\generic\detail.py:56
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr "Nerasta jokių %(verbose_name)s atitinkančių užklausą"
+
+#: .\venv\Lib\site-packages\django\views\generic\list.py:70
+msgid "Page is not “last”, nor can it be converted to an int."
+msgstr "Puslapis nėra „last“, taip pat jo nepavyksta konvertuoti į sveikąjį skaičių."
+
+#: .\venv\Lib\site-packages\django\views\generic\list.py:77
+#, python-format
+msgid "Invalid page (%(page_number)s): %(message)s"
+msgstr "Neteisingas puslapis (%(page_number)s): %(message)s"
+
+#: .\venv\Lib\site-packages\django\views\generic\list.py:169
+#, python-format
+msgid "Empty list and “%(class_name)s.allow_empty” is False."
+msgstr "Tuščias sąrašas, o „%(class_name)s.allow_empty“ yra False."
+
+#: .\venv\Lib\site-packages\django\views\static.py:49
+msgid "Directory indexes are not allowed here."
+msgstr "Čia katalogų indeksai neleidžiami."
+
+#: .\venv\Lib\site-packages\django\views\static.py:51
+#, python-format
+msgid "“%(path)s” does not exist"
+msgstr "„%(path)s“ neegzistuoja."
+
+#: .\venv\Lib\site-packages\django\views\static.py:68
+#: .\venv\Lib\site-packages\django\views\templates\directory_index.html:8
+#: .\venv\Lib\site-packages\django\views\templates\directory_index.html:11
+#, python-format
+msgid "Index of %(directory)s"
+msgstr "%(directory)s indeksas"
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:7
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:204
+msgid "The install worked successfully! Congratulations!"
+msgstr "Diegimas sėkmingas! Sveikiname!"
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:206
+#, python-format
+msgid ""
+"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
+msgstr ""
+"Peržiūrėkite <a href=\"https://docs.djangoproject.com/en/%(version)s/"
+"releases/\" target=\"_blank\" rel=\"noopener\">leidimo pastabas</a> Django "
+"%(version)s"
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:208
+#, python-format
+msgid ""
+"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" rel=\"noopener\">DEBUG="
+"True</a> is in your settings file and you have not configured any URLs."
+msgstr ""
+"Matote šį puslapį, nes jūsų nustatymų faile yra <a href=\"https://docs."
+"djangoproject.com/en/%(version)s/ref/settings/#debug\" target=\"_blank\" "
+"rel=\"noopener\">DEBUG=True</a> ir jūs nesukonfigūravote jokių URL."
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:217
+msgid "Django Documentation"
+msgstr "Django dokumentacija"
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:218
+msgid "Topics, references, &amp; how-to’s"
+msgstr "Temos, nuorodos ir vadovai"
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:226
+msgid "Tutorial: A Polling App"
+msgstr "Pamoka: balsavimo programėlė"
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:227
+msgid "Get started with Django"
+msgstr "Pradėkite dirbti su Django"
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:235
+msgid "Django Community"
+msgstr "Django bendruomenė"
+
+#: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:236
+msgid "Connect, get help, or contribute"
+msgstr "Bendraukite, gaukite pagalbos ar prisidėkite"
