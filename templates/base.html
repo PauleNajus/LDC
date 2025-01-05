@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en" data-theme="light">
+{% load i18n %}
+<html lang="{{ LANGUAGE_CODE }}" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Lung Disease Classifier{% endblock %}</title>
+    <title>{% block title %}{% trans "Lung Disease Classifier" %}{% endblock %}</title>
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <!-- Bootstrap CSS -->
@@ -308,12 +309,12 @@
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <img src="{% static 'full_logo_white.png' %}" alt="LDC Logo" class="d-none d-sm-inline">
-                <span><i class="fas fa-lungs me-2" aria-hidden="true"></i>LDC</span>
+                <img src="{% static 'full_logo_white.png' %}" alt="{% trans 'LDC Logo' %}" class="d-none d-sm-inline">
+                <span><i class="fas fa-lungs me-2" aria-hidden="true"></i>{% trans "LDC" %}</span>
             </a>
             <div class="d-flex align-items-center">
                 <div class="dropdown">
-                    <button class="theme-switcher dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Change language">
+                    <button class="theme-switcher dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="{% trans 'Change language' %}">
                         <i class="fas fa-language" aria-hidden="true"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
@@ -321,19 +322,19 @@
                             <form action="{% url 'set_language' %}" method="post" class="d-inline">
                                 {% csrf_token %}
                                 <input type="hidden" name="language" value="en">
-                                <button type="submit" class="dropdown-item">English</button>
+                                <button type="submit" class="dropdown-item">{% trans "English" %}</button>
                             </form>
                         </li>
                         <li>
                             <form action="{% url 'set_language' %}" method="post" class="d-inline">
                                 {% csrf_token %}
                                 <input type="hidden" name="language" value="lt">
-                                <button type="submit" class="dropdown-item">Lithuanian</button>
+                                <button type="submit" class="dropdown-item">{% trans "Lithuanian" %}</button>
                             </form>
                         </li>
                     </ul>
                 </div>
-                <button class="theme-switcher ms-2" id="theme-switcher" title="Switch theme">
+                <button class="theme-switcher ms-2" id="theme-switcher" title="{% trans 'Switch theme' %}">
                     <i class="fas fa-sun" aria-hidden="true"></i>
                 </button>
                 <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -344,16 +345,16 @@
                 <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:home' %}">Home</a>
+                        <a class="nav-link" href="{% url 'core:home' %}">{% trans "Home" %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:about' %}">About</a>
+                        <a class="nav-link" href="{% url 'core:about' %}">{% trans "About" %}</a>
                     </li>
                     <li class="nav-item">
                         <form method="post" action="{% url 'core:logout' %}" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="nav-link btn-logout border-0 bg-transparent">
-                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                                <i class="fas fa-sign-out-alt me-1"></i>{% trans "Logout" %}
                             </button>
                         </form>
                     </li>
@@ -373,7 +374,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container text-center">
-            <p class="mb-0">© 2024 Lung Disease Classifier. Created by Paulius Bundza, Vilnius Tech. All rights reserved.</p>
+            <p class="mb-0">{% trans "© 2024 Lung Disease Classifier. Created by Paulius Bundza, Vilnius Tech. All rights reserved." %}</p>
         </div>
     </footer>
 

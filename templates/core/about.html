@@ -1,64 +1,65 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}About - Lung Disease Classifier{% endblock %}
+{% block title %}{% trans "About - Lung Disease Classifier" %}{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <!-- Main Title and Description -->
         <div class="text-center mb-5">
-            <h1 class="display-4 mb-3">About the Project</h1>
+            <h1 class="display-4 mb-3">{% trans "About the Project" %}</h1>
             <p class="lead text-muted">
-                Learn about the technology behind our lung disease classification system.
+                {% trans "Learn about the technology behind our lung disease classification system." %}
             </p>
         </div>
 
         <!-- Model Information -->
         <div class="card mb-4">
             <div class="card-body">
-                <h2 class="card-title h4 mb-4">Model Information</h2>
+                <h2 class="card-title h4 mb-4">{% trans "Model Information" %}</h2>
                 <div class="row">
                     <div class="col-md-4 mb-4">
                         <div class="info-block">
-                            <h3 class="h5">Architecture</h3>
-                            <p class="text-muted mb-0">Convolutional Neural Network (CNN)</p>
+                            <h3 class="h5">{% trans "Architecture" %}</h3>
+                            <p class="text-muted mb-0">{% trans "Convolutional Neural Network (CNN)" %}</p>
                         </div>
                     </div>
                     <div class="col-md-4 mb-4">
                         <div class="info-block">
-                            <h3 class="h5">Framework</h3>
-                            <p class="text-muted mb-0">PyTorch 2.5.1</p>
+                            <h3 class="h5">{% trans "Framework" %}</h3>
+                            <p class="text-muted mb-0">{% trans "PyTorch 2.5.1" %}</p>
                         </div>
                     </div>
                     <div class="col-md-4 mb-4">
                         <div class="info-block">
-                            <h3 class="h5">Input Size</h3>
-                            <p class="text-muted mb-0">224x224 pixels</p>
+                            <h3 class="h5">{% trans "Input Size" %}</h3>
+                            <p class="text-muted mb-0">{% trans "224x224 pixels" %}</p>
                         </div>
                     </div>
                     <div class="col-md-4 mb-4">
                         <div class="info-block">
-                            <h3 class="h5">Classes</h3>
-                            <p class="text-muted mb-0">Normal, Pneumonia</p>
+                            <h3 class="h5">{% trans "Classes" %}</h3>
+                            <p class="text-muted mb-0">{% trans "Normal, Pneumonia" %}</p>
                         </div>
                     </div>
                     <div class="col-md-4 mb-4">
                         <div class="info-block">
-                            <h3 class="h5">Training Dataset</h3>
-                            <p class="text-muted mb-0">Chest X-Ray Images</p>
+                            <h3 class="h5">{% trans "Training Dataset" %}</h3>
+                            <p class="text-muted mb-0">{% trans "Chest X-Ray Images" %}</p>
                         </div>
                     </div>
                     <div class="col-md-4 mb-4">
                         <div class="info-block">
-                            <h3 class="h5">GPU Acceleration</h3>
-                            <p class="text-muted mb-0">CUDA (if available)</p>
+                            <h3 class="h5">{% trans "GPU Acceleration" %}</h3>
+                            <p class="text-muted mb-0">{% trans "CUDA (if available)" %}</p>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="info-block">
-                            <h3 class="h5">Model Size</h3>
-                            <p class="text-muted mb-0">~25MB</p>
+                            <h3 class="h5">{% trans "Model Size" %}</h3>
+                            <p class="text-muted mb-0">{% trans "~25MB" %}</p>
                         </div>
                     </div>
                 </div>
@@ -68,19 +69,17 @@
         <!-- How It Works -->
         <div class="card mb-4">
             <div class="card-body">
-                <h2 class="card-title h4 mb-4">How It Works</h2>
-                <p class="mb-4">
-                    Our lung disease classifier uses a deep learning model based on Convolutional Neural Networks (CNN) to 
-                    analyze chest X-ray images and detect signs of pneumonia.
+                <h2 class="card-title h4 mb-4">{% trans "How It Works" %}</h2>
+                <p class="mb-4 description-text">
+                    {% trans "Lung disease classifier uses a deep learning model based on Convolutional Neural Networks (CNN) to analyze chest X-ray images and detect signs of pneumonia." %}
                 </p>
-                <p class="mb-4">
-                    The model has been trained on a large dataset of chest X-ray images, learning to identify patterns and 
-                    features that are indicative of pneumonia. When you upload an image, it goes through the following process:
+                <p class="mb-4 description-text">
+                    {% trans "The model has been trained on a large dataset of chest X-ray images, learning to identify patterns and features that are indicative of pneumonia. When you upload an image, it goes through the following process:" %}
                 </p>
                 <ol class="process-list">
-                    <li class="mb-2">Image preprocessing and normalization</li>
-                    <li class="mb-2">Feature extraction using CNN layers</li>
-                    <li>Classification based on learned patterns</li>
+                    <li class="mb-2">{% trans "Image preprocessing and normalization" %}</li>
+                    <li class="mb-2">{% trans "Feature extraction using CNN layers" %}</li>
+                    <li>{% trans "Classification based on learned patterns" %}</li>
                 </ol>
             </div>
         </div>
@@ -88,26 +87,26 @@
         <!-- Training Performance -->
         <div class="card mb-4">
             <div class="card-body">
-                <h2 class="card-title h4 mb-4">Training Performance</h2>
+                <h2 class="card-title h4 mb-4">{% trans "Training Performance" %}</h2>
                 
                 <!-- Overall Training History -->
                 <div class="mb-5">
-                    <h3 class="h5 mb-3">Overall Training History</h3>
+                    <h3 class="h5 mb-3">{% trans "Overall Training History" %}</h3>
                     <div class="text-center">
-                        <img src="{% static 'training_history.png' %}" alt="Overall Training History" class="img-fluid training-plot mb-2">
-                        <p class="text-muted">Model's learning progression showing accuracy and loss metrics over training epochs.</p>
+                        <img src="{% static 'training_history.png' %}" alt="{% trans 'Overall Training History' %}" class="img-fluid training-plot mb-2">
+                        <p class="text-muted">{% trans "Model's learning progression showing accuracy and loss metrics over training epochs." %}</p>
                     </div>
                 </div>
 
                 <!-- Cross-Validation Results -->
                 <div class="mb-5">
-                    <h3 class="h5 mb-3">5-Fold Cross-Validation Results</h3>
+                    <h3 class="h5 mb-3">{% trans "5-Fold Cross-Validation Results" %}</h3>
                     <div class="row">
                         {% for i in '12345'|make_list %}
                         <div class="col-md-6 mb-4">
                             <div class="text-center">
-                                <img src="{% static 'training_history_fold_'|add:i|add:'.png' %}" alt="Training History Fold {{ i }}" class="img-fluid training-plot mb-2">
-                                <p class="text-muted">Fold {{ i }} performance metrics</p>
+                                <img src="{% static 'training_history_fold_'|add:i|add:'.png' %}" alt="{% trans 'Training History Fold' %} {{ i }}" class="img-fluid training-plot mb-2">
+                                <p class="text-muted">{% trans "Fold" %} {{ i }} {% trans "performance metrics" %}</p>
                             </div>
                         </div>
                         {% endfor %}
@@ -116,10 +115,10 @@
 
                 <!-- Confusion Matrix -->
                 <div>
-                    <h3 class="h5 mb-3">Model Evaluation</h3>
+                    <h3 class="h5 mb-3">{% trans "Model Evaluation" %}</h3>
                     <div class="text-center">
-                        <img src="{% static 'confusion_matrix.png' %}" alt="Confusion Matrix" class="img-fluid training-plot mb-2" style="max-width: 500px;">
-                        <p class="text-muted">Confusion matrix showing the model's classification performance across different categories.</p>
+                        <img src="{% static 'confusion_matrix.png' %}" alt="{% trans 'Confusion Matrix' %}" class="img-fluid training-plot mb-2" style="max-width: 500px;">
+                        <p class="text-muted">{% trans "Confusion matrix showing the model's classification performance across different categories." %}</p>
                     </div>
                 </div>
             </div>
@@ -164,6 +163,10 @@
     [data-theme="dark"] .training-plot {
         background-color: #2d3748;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    [data-theme="dark"] .description-text {
+        color: #ffffff;
     }
 </style>
 {% endblock %} 

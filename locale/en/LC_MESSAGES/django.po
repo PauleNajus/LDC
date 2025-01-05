@@ -441,3 +441,51 @@ msgstr "Training Performance"
 msgid "Overall Training History"
 msgstr "Overall Training History"
 
+msgid "Lung disease classifier uses a deep learning model based on Convolutional Neural Networks (CNN) to analyze chest X-ray images and detect signs of pneumonia."
+msgstr "Lung disease classifier uses a deep learning model based on Convolutional Neural Networks (CNN) to analyze chest X-ray images and detect signs of pneumonia."
+
+msgid "The model has been trained on a large dataset of chest X-ray images, learning to identify patterns and features that are indicative of pneumonia. When you upload an image, it goes through the following process:"
+msgstr "The model has been trained on a large dataset of chest X-ray images, learning to identify patterns and features that are indicative of pneumonia. When you upload an image, it goes through the following process:"
+
+msgid "Model's learning progression showing accuracy and loss metrics over training epochs."
+msgstr "Model's learning progression showing accuracy and loss metrics over training epochs."
+
+msgid "5-Fold Cross-Validation Results"
+msgstr "5-Fold Cross-Validation Results"
+
+msgid "Training History Fold"
+msgstr "Training History Fold"
+
+msgid "Fold"
+msgstr "Fold"
+
+msgid "performance metrics"
+msgstr "performance metrics"
+
+msgid "Model Evaluation"
+msgstr "Model Evaluation"
+
+msgid "Confusion Matrix"
+msgstr "Confusion Matrix"
+
+msgid "Confusion matrix showing the model's classification performance across different categories."
+msgstr "Confusion matrix showing the model's classification performance across different categories."
+
+msgid "LDC"
+msgstr "LDC"
+
+msgid "🌙"
+msgstr "🌙"
+
+msgid "☀️"
+msgstr "☀️"
+
+msgid "LDC Logo"
+msgstr "LDC Logo"
+
+msgid "Change language"
+msgstr "Change language"
+
+msgid "Switch theme"
+msgstr "Switch theme"
+
