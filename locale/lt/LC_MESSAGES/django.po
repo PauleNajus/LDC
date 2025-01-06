@@ -36,8 +36,11 @@ msgstr "Pradinis - Plaučių ligų klasifikatorius"
 msgid "Lung Disease Classifier"
 msgstr "Plaučių ligų klasifikatorius"
 
-msgid "Upload a chest X-ray image to detect pneumonia using our advanced deep learning model. Accuracy: 96.13% (validated through 5-fold cross-validation)"
-msgstr "Įkelkite krūtinės rentgeno nuotrauką pneumonijai aptikti naudojant mūsų pažangų giliojo mokymosi modelį. Tikslumas: 96,13% (patvirtinta 5 kartų kryžminiu patikrinimu)"
+msgid "Upload a chest X-ray image to detect pneumonia using our advanced deep learning model"
+msgstr "Įkelkite krūtinės rentgeno nuotrauką pneumonijai aptikti naudojant mūsų pažangų giliojo mokymosi modelį"
+
+msgid "Accuracy: 96.13% (validated through 5-fold cross-validation)"
+msgstr "Tikslumas: 96,13% (patvirtinta 5 kartų kryžminiu patikrinimu)"
 
 msgid "Upload X-Ray Image"
 msgstr "Įkelti rentgeno nuotrauką"
