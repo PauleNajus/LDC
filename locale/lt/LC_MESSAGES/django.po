@@ -441,7 +441,7 @@ msgstr "Mokymo rezultatai"
 msgid "Overall Training History"
 msgstr "Bendra mokymo istorija"
 
-msgid "Plaučių ligų klasifikatorius naudoja gilaus mokymosi modelį, pagrįstą konvoliuciniais neuroniniais tinklais (CNN), krūtinės rentgeno nuotraukoms analizuoti ir pneumonijos požymiams aptikti."
+msgid "Lung disease classifier uses a deep learning model based on Convolutional Neural Networks (CNN) to analyze chest X-ray images and detect signs of pneumonia."
 msgstr "Plaučių ligų klasifikatorius naudoja gilaus mokymosi modelį, pagrįstą konvoliuciniais neuroniniais tinklais (CNN), krūtinės rentgeno nuotraukoms analizuoti ir pneumonijos požymiams aptikti."
 
 msgid "The model has been trained on a large dataset of chest X-ray images, learning to identify patterns and features that are indicative of pneumonia. When you upload an image, it goes through the following process:"
@@ -488,4 +488,3 @@ msgstr "Keisti kalbą"
 
 msgid "Switch theme"
 msgstr "Keisti temą"
-
