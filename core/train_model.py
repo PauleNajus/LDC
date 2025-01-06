@@ -119,13 +119,31 @@ torch.backends.cudnn.enabled = True
 torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
 
-# Device configuration
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-print(f"Using device: {device}")
+def get_device_info():
+    """Get and format device information for display."""
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    info = [
+        "=" * 40,
+        "DEVICE INFORMATION",
+        "=" * 40,
+        f"Device: {device}"
+    ]
+    
+    if torch.cuda.is_available():
+        gpu_name = torch.cuda.get_device_name()
+        memory_gb = torch.cuda.get_device_properties(0).total_memory / 1024**3
+        info.extend([
+            f"GPU: {gpu_name}",
+            f"Memory Available: {memory_gb:.2f} GB",
+            f"CUDA Version: {torch.version.cuda}",
+            f"cuDNN Version: {torch.backends.cudnn.version()}",
+        ])
+    
+    info.append("=" * 40)
+    return device, "\n".join(info)
 
-if torch.cuda.is_available():
-    print(f"GPU: {torch.cuda.get_device_name()}")
-    print(f"Memory Available: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f} GB")
+# Device configuration
+device, device_info = get_device_info()
 
 # Optimized parameters for RTX 4080 12GB
 BATCH_SIZE = 128  # Optimized for RTX 4080 12GB with larger model
@@ -229,12 +247,14 @@ def validate_one_fold(model, val_loader, criterion, device):
     return val_loss / len(val_loader), val_correct / val_total
 
 def train_model(data_dir, epochs=MAX_EPOCHS, batch_size=BATCH_SIZE, n_folds=5):
+    # Display device information once at the start
+    print(device_info)
+    
     print(f"\nInitializing training with:")
     print(f"- Max Epochs: {epochs}")
     print(f"- Batch size: {batch_size}")
     print(f"- Target Accuracy: {TARGET_ACCURACY * 100}%")
     print(f"- Early Stopping Patience: {PATIENCE}")
-    print(f"- Device: {device}")
     print(f"- Number of folds: {n_folds}")
 
     # Create output directories
