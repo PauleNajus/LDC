@@ -231,7 +231,7 @@
                             <!-- Delete Button -->
                             <div class="mt-2">
                                 <form method="post" action="{% url 'core:delete_prediction' prediction.id %}" 
-                                      onsubmit="return confirm(deleteConfirmMessage);" 
+                                      onsubmit="return confirm('{% trans 'Are you sure you want to delete this record?' %}');" 
                                       style="display: inline;">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-outline-danger btn-sm">
@@ -260,7 +260,6 @@
 
 {% block extra_js %}
 <script>
-    const deleteConfirmMessage = "{% trans 'Are you sure you want to delete this record?' %}";
     // Image preview functionality
     const fileInput = document.getElementById('id_image');
     const previewContainer = document.getElementById('preview-container');
@@ -282,8 +281,7 @@
     });
 
     // Drag and drop functionality
-    const eventTypes = ['dragenter', 'dragover', 'dragleave', 'drop'];
-    eventTypes.forEach(eventName => {
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
         dropZone.addEventListener(eventName, preventDefaults, false);
     });
 
@@ -292,13 +290,11 @@
         e.stopPropagation();
     }
 
-    const highlightEvents = ['dragenter', 'dragover'];
-    highlightEvents.forEach(eventName => {
+    ['dragenter', 'dragover'].forEach(eventName => {
         dropZone.addEventListener(eventName, highlight, false);
     });
 
-    const unhighlightEvents = ['dragleave', 'drop'];
-    unhighlightEvents.forEach(eventName => {
+    ['dragleave', 'drop'].forEach(eventName => {
         dropZone.addEventListener(eventName, unhighlight, false);
     });
 

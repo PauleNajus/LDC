@@ -3,14 +3,6 @@
 {% block title %}Analysis Result - Lung Disease Classifier{% endblock %}
 
 {% block content %}
-<style>
-    .progress-bar[data-value]::before {
-        content: attr(data-value) '%';
-    }
-    .progress-bar {
-        width: var(--progress-width);
-    }
-</style>
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <!-- Result Card -->
@@ -61,9 +53,8 @@
                                 </div>
                                 <div class="progress" style="height: 10px;">
                                     <div class="progress-bar bg-success" role="progressbar" 
-                                         data-value="{{ prediction.normal_probability|floatformat:2 }}"
-                                         style="--progress-width: {{ prediction.normal_probability|floatformat:2 }}%"
-                                         aria-valuenow="{{ prediction.normal_probability|floatformat:2 }}" 
+                                         style="width: {{ prediction.normal_probability }}%" 
+                                         aria-valuenow="{{ prediction.normal_probability }}" 
                                          aria-valuemin="0" aria-valuemax="100">
                                     </div>
                                 </div>
@@ -77,9 +68,8 @@
                                 </div>
                                 <div class="progress" style="height: 10px;">
                                     <div class="progress-bar bg-danger" role="progressbar" 
-                                         data-value="{{ prediction.pneumonia_probability|floatformat:2 }}"
-                                         style="--progress-width: {{ prediction.pneumonia_probability|floatformat:2 }}%"
-                                         aria-valuenow="{{ prediction.pneumonia_probability|floatformat:2 }}" 
+                                         style="width: {{ prediction.pneumonia_probability }}%" 
+                                         aria-valuenow="{{ prediction.pneumonia_probability }}" 
                                          aria-valuemin="0" aria-valuemax="100">
                                     </div>
                                 </div>
