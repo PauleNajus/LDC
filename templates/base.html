@@ -321,6 +321,7 @@
                         <li>
                             <form action="{% url 'set_language' %}" method="post" class="d-inline">
                                 {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.path }}">
                                 <input type="hidden" name="language" value="en">
                                 <button type="submit" class="dropdown-item">{% trans "English" %}</button>
                             </form>
@@ -328,6 +329,7 @@
                         <li>
                             <form action="{% url 'set_language' %}" method="post" class="d-inline">
                                 {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.path }}">
                                 <input type="hidden" name="language" value="lt">
                                 <button type="submit" class="dropdown-item">{% trans "Lithuanian" %}</button>
                             </form>
