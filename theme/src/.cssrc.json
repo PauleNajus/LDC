@@ -1,0 +1,10 @@
+{
+  "validateAtRules": {
+    "tailwind": true,
+    "apply": true,
+    "layer": true,
+    "screen": true,
+    "variants": true,
+    "responsive": true
+  }
+} 
