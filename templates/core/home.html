@@ -40,6 +40,25 @@
         background: rgba(0, 0, 0, 0.5);
         z-index: 999;
     }
+    
+    /* Dark mode styles for patient information */
+    [data-theme="dark"] .prediction-card {
+        color: var(--text-color);
+    }
+    
+    [data-theme="dark"] .prediction-card .text-muted + span,
+    [data-theme="dark"] .prediction-card .text-muted + br + span,
+    [data-theme="dark"] .prediction-card .text-muted + br + br + span {
+        color: var(--text-color);
+    }
+    
+    [data-theme="dark"] .prediction-card .text-muted {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+    
+    [data-theme="dark"] .prediction-card .patient-data {
+        color: var(--text-color);
+    }
 </style>
 
 <!-- Overlay -->
@@ -209,14 +228,14 @@
                                 <h6 class="mb-2">{% trans "Patient Information:" %}</h6>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <small class="text-muted">{% trans "Name:" %}</small> {{ prediction.patient_name|default:"No data" }}<br>
-                                        <small class="text-muted">{% trans "Surname:" %}</small> {{ prediction.patient_surname|default:"No data" }}<br>
-                                        <small class="text-muted">{% trans "Patient ID:" %}</small> {{ prediction.patient_id|default:"No data" }}
+                                        <small class="text-muted">{% trans "Name:" %}</small> <span class="patient-data">{{ prediction.patient_name|default:"No data" }}</span><br>
+                                        <small class="text-muted">{% trans "Surname:" %}</small> <span class="patient-data">{{ prediction.patient_surname|default:"No data" }}</span><br>
+                                        <small class="text-muted">{% trans "Patient ID:" %}</small> <span class="patient-data">{{ prediction.patient_id|default:"No data" }}</span>
                                     </div>
                                     <div class="col-md-6">
-                                        <small class="text-muted">{% trans "Gender:" %}</small> {{ prediction.get_patient_gender_display|default:"No data" }}<br>
-                                        <small class="text-muted">{% trans "Date of Birth:" %}</small> {{ prediction.patient_date_of_birth|default:"No data" }}<br>
-                                        <small class="text-muted">{% trans "X-Ray Date:" %}</small> {{ prediction.xray_date|default:"No data" }}
+                                        <small class="text-muted">{% trans "Gender:" %}</small> <span class="patient-data">{{ prediction.get_patient_gender_display|default:"No data" }}</span><br>
+                                        <small class="text-muted">{% trans "Date of Birth:" %}</small> <span class="patient-data">{{ prediction.patient_date_of_birth|default:"No data" }}</span><br>
+                                        <small class="text-muted">{% trans "X-Ray Date:" %}</small> <span class="patient-data">{{ prediction.xray_date|default:"No data" }}</span>
                                     </div>
                                 </div>
                             </div>

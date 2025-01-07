@@ -156,9 +156,9 @@ class HomeView(LoginRequiredMixin, TemplateView):
                 logger.info(f'Pneumonia Probability: {pneumonia_prob:.4f}%')
                 
                 # Update XRayImage with prediction results
-                prediction_class = 'NORMAL' if predicted_class == 0 else 'PNEUMONIA'
+                prediction_class = 'NORMAL' if normal_prob > pneumonia_prob else 'PNEUMONIA'
                 xray.prediction = prediction_class
-                xray.confidence = confidence  # Already in percentage (0-100)
+                xray.confidence = max(normal_prob, pneumonia_prob)  # Use the higher probability as confidence
                 xray.normal_probability = normal_prob
                 xray.pneumonia_probability = pneumonia_prob
                 xray.processing_time = processing_time
