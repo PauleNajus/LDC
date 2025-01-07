@@ -225,70 +225,42 @@ LOGGING = {
             'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
             'style': '{',
         },
-        'pytorch': {
-            'format': '[PyTorch] {levelname} {asctime} - {message}',
-            'style': '{',
-        },
-        'model': {
-            'format': '[Model] {levelname} {asctime} - {message}',
+        'simple': {
+            'format': '{levelname} {asctime} {message}',
             'style': '{',
         },
     },
     'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'django.log',
-            'formatter': 'verbose',
-        },
         'console': {
-            'level': 'INFO',
             'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': 'django.log',
             'formatter': 'verbose',
-        },
-        'pytorch_file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'pytorch.log',
-            'formatter': 'pytorch',
-        },
-        'pytorch_console': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'pytorch',
-        },
-        'model_file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'model.log',
-            'formatter': 'model',
-        },
-        'model_console': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'model',
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['file', 'console'],
+            'handlers': ['console', 'file'],
             'level': 'INFO',
             'propagate': True,
         },
-        'core': {
-            'handlers': ['file', 'console'],
+        'django.request': {
+            'handlers': ['console', 'file'],
             'level': 'INFO',
-            'propagate': True,
+            'propagate': False,
         },
         'pytorch': {
-            'handlers': ['pytorch_file', 'pytorch_console'],
-            'level': 'DEBUG',
-            'propagate': False,
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': True,
         },
         'model': {
-            'handlers': ['model_file', 'model_console'],
-            'level': 'DEBUG',
-            'propagate': False,
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': True,
         },
     },
 }
