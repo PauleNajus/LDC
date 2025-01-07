@@ -4,6 +4,8 @@
     "extraPaths": [
         ".venv_new/Lib/site-packages"
     ],
-    "reportMissingImports": true,
-    "reportMissingTypeStubs": false
+    "typeCheckingMode": "basic",
+    "useLibraryCodeForTypes": true,
+    "reportMissingImports": "warning",
+    "reportMissingModuleSource": "warning"
 } 

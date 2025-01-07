@@ -87,7 +87,7 @@ CACHE_MIDDLEWARE_KEY_PREFIX = 'ldc'
 CACHE_MIDDLEWARE_ALIAS = 'default'
 
 # Session settings (using Redis for better performance)
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_CACHE_ALIAS = 'default'
 
 # Rate limiting settings
@@ -225,6 +225,14 @@ LOGGING = {
             'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
             'style': '{',
         },
+        'pytorch': {
+            'format': '[PyTorch] {levelname} {asctime} - {message}',
+            'style': '{',
+        },
+        'model': {
+            'format': '[Model] {levelname} {asctime} - {message}',
+            'style': '{',
+        },
     },
     'handlers': {
         'file': {
@@ -238,6 +246,28 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
         },
+        'pytorch_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'pytorch.log',
+            'formatter': 'pytorch',
+        },
+        'pytorch_console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'pytorch',
+        },
+        'model_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'model.log',
+            'formatter': 'model',
+        },
+        'model_console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'model',
+        },
     },
     'loggers': {
         'django': {
@@ -250,24 +280,48 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+        'pytorch': {
+            'handlers': ['pytorch_file', 'pytorch_console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'model': {
+            'handlers': ['model_file', 'model_console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
     },
 }
 
 # Authentication settings
 AUTHENTICATION_BACKENDS = [
-    'axes.backends.AxesStandaloneBackend',
+    'axes.backends.AxesBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
 # Django Axes Configuration
 AXES_ENABLED = True
-AXES_FAILURE_LIMIT = 5  # Number of login attempts before lockout
-AXES_COOLOFF_TIME = 1  # Hours before allowing login attempts again
-AXES_LOCKOUT_TEMPLATE = 'core/lockout.html'  # Template to show when locked out
-AXES_RESET_ON_SUCCESS = True  # Reset the number of attempts on successful login
+AXES_FAILURE_LIMIT = 5
+AXES_LOCK_OUT_AT_FAILURE = True
+AXES_COOLOFF_TIME = 1  # 1 hour lockout
+AXES_RESET_ON_SUCCESS = True
+AXES_LOCKOUT_TEMPLATE = 'core/lockout.html'
+AXES_LOCKOUT_URL = None
+AXES_USERNAME_FORM_FIELD = 'username'
+AXES_ENABLE_ACCESS_FAILURE_LOG = True
+AXES_DISABLE_ACCESS_LOG = True  # Disable access logging to avoid session hash issues
+
+# Axes Handler Configuration
 AXES_HANDLER = 'axes.handlers.database.AxesDatabaseHandler'
-AXES_LOCKOUT_PARAMETERS = ['username', 'ip_address']  # Lock out based on both username and IP
-AXES_CACHE = 'default'  # Use the default cache for storing attempts
+AXES_LOCKOUT_PARAMETERS = ['ip_address', 'username']
+
+# Session Configuration
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 86400  # 24 hours
+SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
+SESSION_COOKIE_HTTPONLY = True
+SESSION_SAVE_EVERY_REQUEST = True
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -359,3 +413,13 @@ LANGUAGE_COOKIE_SAMESITE = None
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
 MODELTRANSLATION_LANGUAGES = ('en', 'lt')
 MODELTRANSLATION_FALLBACK_LANGUAGES = ('en',)
+
+# Session Configuration (using the same Redis instance)
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_CACHE_ALIAS = 'default'
+SESSION_COOKIE_AGE = 1209600  # 2 weeks
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_NAME = 'sessionid'
+SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_SAVE_EVERY_REQUEST = True
