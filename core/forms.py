@@ -5,6 +5,19 @@ from .models import XRayImage
 import datetime
 
 class XRayImageForm(forms.ModelForm):
+    # Define custom gender choices
+    GENDER_CHOICES = [
+        ('', _('Select Gender')),
+        ('M', _('Male')),
+        ('F', _('Female')),
+    ]
+
+    # Override the gender field to use our custom choices
+    patient_gender = forms.ChoiceField(
+        choices=GENDER_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+
     class Meta:
         model = XRayImage
         fields = [
@@ -19,7 +32,6 @@ class XRayImageForm(forms.ModelForm):
         widgets = {
             'patient_date_of_birth': forms.DateInput(attrs={'type': 'date'}),
             'xray_date': forms.DateInput(attrs={'type': 'date'}),
-            'patient_gender': forms.Select(choices=XRayImage.GENDER_CHOICES),
         }
         labels = {
             'patient_name': _('First Name'),
@@ -68,11 +80,6 @@ class XRayImageForm(forms.ModelForm):
             # Check if date is not in the future
             if date > datetime.date.today():
                 raise ValidationError(_('X-ray date cannot be in the future'))
-            
-            # Check if date is not too far in the past (e.g., 10 years)
-            min_date = datetime.date.today() - datetime.timedelta(days=10*365)
-            if date < min_date:
-                raise ValidationError(_('X-ray date is too old (maximum 10 years old)'))
             
             # Check if date is after date of birth
             dob = self.cleaned_data.get('patient_date_of_birth')
@@ -129,6 +136,22 @@ class XRayImageForm(forms.ModelForm):
         
         return patient_id
     
+    def clean_patient_gender(self):
+        gender = self.cleaned_data.get('patient_gender')
+        if gender:
+            # Convert display values to model values
+            gender_map = {
+                'Male': 'M',
+                'Female': 'F'
+            }
+            if gender in gender_map:
+                return gender_map[gender]
+            elif gender in ['M', 'F']:
+                return gender
+            else:
+                raise ValidationError(_('Invalid gender selection'))
+        return gender
+    
     def clean_image(self):
         image = self.cleaned_data.get('image')
         if image:
@@ -159,6 +182,9 @@ class XRayImageForm(forms.ModelForm):
                 'placeholder': self.fields[field].label
             })
         
-        # Make all fields required
+        # Make only image field required, others optional
         for field_name, field in self.fields.items():
-            field.required = True 
+            if field_name == 'image':
+                field.required = True
+            else:
+                field.required = False 

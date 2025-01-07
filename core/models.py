@@ -17,9 +17,14 @@ from django.utils.translation import gettext_lazy as _
 logger = logging.getLogger('core')
 
 def get_default_user():
+    """Get the ID of the first user or None if no users exist."""
     User = get_user_model()
-    user = User.objects.first()
-    return user.id if user else None
+    try:
+        first_user = User.objects.first()
+        return first_user.pk if first_user else None
+    except Exception as e:
+        logger.error(f"Error getting default user: {str(e)}")
+        return None
 
 def validate_image_extension(value):
     valid_extensions = ['.jpg', '.jpeg', '.png']
@@ -164,17 +169,23 @@ class XRayImage(models.Model):
     )
     patient_name = models.CharField(
         max_length=100,
-        default="No data",
+        null=True,
+        blank=True,
+        default=None,
         validators=[MinLengthValidator(2)]
     )
     patient_surname = models.CharField(
         max_length=100,
-        default="No data",
+        null=True,
+        blank=True,
+        default=None,
         validators=[MinLengthValidator(2)]
     )
     patient_id = models.CharField(
         max_length=50,
-        default="No data",
+        null=True,
+        blank=True,
+        default=None,
         validators=[
             RegexValidator(
                 regex=r'^[A-Za-z0-9-]+$',
@@ -182,13 +193,25 @@ class XRayImage(models.Model):
             )
         ]
     )
-    patient_date_of_birth = models.CharField(max_length=20, default="No data")
+    patient_date_of_birth = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        default=None
+    )
     patient_gender = models.CharField(
         max_length=1,
         choices=GENDER_CHOICES,
-        default='N'
+        null=True,
+        blank=True,
+        default=None
     )
-    xray_date = models.CharField(max_length=20, default="No data")
+    xray_date = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        default=None
+    )
     prediction = models.CharField(max_length=20, blank=True, default="No data")
     confidence = models.FloatField(default=0.0)
     normal_probability = models.FloatField(default=0.0)
@@ -244,8 +267,11 @@ class XRayImage(models.Model):
 
     def save(self, *args, **kwargs):
         """Override save method to perform additional operations."""
-        self.patient_name = self.patient_name.title()
-        self.patient_surname = self.patient_surname.title()
+        # Only title case the name and surname if they are not None
+        if self.patient_name:
+            self.patient_name = self.patient_name.title()
+        if self.patient_surname:
+            self.patient_surname = self.patient_surname.title()
         self.clean()
         super().save(*args, **kwargs)
 
@@ -375,18 +401,21 @@ class LungClassifier:
             # Build or load model if not already done
             if self.model is None:
                 self.build_model()
+                if not self.model:
+                    logger.error("Failed to build model!")
+                    raise RuntimeError("Failed to build model!")
+                    
                 if os.path.exists(settings.MODEL_PATH):
-                    state_dict = torch.load(settings.MODEL_PATH, map_location=self.device)
-                    self.model.load_state_dict(state_dict)
-                    logger.info("Successfully loaded model weights")
+                    try:
+                        state_dict = torch.load(settings.MODEL_PATH, map_location=self.device)
+                        self.model.load_state_dict(state_dict)
+                        logger.info("Successfully loaded model weights")
+                    except Exception as e:
+                        logger.error(f"Error loading model weights: {str(e)}")
+                        raise RuntimeError(f"Failed to load model weights: {str(e)}")
                 else:
                     logger.error("Model weights not found!")
-                    raise Exception("Model weights not found!")
-
-            # Ensure model exists before proceeding
-            if self.model is None:
-                logger.error("Failed to initialize model!")
-                raise Exception("Failed to initialize model!")
+                    raise FileNotFoundError("Model weights file not found!")
 
             # Get image size before preprocessing
             with Image.open(image_path) as img:
