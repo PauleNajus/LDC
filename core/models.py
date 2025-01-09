@@ -15,6 +15,7 @@ import logging
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.db.models import AutoField, DateTimeField, JSONField, IntegerField
+from datetime import datetime
 
 logger = logging.getLogger('core')
 
@@ -292,6 +293,32 @@ class XRayImage(models.Model):
         except Exception as e:
             logger.error(f"Error deleting image file: {str(e)}")
         super().delete(*args, **kwargs)
+
+    def get_formatted_dob(self):
+        """Get formatted date of birth."""
+        if not self.patient_date_of_birth:
+            return _("No data")
+        try:
+            if isinstance(self.patient_date_of_birth, str):
+                date_obj = datetime.strptime(self.patient_date_of_birth, '%Y-%m-%d')
+            else:
+                date_obj = self.patient_date_of_birth
+            return date_obj.strftime('%Y-%m-%d')
+        except (ValueError, AttributeError):
+            return _("No data")
+
+    def get_formatted_xray_date(self):
+        """Get formatted X-ray date."""
+        if not self.xray_date:
+            return _("No data")
+        try:
+            if isinstance(self.xray_date, str):
+                date_obj = datetime.strptime(self.xray_date, '%Y-%m-%d')
+            else:
+                date_obj = self.xray_date
+            return date_obj.strftime('%Y-%m-%d')
+        except (ValueError, AttributeError):
+            return _("No data")
 
 class LungClassifierModel(nn.Module):
     def __init__(self):

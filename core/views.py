@@ -18,7 +18,7 @@ from django.core.cache import cache
 from django.conf import settings
 from django.http import Http404, JsonResponse
 from .models import XRayImage, LungClassifier
-from .forms import XRayImageForm
+from .forms import XRayImageForm, PredictionSearchForm
 from datetime import datetime
 import logging
 import time
@@ -26,18 +26,23 @@ from django.utils import translation
 from django.urls import reverse
 from django.conf import global_settings
 import torch
+from django.db.models import Q
+from django.utils.formats import date_format
 
 logger = logging.getLogger('core')
 
 def format_date(date_str):
     """Format date to Lithuanian format or return 'No data' if empty"""
     if not date_str:
-        return "No data"
+        return _("No data")
     try:
-        date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+        if isinstance(date_str, str):
+            date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+        else:
+            date_obj = date_str
         return date_obj.strftime('%Y-%m-%d')
-    except ValueError:
-        return "No data"
+    except (ValueError, AttributeError):
+        return _("No data")
 
 class CustomLoginView(LoginView):
     template_name = 'core/login.html'
@@ -67,11 +72,43 @@ class HomeView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        # Get recent predictions with pagination
-        recent_predictions = XRayImage.objects.filter(user=self.request.user).order_by('-uploaded_at')
+        # Initialize search form
+        search_form = PredictionSearchForm(self.request.GET)
+        recent_predictions = XRayImage.objects.filter(user=self.request.user)
+        
+        # Apply search filters if form is valid
+        if search_form.is_valid():
+            # Text search
+            search_query = search_form.cleaned_data.get('search_query')
+            if search_query:
+                recent_predictions = recent_predictions.filter(
+                    Q(patient_name__icontains=search_query) |
+                    Q(patient_surname__icontains=search_query) |
+                    Q(patient_id__icontains=search_query)
+                )
+            
+            # Date range filter
+            date_from = search_form.cleaned_data.get('date_from')
+            if date_from:
+                recent_predictions = recent_predictions.filter(xray_date__gte=date_from)
+            
+            date_to = search_form.cleaned_data.get('date_to')
+            if date_to:
+                recent_predictions = recent_predictions.filter(xray_date__lte=date_to)
+            
+            # Prediction type filter
+            prediction_type = search_form.cleaned_data.get('prediction_type')
+            if prediction_type:
+                recent_predictions = recent_predictions.filter(prediction=prediction_type)
+        
+        # Order by most recent
+        recent_predictions = recent_predictions.order_by('-uploaded_at')
+        
+        # Pagination
         paginator = Paginator(recent_predictions, 10)
         page = self.request.GET.get('page')
         context['recent_predictions'] = paginator.get_page(page)
+        context['search_form'] = search_form
         context['form'] = XRayImageForm()
         
         return context

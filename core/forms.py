@@ -188,3 +188,67 @@ class XRayImageForm(forms.ModelForm):
                 field.required = True
             else:
                 field.required = False 
+
+class PredictionSearchForm(forms.Form):
+    search_query = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': _('Search by name, surname, or ID')
+        })
+    )
+    date_from = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control date-input',
+            'placeholder': _('From date (YYYY-MM-DD)'),
+            'oninput': 'formatDate(this)',
+            'onkeypress': 'return isNumberOrDash(event)'
+        })
+    )
+    date_to = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control date-input',
+            'placeholder': _('To date (YYYY-MM-DD)'),
+            'oninput': 'formatDate(this)',
+            'onkeypress': 'return isNumberOrDash(event)'
+        })
+    )
+    prediction_type = forms.ChoiceField(
+        required=False,
+        choices=[
+            ('', _('All')),
+            ('NORMAL', _('Normal')),
+            ('PNEUMONIA', _('Pneumonia'))
+        ],
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+
+    def clean_date_from(self):
+        date_from = self.cleaned_data.get('date_from')
+        if date_from:
+            try:
+                return datetime.datetime.strptime(date_from, '%Y-%m-%d').date()
+            except ValueError:
+                raise ValidationError(_('Invalid date format. Use YYYY-MM-DD'))
+        return None
+
+    def clean_date_to(self):
+        date_to = self.cleaned_data.get('date_to')
+        if date_to:
+            try:
+                return datetime.datetime.strptime(date_to, '%Y-%m-%d').date()
+            except ValueError:
+                raise ValidationError(_('Invalid date format. Use YYYY-MM-DD'))
+        return None
+
+    def clean(self):
+        cleaned_data = super().clean()
+        date_from = cleaned_data.get('date_from')
+        date_to = cleaned_data.get('date_to')
+
+        if date_from and date_to and date_from > date_to:
+            raise ValidationError(_('From date cannot be later than To date'))
+
+        return cleaned_data 
