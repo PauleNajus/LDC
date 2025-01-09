@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator, RegexValidator
 from django.core.exceptions import ValidationError
+from typing import Optional
 import os
 import torch
 import torch.nn as nn
@@ -13,6 +14,7 @@ import time
 import logging
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.db.models import AutoField, DateTimeField, JSONField, IntegerField
 
 logger = logging.getLogger('core')
 
@@ -38,6 +40,13 @@ def validate_image_size(value):
         raise ValidationError(f'File size cannot exceed {max_size_mb}MB')
 
 class User(AbstractUser):
+    """Custom user model with additional fields and functionality."""
+    last_password_change: models.DateTimeField
+    password_history: models.JSONField
+    failed_login_attempts: models.IntegerField
+    last_failed_login: Optional[models.DateTimeField]
+    security_questions: models.JSONField
+    
     first_name = models.CharField(max_length=30, validators=[MinLengthValidator(2)])
     last_name = models.CharField(max_length=30, validators=[MinLengthValidator(2)])
     email = models.EmailField(unique=True)
@@ -156,6 +165,7 @@ class User(AbstractUser):
         return bcrypt.checkpw(answer, stored_hash)
 
 class XRayImage(models.Model):
+    id: AutoField = models.AutoField(primary_key=True)
     GENDER_CHOICES = [
         ('M', 'Male'),
         ('F', 'Female'),

@@ -265,22 +265,21 @@ def train_model(data_dir, epochs=MAX_EPOCHS, batch_size=BATCH_SIZE, n_folds=5):
 
     # Enhanced data augmentation
     train_transform = A.Compose([
-        A.RandomResizedCrop(224, 224, scale=(0.7, 1.0)),
+        A.Resize(224, 224),  # Simpler resize instead of RandomResizedCrop
         A.HorizontalFlip(p=0.5),
         A.VerticalFlip(p=0.1),
         A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.3),
         A.ShiftScaleRotate(shift_limit=0.2, scale_limit=0.2, rotate_limit=30, p=0.5),
         A.OneOf([
-            A.GaussNoise(var_limit=(10.0, 50.0), p=1),
             A.GaussianBlur(blur_limit=(3, 7), p=1),
             A.MotionBlur(blur_limit=(3, 7), p=1),
+            A.GaussNoise(p=1),
         ], p=0.3),
         A.OneOf([
-            A.OpticalDistortion(distort_limit=0.2, p=1),
-            A.GridDistortion(distort_limit=0.2, p=1),
-            A.ElasticTransform(alpha=120, sigma=120 * 0.05, alpha_affine=120 * 0.03, p=1)
+            A.OpticalDistortion(p=1),
+            A.GridDistortion(p=1),
+            A.ElasticTransform(p=1)
         ], p=0.3),
-        A.CoarseDropout(max_holes=8, max_height=32, max_width=32, min_holes=5, fill_value=0, p=0.3),
         A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ToTensorV2(),
     ])
@@ -304,13 +303,16 @@ def train_model(data_dir, epochs=MAX_EPOCHS, batch_size=BATCH_SIZE, n_folds=5):
         # Store fold results
         fold_results = []
         
+        # Convert dataset to numpy array for KFold
+        dataset_indices = np.arange(len(full_dataset))
+        
         # Training loop for each fold
-        for fold, (train_idx, val_idx) in enumerate(kfold.split(full_dataset)):
+        for fold, (train_idx, val_idx) in enumerate(kfold.split(dataset_indices)):
             print(f'\nFold {fold + 1}/{n_folds}')
             
             # Create data samplers for fold
-            train_sampler = SubsetRandomSampler(train_idx)
-            val_sampler = SubsetRandomSampler(val_idx)
+            train_sampler = SubsetRandomSampler(train_idx.tolist())
+            val_sampler = SubsetRandomSampler(val_idx.tolist())
             
             # Create data loaders for fold
             train_loader = DataLoader(
@@ -359,7 +361,8 @@ def train_model(data_dir, epochs=MAX_EPOCHS, batch_size=BATCH_SIZE, n_folds=5):
                 final_div_factor=1000.0
             )
 
-            scaler = amp.GradScaler()
+            # Initialize GradScaler for mixed precision training
+            scaler = torch.cuda.amp.GradScaler()
             
             # Training history for fold
             history = {

@@ -3,10 +3,15 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from django.utils import timezone
+from django.db.models import DateTimeField
+from typing import cast
+from core.models import User as CustomUser
 import logging
 import datetime
 
 logger = logging.getLogger('core')
+
+User = get_user_model()
 
 class Command(BaseCommand):
     help = 'Check password security for all users'
@@ -27,7 +32,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         notify = options['notify']
         max_age = options['max_age']
-        User = get_user_model()
         
         # Get all active users
         users = User.objects.filter(is_active=True)
@@ -41,7 +45,9 @@ class Command(BaseCommand):
             try:
                 # Check if password is too old
                 if user.password and hasattr(user, 'last_password_change'):
-                    days_old = (timezone.now() - user.last_password_change).days
+                    # Cast user to our custom User model type
+                    custom_user = cast(CustomUser, user)
+                    days_old = (timezone.now() - custom_user.last_password_change).days
                     if days_old > max_age:
                         old_passwords += 1
                         self.stdout.write(
