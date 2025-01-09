@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load core_extras %}
 
 {% block title %}{% trans "Home - Lung Disease Classifier" %}{% endblock %}
 
@@ -140,22 +141,22 @@
                     {% csrf_token %}
                     <!-- Patient Information -->
                     <div class="row mb-3">
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label class="form-label small text-muted">{% trans "Patient Name" %}</label>
                             <input type="text" name="patient_name" class="form-control" placeholder="{% trans 'Patient Name' %}">
                             <div class="invalid-feedback" data-field="patient_name"></div>
                         </div>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label class="form-label small text-muted">{% trans "Patient Surname" %}</label>
                             <input type="text" name="patient_surname" class="form-control" placeholder="{% trans 'Patient Surname' %}">
                             <div class="invalid-feedback" data-field="patient_surname"></div>
                         </div>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label class="form-label small text-muted">{% trans "Patient ID" %}</label>
                             <input type="text" name="patient_id" class="form-control" placeholder="{% trans 'Patient ID' %}">
                             <div class="invalid-feedback" data-field="patient_id"></div>
                         </div>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label class="form-label small text-muted">{% trans "Patient Date of Birth (YYYY-MM-DD)" %}</label>
                             <input type="text" 
                                    name="patient_date_of_birth" 
@@ -166,7 +167,7 @@
                                    onkeypress="return isNumberOrDash(event)">
                             <div class="invalid-feedback" data-field="patient_date_of_birth"></div>
                         </div>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label class="form-label small text-muted">{% trans "Patient Gender" %}</label>
                             <select name="patient_gender" class="form-select">
                                 <option value="">{% trans "Select Gender" %}</option>
@@ -175,7 +176,7 @@
                             </select>
                             <div class="invalid-feedback" data-field="patient_gender"></div>
                         </div>
-                        <div class="col-md-6 mb-2">
+                        <div class="col-md-4 mb-2">
                             <label class="form-label small text-muted">{% trans "X-Ray Date (YYYY-MM-DD)" %}</label>
                             <input type="text" 
                                    name="xray_date" 
@@ -211,37 +212,6 @@
                 <span class="visually-hidden">{% trans "Loading..." %}</span>
             </div>
             <p class="mt-2">{% trans "Analyzing your X-ray image..." %}</p>
-        </div>
-
-        <!-- Information Cards -->
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="stats-card">
-                    <h5 class="card-title">
-                        <i class="fas fa-chart-line info-icon"></i>
-                        {% trans "High Accuracy" %}
-                    </h5>
-                    <p class="card-text">{% trans "96.13% accuracy with cross-validation and ensemble learning." %}</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="stats-card">
-                    <h5 class="card-title">
-                        <i class="fas fa-bolt info-icon"></i>
-                        {% trans "Fast Processing" %}
-                    </h5>
-                    <p class="card-text">{% trans "Optimized with PyTorch JIT and parallel processing for rapid inference." %}</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="stats-card">
-                    <h5 class="card-title">
-                        <i class="fas fa-chart-bar info-icon"></i>
-                        {% trans "Detailed Analysis" %}
-                    </h5>
-                    <p class="card-text">{% trans "Comprehensive probability scores and visualization." %}</p>
-                </div>
-            </div>
         </div>
 
         <!-- Recent Predictions -->
@@ -282,22 +252,82 @@
                 <div class="prediction-card mb-4" data-prediction="{{ prediction.prediction|lower }}">
                     <div class="row align-items-center">
                         <div class="col-md-3">
-                            <div class="position-relative" style="width: 120%;">
-                                <img src="{{ prediction.image.url }}" class="prediction-image img-fluid rounded" alt="{% trans 'X-ray' %}">
+                            <div class="position-relative">
+                                <img src="{{ prediction.image.url }}" class="prediction-image img-fluid rounded w-100" alt="{% trans 'X-ray' %}">
+                                <div class="text-center mt-2">
+                                    <small class="text-muted">{{ prediction.image.name|filename }}</small>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-9">
                             <!-- Patient Information -->
                             <div class="mb-3">
                                 <h6 class="mb-2">{% trans "Patient Information:" %}</h6>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <small class="text-muted">{% trans "Name:" %}</small> <span class="patient-data">{{ prediction.patient_name|default:"No data" }}</span><br>
-                                        <small class="text-muted">{% trans "Surname:" %}</small> <span class="patient-data">{{ prediction.patient_surname|default:"No data" }}</span><br>
-                                        <small class="text-muted">{% trans "Patient ID:" %}</small> <span class="patient-data">{{ prediction.patient_id|default:"No data" }}</span>
+                                <form method="post" action="{% url 'core:update_prediction' prediction.id %}" class="edit-form" style="display: none;">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="mb-2">
+                                                <small class="text-muted">{% trans "Name:" %}</small>
+                                                <input type="text" name="patient_name" class="form-control form-control-sm" value="{{ prediction.patient_name }}">
+                                            </div>
+                                            <div class="mb-2">
+                                                <small class="text-muted">{% trans "Surname:" %}</small>
+                                                <input type="text" name="patient_surname" class="form-control form-control-sm" value="{{ prediction.patient_surname }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-2">
+                                                <small class="text-muted">{% trans "Patient ID:" %}</small>
+                                                <input type="text" name="patient_id" class="form-control form-control-sm" value="{{ prediction.patient_id }}">
+                                            </div>
+                                            <div class="mb-2">
+                                                <small class="text-muted">{% trans "Gender:" %}</small>
+                                                <select name="patient_gender" class="form-select form-select-sm">
+                                                    <option value="">{% trans "Select Gender" %}</option>
+                                                    <option value="M" {% if prediction.patient_gender == 'M' %}selected{% endif %}>{% trans "Male" %}</option>
+                                                    <option value="F" {% if prediction.patient_gender == 'F' %}selected{% endif %}>{% trans "Female" %}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-2">
+                                                <small class="text-muted">{% trans "Date of Birth:" %}</small>
+                                                <input type="text" name="patient_date_of_birth" class="form-control form-control-sm date-input" 
+                                                       value="{{ prediction.patient_date_of_birth|date:'Y-m-d' }}"
+                                                       maxlength="10"
+                                                       oninput="formatDate(this)"
+                                                       onkeypress="return isNumberOrDash(event)">
+                                            </div>
+                                            <div class="mb-2">
+                                                <small class="text-muted">{% trans "X-Ray Date:" %}</small>
+                                                <input type="text" name="xray_date" class="form-control form-control-sm date-input" 
+                                                       value="{{ prediction.xray_date|date:'Y-m-d' }}"
+                                                       maxlength="10"
+                                                       oninput="formatDate(this)"
+                                                       onkeypress="return isNumberOrDash(event)">
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <small class="text-muted">{% trans "Gender:" %}</small> <span class="patient-data">{{ prediction.get_patient_gender_display|default:"No data" }}</span><br>
+                                    <div class="mt-2">
+                                        <button type="submit" class="btn btn-primary btn-sm me-2">
+                                            <i class="fas fa-save me-1"></i>{% trans "Save Changes" %}
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm cancel-edit">
+                                            <i class="fas fa-times me-1"></i>{% trans "Cancel" %}
+                                        </button>
+                                    </div>
+                                </form>
+                                <div class="view-mode row">
+                                    <div class="col-md-4">
+                                        <small class="text-muted">{% trans "Name:" %}</small> <span class="patient-data">{{ prediction.patient_name|default:"No data" }}</span><br>
+                                        <small class="text-muted">{% trans "Surname:" %}</small> <span class="patient-data">{{ prediction.patient_surname|default:"No data" }}</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <small class="text-muted">{% trans "Patient ID:" %}</small> <span class="patient-data">{{ prediction.patient_id|default:"No data" }}</span><br>
+                                        <small class="text-muted">{% trans "Gender:" %}</small> <span class="patient-data">{{ prediction.get_patient_gender_display|default:"No data" }}</span>
+                                    </div>
+                                    <div class="col-md-4">
                                         <small class="text-muted">{% trans "Date of Birth:" %}</small> <span class="patient-data">{{ prediction.get_formatted_dob }}</span><br>
                                         <small class="text-muted">{% trans "X-Ray Date:" %}</small> <span class="patient-data">{{ prediction.get_formatted_xray_date }}</span>
                                     </div>
@@ -344,11 +374,13 @@
                                 <i class="fas fa-weight-hanging ms-3 me-1"></i>{{ prediction.get_file_size_mb }} {% trans "MB" %}
                                 <i class="fas fa-stopwatch ms-3 me-1"></i>{{ prediction.processing_time|floatformat:2 }}{% trans "s" %}
                             </small>
-                            <!-- Delete Button -->
-                            <div class="mt-2">
+                            <!-- Action Buttons -->
+                            <div class="mt-2 d-flex">
+                                <button type="button" class="btn btn-outline-primary btn-sm me-2 edit-record" data-record-id="{{ prediction.id }}">
+                                    <i class="fas fa-edit me-1"></i>{% trans "Edit Record" %}
+                                </button>
                                 <form method="post" action="{% url 'core:delete_prediction' prediction.id %}" 
-                                      onsubmit="return confirm('{% trans 'Are you sure you want to delete this record?' %}');" 
-                                      style="display: inline;">
+                                      onsubmit="return confirm('{% trans 'Are you sure you want to delete this record?' %}');">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-outline-danger btn-sm">
                                         <i class="fas fa-trash-alt me-1"></i>{% trans "Delete Record" %}
@@ -572,101 +604,158 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-});
 
-// Lithuanian date formatting function
-function formatDate(input) {
-    let value = input.value.replace(/\D/g, '');
-    if (value.length >= 4) {
-        value = value.slice(0, 4) + '-' + value.slice(4);
-    }
-    if (value.length >= 7) {
-        value = value.slice(0, 7) + '-' + value.slice(7);
-    }
-    if (value.length > 10) {
-        value = value.slice(0, 10);
-    }
-    input.value = value;
-}
-
-function isNumberOrDash(evt) {
-    const charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode === 45) { // dash
-        return true;
-    }
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        return false;
-    }
-    return true;
-}
-
-// Image preview functionality
-document.getElementById('id_image').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const preview = document.getElementById('image-preview');
-            preview.src = e.target.result;
-            document.getElementById('preview-container').style.display = 'block';
-        }
-        reader.readAsDataURL(file);
-    }
-});
-
-// Drag and drop functionality
-const dropZone = document.getElementById('drop-zone');
-
-dropZone.addEventListener('dragover', function(e) {
-    e.preventDefault();
-    dropZone.classList.add('dragover');
-});
-
-dropZone.addEventListener('dragleave', function(e) {
-    e.preventDefault();
-    dropZone.classList.remove('dragover');
-});
-
-dropZone.addEventListener('drop', function(e) {
-    e.preventDefault();
-    dropZone.classList.remove('dragover');
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-        document.getElementById('id_image').files = files;
-        const event = new Event('change');
-        document.getElementById('id_image').dispatchEvent(event);
-    }
-});
-
-// Add datepicker initialization if needed
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize search form date inputs
-    const dateInputs = document.querySelectorAll('.date-input');
-    dateInputs.forEach(input => {
-        input.addEventListener('input', function() {
-            formatDate(this);
+    // Edit record functionality
+    document.querySelectorAll('.edit-record').forEach(button => {
+        button.addEventListener('click', function() {
+            const recordId = this.dataset.recordId;
+            const card = this.closest('.prediction-card');
+            const viewMode = card.querySelector('.view-mode');
+            const editForm = card.querySelector('.edit-form');
+            
+            viewMode.style.display = 'none';
+            editForm.style.display = 'block';
+            this.style.display = 'none';
         });
     });
 
-    // Initialize form submission
-    const searchForm = document.querySelector('.search-form');
-    if (searchForm) {
-        searchForm.addEventListener('submit', function(e) {
-            const dateFrom = this.querySelector('[name="date_from"]');
-            const dateTo = this.querySelector('[name="date_to"]');
+    // Cancel edit functionality
+    document.querySelectorAll('.cancel-edit').forEach(button => {
+        button.addEventListener('click', function() {
+            const card = this.closest('.prediction-card');
+            const viewMode = card.querySelector('.view-mode');
+            const editForm = card.querySelector('.edit-form');
+            const editButton = card.querySelector('.edit-record');
             
-            // Validate dates
-            if (dateFrom.value && dateTo.value) {
-                const fromDate = new Date(dateFrom.value);
-                const toDate = new Date(dateTo.value);
-                
-                if (fromDate > toDate) {
-                    e.preventDefault();
-                    alert('{% trans "From date cannot be later than To date" %}');
-                }
-            }
+            viewMode.style.display = 'flex';
+            editForm.style.display = 'none';
+            editButton.style.display = 'block';
         });
+    });
+
+    // Handle edit form submission
+    document.querySelectorAll('.edit-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Refresh the page to show updated data
+                    window.location.reload();
+                } else {
+                    alert(data.error || '{% trans "An error occurred while updating the record." %}');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('{% trans "An error occurred while updating the record." %}');
+            });
+        });
+    });
+
+    // Lithuanian date formatting function
+    function formatDate(input) {
+        let value = input.value.replace(/\D/g, '');
+        if (value.length >= 4) {
+            value = value.slice(0, 4) + '-' + value.slice(4);
+        }
+        if (value.length >= 7) {
+            value = value.slice(0, 7) + '-' + value.slice(7);
+        }
+        if (value.length > 10) {
+            value = value.slice(0, 10);
+        }
+        input.value = value;
     }
+
+    function isNumberOrDash(evt) {
+        const charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode === 45) { // dash
+            return true;
+        }
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+    // Image preview functionality
+    document.getElementById('id_image').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('image-preview');
+                preview.src = e.target.result;
+                document.getElementById('preview-container').style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Drag and drop functionality
+    const dropZone = document.getElementById('drop-zone');
+
+    dropZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            document.getElementById('id_image').files = files;
+            const event = new Event('change');
+            document.getElementById('id_image').dispatchEvent(event);
+        }
+    });
+
+    // Add datepicker initialization if needed
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize search form date inputs
+        const dateInputs = document.querySelectorAll('.date-input');
+        dateInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                formatDate(this);
+            });
+        });
+
+        // Initialize form submission
+        const searchForm = document.querySelector('.search-form');
+        if (searchForm) {
+            searchForm.addEventListener('submit', function(e) {
+                const dateFrom = this.querySelector('[name="date_from"]');
+                const dateTo = this.querySelector('[name="date_to"]');
+                
+                // Validate dates
+                if (dateFrom.value && dateTo.value) {
+                    const fromDate = new Date(dateFrom.value);
+                    const toDate = new Date(dateTo.value);
+                    
+                    if (fromDate > toDate) {
+                        e.preventDefault();
+                        alert('{% trans "From date cannot be later than To date" %}');
+                    }
+                }
+            });
+        }
+    });
 });
 </script>
 {% endblock %} 

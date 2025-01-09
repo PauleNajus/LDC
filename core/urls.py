@@ -11,6 +11,7 @@ urlpatterns = [
     path('logout/', views.CustomLogoutView.as_view(), name='logout'),
     path('result/<int:prediction_id>/', views.ResultView.as_view(), name='result'),
     path('delete/<int:prediction_id>/', views.DeletePredictionView.as_view(), name='delete_prediction'),
+    path('update/<int:prediction_id>/', views.UpdatePredictionView.as_view(), name='update_prediction'),
     path('password_reset/', auth_views.PasswordResetView.as_view(
         template_name='core/password_reset.html',
         email_template_name='core/password_reset_email.html',

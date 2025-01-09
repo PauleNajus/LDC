@@ -2,6 +2,8 @@ from django import template
 from django.template.defaultfilters import floatformat
 from django.utils.safestring import mark_safe
 import datetime
+import os
+from django.utils.translation import gettext as _
 
 register = template.Library()
 
@@ -149,4 +151,8 @@ def age_from_dob(dob):
         age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
         return f"{age} years"
     except (ValueError, TypeError):
-        return "Unknown" 
+        return "Unknown"
+
+@register.filter
+def filename(value):
+    return os.path.basename(str(value)) if value else _("No filename") 

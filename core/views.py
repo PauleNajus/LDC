@@ -294,24 +294,48 @@ class ResultView(LoginRequiredMixin, TemplateView):
 
 class DeletePredictionView(LoginRequiredMixin, View):
     def post(self, request, prediction_id):
-        try:
-            prediction = get_object_or_404(XRayImage, id=prediction_id)
-            
-            # Check if user has permission to delete this prediction
-            if prediction.user != request.user and not request.user.is_staff:
-                messages.error(request, _("You do not have permission to delete this prediction."))
-                return redirect('core:home')
-            
-            # Delete the prediction
-            prediction.delete()
-            messages.success(request, _("Prediction deleted successfully."))
-            logger.info(f"User {request.user.username} deleted prediction {prediction_id}")
-            
-        except Exception as e:
-            logger.error(f"Error deleting prediction {prediction_id}: {str(e)}")
-            messages.error(request, _("Error deleting prediction."))
-        
+        prediction = get_object_or_404(XRayImage, id=prediction_id, user=request.user)
+        prediction.delete()
+        messages.success(request, _("Record deleted successfully."))
         return redirect('core:home')
+
+class UpdatePredictionView(LoginRequiredMixin, View):
+    def post(self, request, prediction_id):
+        prediction = get_object_or_404(XRayImage, id=prediction_id, user=request.user)
+        
+        # Update fields
+        prediction.patient_name = request.POST.get('patient_name', prediction.patient_name)
+        prediction.patient_surname = request.POST.get('patient_surname', prediction.patient_surname)
+        prediction.patient_id = request.POST.get('patient_id', prediction.patient_id)
+        prediction.patient_gender = request.POST.get('patient_gender', prediction.patient_gender)
+        
+        # Handle dates
+        try:
+            if dob := request.POST.get('patient_date_of_birth'):
+                prediction.patient_date_of_birth = dob
+            if xray_date := request.POST.get('xray_date'):
+                prediction.xray_date = xray_date
+        except ValueError as e:
+            return JsonResponse({
+                'success': False,
+                'error': _('Invalid date format. Please use YYYY-MM-DD format.')
+            }, status=400)
+        
+        try:
+            prediction.full_clean()
+            prediction.save()
+            return JsonResponse({
+                'success': True,
+                'message': _('Record updated successfully.')
+            })
+        except ValidationError as e:
+            errors = {}
+            for field, error_list in e.message_dict.items():
+                errors[field] = [str(error) for error in error_list]
+            return JsonResponse({
+                'success': False,
+                'errors': errors
+            }, status=400)
 
 def set_language(request):
     """View to handle language switching."""
