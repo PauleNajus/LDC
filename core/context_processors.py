@@ -58,13 +58,13 @@ def navigation(request):
             'title': 'Home',
             'url': 'core:home',
             'icon': 'fas fa-home',
-            'active': request.resolver_match.url_name == 'home'
+            'active': request.resolver_match and request.resolver_match.url_name == 'home'
         },
         {
             'title': 'About',
             'url': 'core:about',
             'icon': 'fas fa-info-circle',
-            'active': request.resolver_match.url_name == 'about'
+            'active': request.resolver_match and request.resolver_match.url_name == 'about'
         },
     ]
     

@@ -16,9 +16,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-your-secret-key-here')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() == 'true'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '*').split(',')
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', os.environ.get('DJANGO_ALLOWED_HOSTS', '*')]
 
 # Application definition
 INSTALLED_APPS = [
@@ -182,6 +182,10 @@ STATICFILES_DIRS = [
 
 # WhiteNoise configuration
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_AUTOREFRESH = True
+WHITENOISE_MANIFEST_STRICT = False
+WHITENOISE_SERVE_MEDIA = True
 
 # Media files
 MEDIA_URL = 'media/'

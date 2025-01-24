@@ -1,0 +1,5 @@
+Dev: python manage.py runserver
+Prod:  .venv_new\Scripts\activate && python run_prod_windows.py
+
+Dev: http://127.0.0.1:8000
+Prod: http://[::1]:8000

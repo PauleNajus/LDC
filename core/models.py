@@ -258,6 +258,8 @@ class XRayImage(models.Model):
     def get_file_size_mb(self):
         """Get the file size in MB with 2 decimal places."""
         try:
+            if not self.image or not self.image.storage.exists(self.image.name):
+                return "0.00"
             size_bytes = self.image.size
             size_mb = size_bytes / (1024 * 1024)
             return f"{size_mb:.2f}"

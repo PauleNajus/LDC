@@ -1,11 +1,22 @@
 {
+    "include": [
+        "."
+    ],
+    "exclude": [
+        "**/node_modules",
+        "**/__pycache__",
+        ".venv_new"
+    ],
+    "ignore": [
+        "**/.git"
+    ],
+    "defineConstant": {
+        "DEBUG": true
+    },
     "venvPath": ".",
     "venv": ".venv_new",
-    "extraPaths": [
-        ".venv_new/Lib/site-packages"
-    ],
-    "typeCheckingMode": "basic",
-    "useLibraryCodeForTypes": true,
-    "reportMissingImports": "warning",
-    "reportMissingModuleSource": "warning"
+    "reportMissingImports": true,
+    "reportMissingTypeStubs": false,
+    "pythonVersion": "3.11",
+    "pythonPlatform": "Windows"
 } 
