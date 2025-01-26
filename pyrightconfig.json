@@ -1,0 +1,22 @@
+{
+    "include": [
+        "."
+    ],
+    "exclude": [
+        "**/node_modules",
+        "**/__pycache__",
+        ".venv_new"
+    ],
+    "ignore": [
+        "**/.git"
+    ],
+    "defineConstant": {
+        "DEBUG": true
+    },
+    "venvPath": ".",
+    "venv": ".venv_new",
+    "reportMissingImports": true,
+    "reportMissingModuleSource": false,
+    "pythonVersion": "3.10",
+    "typeCheckingMode": "basic"
+} 

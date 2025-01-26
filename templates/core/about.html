@@ -1,0 +1,329 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "About - Lung Disease Classifier" %}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- Model Overview -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title h4 mb-4">{% trans "Model Overview" %}</h2>
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <div class="info-block">
+                                <h3 class="h5">{% trans "Framework" %}</h3>
+                                <p class="text-muted mb-0">{% trans "PyTorch 2.5.1" %}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="info-block">
+                                <h3 class="h5">{% trans "Input Size" %}</h3>
+                                <p class="text-muted mb-0">{% trans "224x224 pixels" %}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="info-block">
+                                <h3 class="h5">{% trans "Classes" %}</h3>
+                                <p class="text-muted mb-0">{% trans "Normal, Pneumonia" %}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model Architecture -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title h4 mb-4">{% trans "Model Architecture" %}</h2>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>{% trans "Layer" %}</th>
+                                            <th>{% trans "Output Shape" %}</th>
+                                            <th>{% trans "Parameters" %}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Input Layer</td>
+                                            <td>(224, 224, 3)</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Conv2D + ReLU</td>
+                                            <td>(224, 224, 32)</td>
+                                            <td>896</td>
+                                        </tr>
+                                        <tr>
+                                            <td>MaxPooling2D</td>
+                                            <td>(112, 112, 32)</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Conv2D + ReLU</td>
+                                            <td>(112, 112, 64)</td>
+                                            <td>18,496</td>
+                                        </tr>
+                                        <tr>
+                                            <td>MaxPooling2D</td>
+                                            <td>(56, 56, 64)</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Flatten</td>
+                                            <td>(200,704)</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dense + ReLU</td>
+                                            <td>(64)</td>
+                                            <td>12,845,120</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dropout (0.5)</td>
+                                            <td>(64)</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dense (Output)</td>
+                                            <td>(2)</td>
+                                            <td>130</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-muted mt-3">{% trans "Total trainable parameters: 12,864,642" %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training Performance -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title h4 mb-4">{% trans "Training Performance" %}</h2>
+                    
+                    <!-- Training Metrics Summary -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="metric-card">
+                                <h5>{% trans "Best Validation Accuracy" %}</h5>
+                                <p class="h3 text-primary">{{ best_val_accuracy|floatformat:2 }}%</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card">
+                                <h5>{% trans "Training Time" %}</h5>
+                                <p class="h3 text-primary">{{ total_training_time|floatformat:1 }} hours</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card">
+                                <h5>{% trans "GPU Memory Used" %}</h5>
+                                <p class="h3 text-primary">{{ gpu_memory_used_gb|floatformat:1 }} GB</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card">
+                                <h5>{% trans "Convergence Epoch" %}</h5>
+                                <p class="h3 text-primary">{{ convergence_epoch }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Training History -->
+                    <div class="mb-5">
+                        <h3 class="h5 mb-3">{% trans "Training History" %}</h3>
+                        <div class="iframe-container">
+                            <div class="loading-spinner">
+                                <div class="spinner"></div>
+                                <p>{% trans "Loading visualization..." %}</p>
+                            </div>
+                            <iframe src="{% static 'training_history_interactive.html' %}" 
+                                    width="100%" height="800px" frameborder="0" 
+                                    class="training-plot"
+                                    onload="this.parentElement.classList.add('loaded')"></iframe>
+                        </div>
+                    </div>
+
+                    <!-- Learning Rate Schedule -->
+                    <div class="mb-5">
+                        <h3 class="h5 mb-3">{% trans "Learning Rate Schedule" %}</h3>
+                        <div class="iframe-container">
+                            <div class="loading-spinner">
+                                <div class="spinner"></div>
+                                <p>{% trans "Loading visualization..." %}</p>
+                            </div>
+                            <iframe src="{% static 'lr_schedule_interactive.html' %}" 
+                                    width="100%" height="400px" frameborder="0" 
+                                    class="training-plot"
+                                    onload="this.parentElement.classList.add('loaded')"></iframe>
+                        </div>
+                    </div>
+
+                    <!-- Cross-Validation Results -->
+                    <div class="mb-5">
+                        <h3 class="h5 mb-3">{% trans "5-Fold Cross-Validation Results" %}</h3>
+                        <div class="row">
+                            {% for i in '12345'|make_list %}
+                            <div class="col-md-6 mb-4">
+                                <div class="validation-fold-card">
+                                    <h4 class="h6 mb-3">{% trans "Fold" %} {{ i }}</h4>
+                                    
+                                    <!-- ROC Curve -->
+                                    <div class="mb-4">
+                                        <div class="iframe-container">
+                                            <div class="loading-spinner">
+                                                <div class="spinner"></div>
+                                                <p>{% trans "Loading ROC curve..." %}</p>
+                                            </div>
+                                            <iframe src="{% static 'roc_curve_fold_'|add:i|add:'.html' %}" 
+                                                    width="100%" height="400px" frameborder="0" 
+                                                    class="training-plot"
+                                                    onload="this.parentElement.classList.add('loaded')"></iframe>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Precision-Recall Curve -->
+                                    <div class="mb-4">
+                                        <div class="iframe-container">
+                                            <div class="loading-spinner">
+                                                <div class="spinner"></div>
+                                                <p>{% trans "Loading PR curve..." %}</p>
+                                            </div>
+                                            <iframe src="{% static 'pr_curve_fold_'|add:i|add:'.html' %}" 
+                                                    width="100%" height="400px" frameborder="0" 
+                                                    class="training-plot"
+                                                    onload="this.parentElement.classList.add('loaded')"></iframe>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Confusion Matrix -->
+                                    <div class="text-center">
+                                        <img src="{% static 'confusion_matrix_fold_'|add:i|add:'.png' %}" 
+                                             alt="{% trans 'Confusion Matrix' %} {{ i }}" 
+                                             class="img-fluid mb-2 light-theme-only confusion-matrix">
+                                        <img src="{% static 'confusion_matrix_fold_'|add:i|add:'_dark.png' %}" 
+                                             alt="{% trans 'Confusion Matrix' %} {{ i }}" 
+                                             class="img-fluid mb-2 dark-theme-only confusion-matrix">
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.metric-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.validation-fold-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.training-plot {
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.iframe-container {
+    position: relative;
+    width: 100%;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.iframe-container.loaded .training-plot {
+    opacity: 1;
+}
+
+.iframe-container.loaded .loading-spinner {
+    display: none;
+}
+
+.loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 1rem;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.confusion-matrix {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.confusion-matrix:hover {
+    transform: scale(1.02);
+}
+
+/* Theme-specific styles */
+[data-theme="light"] .dark-theme-only {
+    display: none;
+}
+
+[data-theme="dark"] .light-theme-only {
+    display: none;
+}
+
+.training-plot {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+}
+
+@media (max-width: 768px) {
+    .validation-fold-card {
+        padding: 1rem;
+    }
+    
+    .training-plot {
+        height: 300px !important;
+    }
+}
+</style>
+{% endblock %} 

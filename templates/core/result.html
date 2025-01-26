@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}Analysis Result - Lung Disease Classifier{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Result Card -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4 class="card-title mb-4">
+                    <i class="fas fa-microscope info-icon"></i>
+                    Analysis Result
+                </h4>
+                
+                <div class="row">
+                    <!-- Image Column -->
+                    <div class="col-md-5">
+                        <div class="text-center">
+                            <img src="{{ prediction.image.url }}" class="img-fluid rounded shadow" alt="X-ray image">
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-image me-1"></i>{{ prediction.image_size }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Analysis Column -->
+                    <div class="col-md-7">
+                        <!-- Primary Prediction -->
+                        <div class="mb-4">
+                            <h5 class="mb-3">Primary Diagnosis</h5>
+                            <div class="prediction-result p-3 rounded {% if prediction.prediction == 'NORMAL' %}bg-success bg-opacity-10{% else %}bg-danger bg-opacity-10{% endif %}">
+                                <h3 class="mb-2 {% if prediction.prediction == 'NORMAL' %}text-success{% else %}text-danger{% endif %}">
+                                    {{ prediction.prediction }}
+                                </h3>
+                                <p class="mb-0 text-muted">
+                                    Confidence: {{ prediction.confidence|floatformat:2 }}%
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Detailed Probabilities -->
+                        <div class="mb-4">
+                            <h5 class="mb-3">Probability Analysis</h5>
+                            
+                            <!-- Normal Probability -->
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Normal</span>
+                                    <span>{{ prediction.normal_probability|floatformat:2 }}%</span>
+                                </div>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar bg-success" role="progressbar" 
+                                         style="width: {{ prediction.normal_probability }}%" 
+                                         aria-valuenow="{{ prediction.normal_probability }}" 
+                                         aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Pneumonia Probability -->
+                            <div>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Pneumonia</span>
+                                    <span>{{ prediction.pneumonia_probability|floatformat:2 }}%</span>
+                                </div>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar bg-danger" role="progressbar" 
+                                         style="width: {{ prediction.pneumonia_probability }}%" 
+                                         aria-valuenow="{{ prediction.pneumonia_probability }}" 
+                                         aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Technical Details -->
+                        <div>
+                            <h5 class="mb-3">Technical Information</h5>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="mb-2">
+                                        <small class="text-muted">Processing Time</small>
+                                        <div>{{ prediction.processing_time|floatformat:3 }} seconds</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="mb-2">
+                                        <small class="text-muted">Model Version</small>
+                                        <div>Ensemble v1.0</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="mb-2">
+                                        <small class="text-muted">Analysis Date</small>
+                                        <div>{{ prediction.uploaded_at|date:"Y-m-d H:i" }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="mb-2">
+                                        <small class="text-muted">Hardware</small>
+                                        <div>RTX 4080</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'core:home' %}" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-2"></i>Analyze Another Image
+            </a>
+            <button class="btn btn-primary" onclick="window.print()">
+                <i class="fas fa-print me-2"></i>Print Report
+            </button>
+        </div>
+        
+        <!-- Additional Information -->
+        <div class="mt-4">
+            <div class="alert alert-info" role="alert">
+                <h5 class="alert-heading">
+                    <i class="fas fa-info-circle me-2"></i>Important Note
+                </h5>
+                <p class="mb-0">
+                    This analysis is provided as a screening tool and should not be used as the sole basis for diagnosis. 
+                    Please consult with a qualified healthcare professional for proper medical evaluation and diagnosis.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add any additional JavaScript functionality here
+</script>
+{% endblock %} 

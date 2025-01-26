@@ -1,0 +1,43 @@
+{% load i18n %}
+
+<form action="{% url 'set_language' %}" method="post" class="inline" id="language-form">
+    {% csrf_token %}
+    <input name="next" type="hidden" value="{{ request.path }}">
+    <input type="hidden" name="language" id="language-input" value="">
+    
+    {% get_current_language as LANGUAGE_CODE %}
+    <div class="relative">
+        <button type="button" 
+                onclick="toggleLanguage('{{ LANGUAGE_CODE }}')"
+                class="inline-flex items-center text-white hover:text-gray-300 px-3 py-2 text-sm font-medium">
+            <span class="mr-1">
+                {% if LANGUAGE_CODE == 'lt' %}
+                    🇱🇹
+                {% else %}
+                    🇬🇧
+                {% endif %}
+            </span>
+            <span>
+                {% if LANGUAGE_CODE == 'lt' %}
+                    LT
+                {% else %}
+                    EN
+                {% endif %}
+            </span>
+        </button>
+    </div>
+</form>
+
+<script>
+function toggleLanguage(currentLang) {
+    const form = document.getElementById('language-form');
+    const input = document.getElementById('language-input');
+    
+    // Toggle between languages
+    const newLang = currentLang === 'lt' ? 'en' : 'lt';
+    input.value = newLang;
+    
+    // Submit form
+    form.submit();
+}
+</script> 

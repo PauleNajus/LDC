@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+.env
+.venv
+.venv_gpu/
+.venv_new/
+.venv_tf/
+env/
+venv/
+ENV/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# Model files
+models/*.pth
+models/*.pth.tar
+models/*.h5
+models/*.keras
+!models/lung_classifier.pth
+!models/lung_classifier_model.pth
+
+# Training logs
+train_results_logs/
+logs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dataset
+Chest_X-Ray_Images_(Pneumonia)_2_classes/ 

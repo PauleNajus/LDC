@@ -1,0 +1,491 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-05 22:53+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "%(from)s-%(to)s relationship"
+msgstr "%(from)s-%(to)s relationship"
+
+msgid "Logo"
+msgstr "Logo"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Username"
+msgstr "Username"
+
+msgid "Password"
+msgstr "Password"
+
+msgid "Invalid username or password."
+msgstr "Invalid username or password."
+
+msgid "Home - Lung Disease Classifier"
+msgstr "Home - Lung Disease Classifier"
+
+msgid "Lung Disease Classifier"
+msgstr "Lung Disease Classifier"
+
+msgid "Upload a chest X-ray image to detect pneumonia using our advanced deep learning model. Accuracy: 96.13% (validated through 5-fold cross-validation)"
+msgstr "Upload a chest X-ray image to detect pneumonia using our advanced deep learning model. Accuracy: 96.13% (validated through 5-fold cross-validation)"
+
+msgid "Upload X-Ray Image"
+msgstr "Upload X-Ray Image"
+
+msgid "Patient Name"
+msgstr "Patient Name"
+
+msgid "Patient Surname"
+msgstr "Patient Surname"
+
+msgid "Patient ID"
+msgstr "Patient ID"
+
+msgid "Patient Date of Birth (YYYY-MM-DD)"
+msgstr "Patient Date of Birth (YYYY-MM-DD)"
+
+msgid "YYYY-MM-DD"
+msgstr "YYYY-MM-DD"
+
+msgid "Patient Gender"
+msgstr "Patient Gender"
+
+msgid "Select Gender"
+msgstr "Select Gender"
+
+msgid "Male"
+msgstr "Male"
+
+msgid "Female"
+msgstr "Female"
+
+msgid "X-Ray Date (YYYY-MM-DD)"
+msgstr "X-Ray Date (YYYY-MM-DD)"
+
+msgid "Drag & Drop or Click to Upload"
+msgstr "Drag & Drop or Click to Upload"
+
+msgid "Supported formats: JPEG, PNG, DICOM"
+msgstr "Supported formats: JPEG, PNG, DICOM"
+
+msgid "Preview"
+msgstr "Preview"
+
+msgid "Analyze Image"
+msgstr "Analyze Image"
+
+msgid "Loading..."
+msgstr "Loading..."
+
+msgid "Analyzing your X-ray image..."
+msgstr "Analyzing your X-ray image..."
+
+msgid "High Accuracy"
+msgstr "High Accuracy"
+
+msgid "96.13% accuracy with cross-validation and ensemble learning."
+msgstr "96.13% accuracy with cross-validation and ensemble learning."
+
+msgid "Fast Processing"
+msgstr "Fast Processing"
+
+msgid "Optimized with PyTorch JIT and parallel processing for rapid inference."
+msgstr "Optimized with PyTorch JIT and parallel processing for rapid inference."
+
+msgid "Detailed Analysis"
+msgstr "Detailed Analysis"
+
+msgid "Comprehensive probability scores and visualization."
+msgstr "Comprehensive probability scores and visualization."
+
+msgid "Recent Predictions"
+msgstr "Recent Predictions"
+
+msgid "All"
+msgstr "All"
+
+msgid "Normal"
+msgstr "Normal"
+
+msgid "Pneumonia"
+msgstr "Pneumonia"
+
+msgid "X-ray"
+msgstr "X-ray"
+
+msgid "Patient Information:"
+msgstr "Patient Information:"
+
+msgid "Name:"
+msgstr "Name:"
+
+msgid "Surname:"
+msgstr "Surname:"
+
+msgid "Patient ID:"
+msgstr "Patient ID:"
+
+msgid "Gender:"
+msgstr "Gender:"
+
+msgid "Date of Birth:"
+msgstr "Date of Birth:"
+
+msgid "X-Ray Date:"
+msgstr "X-Ray Date:"
+
+msgid "Prediction:"
+msgstr "Prediction:"
+
+msgid "Normal Probability:"
+msgstr "Normal Probability:"
+
+msgid "Pneumonia Probability:"
+msgstr "Pneumonia Probability:"
+
+msgid "ago"
+msgstr "ago"
+
+msgid "MB"
+msgstr "MB"
+
+msgid "s"
+msgstr "s"
+
+msgid "Are you sure you want to delete this record?"
+msgstr "Are you sure you want to delete this record?"
+
+msgid "Delete Record"
+msgstr "Delete Record"
+
+msgid "Load More Records"
+msgstr "Load More Records"
+
+msgid "About - Lung Disease Classifier"
+msgstr "About - Lung Disease Classifier"
+
+msgid "About the Project"
+msgstr "About the Project"
+
+msgid "Learn about the technology behind our lung disease classification system."
+msgstr "Learn about the technology behind our lung disease classification system."
+
+msgid "Analysis Result - Lung Disease Classifier"
+msgstr "Analysis Result - Lung Disease Classifier"
+
+msgid "Analysis Result"
+msgstr "Analysis Result"
+
+msgid "Primary Diagnosis"
+msgstr "Primary Diagnosis"
+
+msgid "Confidence:"
+msgstr "Confidence:"
+
+msgid "Probability Analysis"
+msgstr "Probability Analysis"
+
+msgid "Technical Information"
+msgstr "Technical Information"
+
+msgid "Processing Time"
+msgstr "Processing Time"
+
+msgid "Model Version"
+msgstr "Model Version"
+
+msgid "Analysis Date"
+msgstr "Analysis Date"
+
+msgid "Hardware"
+msgstr "Hardware"
+
+msgid "Analyze Another Image"
+msgstr "Analyze Another Image"
+
+msgid "Print Report"
+msgstr "Print Report"
+
+msgid "Important Note"
+msgstr "Important Note"
+
+msgid "This analysis is provided as a screening tool and should not be used as the sole basis for diagnosis. Please consult with a qualified healthcare professional for proper medical evaluation and diagnosis."
+msgstr "This analysis is provided as a screening tool and should not be used as the sole basis for diagnosis. Please consult with a qualified healthcare professional for proper medical evaluation and diagnosis."
+
+msgid "Home"
+msgstr "Home"
+
+msgid "About"
+msgstr "About"
+
+msgid "Logout"
+msgstr "Logout"
+
+msgid "Created by Paulius Bundza, Vilnius Tech. All rights reserved."
+msgstr "Created by Paulius Bundza, Vilnius Tech. All rights reserved."
+
+msgid "Language"
+msgstr "Language"
+
+msgid "Select Language"
+msgstr "Select Language"
+
+msgid "English"
+msgstr "English"
+
+msgid "© 2024 Lung Disease Classifier. Created by Paulius Bundza, Vilnius Tech. All rights reserved."
+msgstr "© 2024 Lung Disease Classifier. Created by Paulius Bundza, Vilnius Tech. All rights reserved."
+
+msgid "Model Information"
+msgstr "Model Information"
+
+msgid "Architecture"
+msgstr "Architecture"
+
+msgid "Convolutional Neural Network (CNN)"
+msgstr "Convolutional Neural Network (CNN)"
+
+msgid "Training Data"
+msgstr "Training Data"
+
+msgid "Over 100,000 chest X-ray images"
+msgstr "Over 100,000 chest X-ray images"
+
+msgid "Validation Method"
+msgstr "Validation Method"
+
+msgid "5-fold cross-validation"
+msgstr "5-fold cross-validation"
+
+msgid "Base Model"
+msgstr "Base Model"
+
+msgid "ResNet-50 with transfer learning"
+msgstr "ResNet-50 with transfer learning"
+
+msgid "Training Time"
+msgstr "Training Time"
+
+msgid "48 hours on NVIDIA A100"
+msgstr "48 hours on NVIDIA A100"
+
+msgid "Model Size"
+msgstr "Model Size"
+
+msgid "98MB (optimized with quantization)"
+msgstr "98MB (optimized with quantization)"
+
+msgid "Performance Metrics"
+msgstr "Performance Metrics"
+
+msgid "Accuracy"
+msgstr "Accuracy"
+
+msgid "96.13%"
+msgstr "96.13%"
+
+msgid "Sensitivity"
+msgstr "Sensitivity"
+
+msgid "94.89%"
+msgstr "94.89%"
+
+msgid "Specificity"
+msgstr "Specificity"
+
+msgid "97.37%"
+msgstr "97.37%"
+
+msgid "F1 Score"
+msgstr "F1 Score"
+
+msgid "95.92%"
+msgstr "95.92%"
+
+msgid "AUC-ROC"
+msgstr "AUC-ROC"
+
+msgid "0.983"
+msgstr "0.983"
+
+msgid "Technical Details"
+msgstr "Technical Details"
+
+msgid "Framework"
+msgstr "Framework"
+
+msgid "PyTorch 2.0"
+msgstr "PyTorch 2.0"
+
+msgid "Optimization"
+msgstr "Optimization"
+
+msgid "TorchScript, ONNX Runtime"
+msgstr "TorchScript, ONNX Runtime"
+
+msgid "Deployment"
+msgstr "Deployment"
+
+msgid "Docker container with GPU support"
+msgstr "Docker container with GPU support"
+
+msgid "API"
+msgstr "API"
+
+msgid "REST API with Django"
+msgstr "REST API with Django"
+
+msgid "Development Team"
+msgstr "Development Team"
+
+msgid "Lead Developer"
+msgstr "Lead Developer"
+
+msgid "Paulius Bundza"
+msgstr "Paulius Bundza"
+
+msgid "Institution"
+msgstr "Institution"
+
+msgid "Vilnius Tech University"
+msgstr "Vilnius Tech University"
+
+msgid "Department"
+msgstr "Department"
+
+msgid "Faculty of Electronics"
+msgstr "Faculty of Electronics"
+
+msgid "Contact"
+msgstr "Contact"
+
+msgid "For technical support or collaboration inquiries"
+msgstr "For technical support or collaboration inquiries"
+
+msgid "Version History"
+msgstr "Version History"
+
+msgid "Current Version"
+msgstr "Current Version"
+
+msgid "2.0.0 (January 2024)"
+msgstr "2.0.0 (January 2024)"
+
+msgid "Previous Version"
+msgstr "Previous Version"
+
+msgid "1.5.0 (October 2023)"
+msgstr "1.5.0 (October 2023)"
+
+msgid "Initial Release"
+msgstr "Initial Release"
+
+msgid "1.0.0 (June 2023)"
+msgstr "1.0.0 (June 2023)"
+
+msgid "Classes:"
+msgstr "Classes:"
+
+msgid "Normal, Pneumonia"
+msgstr "Normal, Pneumonia"
+
+msgid "Input Size"
+msgstr "Input Size"
+
+msgid "224x224 pixels"
+msgstr "224x224 pixels"
+
+msgid "PyTorch 2.5.1"
+msgstr "PyTorch 2.5.1"
+
+msgid "Training Dataset"
+msgstr "Training Dataset"
+
+msgid "Chest X-Ray images"
+msgstr "Chest X-Ray images"
+
+msgid "GPU Acceleration"
+msgstr "GPU Acceleration"
+
+msgid "CUDA (if available)"
+msgstr "CUDA (if available)"
+
+msgid "~25MB"
+msgstr "~25MB"
+
+msgid "How It Works"
+msgstr "How It Works"
+
+msgid "Image preprocessing and normalization"
+msgstr "Image preprocessing and normalization"
+
+msgid "Feature extraction using CNN layers"
+msgstr "Feature extraction using CNN layers"
+
+msgid "Classification based on learned patterns"
+msgstr "Classification based on learned patterns"
+
+msgid "Training Performance"
+msgstr "Training Performance"
+
+msgid "Overall Training History"
+msgstr "Overall Training History"
+
+msgid "Lung disease classifier uses a deep learning model based on Convolutional Neural Networks (CNN) to analyze chest X-ray images and detect signs of pneumonia."
+msgstr "Lung disease classifier uses a deep learning model based on Convolutional Neural Networks (CNN) to analyze chest X-ray images and detect signs of pneumonia."
+
+msgid "The model has been trained on a large dataset of chest X-ray images, learning to identify patterns and features that are indicative of pneumonia. When you upload an image, it goes through the following process:"
+msgstr "The model has been trained on a large dataset of chest X-ray images, learning to identify patterns and features that are indicative of pneumonia. When you upload an image, it goes through the following process:"
+
+msgid "Model's learning progression showing accuracy and loss metrics over training epochs."
+msgstr "Model's learning progression showing accuracy and loss metrics over training epochs."
+
+msgid "5-Fold Cross-Validation Results"
+msgstr "5-Fold Cross-Validation Results"
+
+msgid "Training History Fold"
+msgstr "Training History Fold"
+
+msgid "Fold"
+msgstr "Fold"
+
+msgid "performance metrics"
+msgstr "performance metrics"
+
+msgid "Model Evaluation"
+msgstr "Model Evaluation"
+
+msgid "Confusion Matrix"
+msgstr "Confusion Matrix"
+
+msgid "Confusion matrix showing the model's classification performance across different categories."
+msgstr "Confusion matrix showing the model's classification performance across different categories."
+
+msgid "LDC"
+msgstr "LDC"
+
+msgid "🌙"
+msgstr "🌙"
+
+msgid "☀️"
+msgstr "☀️"
+
+msgid "LDC Logo"
+msgstr "LDC Logo"
+
+msgid "Change language"
+msgstr "Change language"
+
+msgid "Switch theme"
+msgstr "Switch theme"
+
