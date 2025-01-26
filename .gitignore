@@ -25,6 +25,9 @@ venv/
 .venv/
 .env/
 ENV/
+.venv_gpu/
+.venv_new/
+.venv_tf/
 
 # Django
 *.log
@@ -52,4 +55,22 @@ Chest_X-Ray_Images_(Pneumonia)_2_classes/
 models/*.pth
 models/*.pth.tar
 models/*.keras
-models/*.h5 
+models/*.h5
+models/checkpoint_fold_*.pth.tar
+models/best_model_fold_*.pth
+models/final_ensemble_model.pth
+models/lung_classifier_model.h5
+models/lung_classifier_model.keras
+
+# Keep smaller models
+!models/lung_classifier.pth
+!models/lung_classifier_model.pth
+
+# Logs
+logs/
+train_results_logs/
+
+# IDE and OS files
+*.swp
+*.swo
+*~ 
