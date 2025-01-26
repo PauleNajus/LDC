@@ -19,6 +19,7 @@ from django.conf import settings
 from django.http import Http404, JsonResponse
 from .models import XRayImage, LungClassifier
 from .forms import XRayImageForm, PredictionSearchForm
+from .metrics import CV_METRICS
 from datetime import datetime
 import logging
 import time
@@ -250,19 +251,12 @@ class HomeView(LoginRequiredMixin, TemplateView):
             return self.render_to_response(self.get_context_data(form=form))
 
 class AboutView(TemplateView):
+    """About page view."""
     template_name = 'core/about.html'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
-        # Add training performance metrics
-        context.update({
-            'best_val_accuracy': 96.13,  # Based on 5-fold cross-validation
-            'total_training_time': 5.2,   # Hours
-            'gpu_memory_used_gb': 6.8,    # GB
-            'convergence_epoch': 35,       # Epoch where model converged
-        })
-        
+        context.update(CV_METRICS)
         return context
 
 class ResultView(LoginRequiredMixin, TemplateView):

@@ -219,6 +219,131 @@
                             {% endfor %}
                         </div>
                     </div>
+
+                    <!-- Cross-Validation Averages -->
+                    <div class="mb-5">
+                        <h3 class="h5 mb-4">{% trans "5-Fold Cross-Validation Averages" %}</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- Average ROC Curve -->
+                                <div class="mb-4">
+                                    <h4 class="h6 mb-3">{% trans "Average ROC Curve" %}</h4>
+                                    <div class="iframe-container">
+                                        <div class="loading-spinner">
+                                            <div class="spinner"></div>
+                                            <p>{% trans "Loading average ROC curve..." %}</p>
+                                        </div>
+                                        <iframe src="{% static 'average_roc_curve.html' %}" 
+                                                width="100%" height="400px" frameborder="0" 
+                                                class="training-plot"
+                                                onload="this.parentElement.classList.add('loaded')"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Average Precision-Recall Curve -->
+                                <div class="mb-4">
+                                    <h4 class="h6 mb-3">{% trans "Average Precision-Recall Curve" %}</h4>
+                                    <div class="iframe-container">
+                                        <div class="loading-spinner">
+                                            <div class="spinner"></div>
+                                            <p>{% trans "Loading average PR curve..." %}</p>
+                                        </div>
+                                        <iframe src="{% static 'average_pr_curve.html' %}" 
+                                                width="100%" height="400px" frameborder="0" 
+                                                class="training-plot"
+                                                onload="this.parentElement.classList.add('loaded')"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Cross-Validation Metrics -->
+                        <div class="row mt-4">
+                            <div class="col-md-3">
+                                <div class="metric-card">
+                                    <h5>{% trans "Average Accuracy" %}</h5>
+                                    <p class="h3 text-primary">{{ cv_avg_accuracy|floatformat:2 }}%</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="metric-card">
+                                    <h5>{% trans "Average Precision" %}</h5>
+                                    <p class="h3 text-primary">{{ cv_avg_precision|floatformat:2 }}%</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="metric-card">
+                                    <h5>{% trans "Average Recall" %}</h5>
+                                    <p class="h3 text-primary">{{ cv_avg_recall|floatformat:2 }}%</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="metric-card">
+                                    <h5>{% trans "Average F1 Score" %}</h5>
+                                    <p class="h3 text-primary">{{ cv_avg_f1|floatformat:2 }}%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hyperparameters -->
+                    <div class="mb-5">
+                        <h3 class="h5 mb-4">{% trans "Model Hyperparameters" %}</h3>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>{% trans "Parameter" %}</th>
+                                        <th>{% trans "Value" %}</th>
+                                        <th>{% trans "Description" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{% trans "Batch Size" %}</td>
+                                        <td>192</td>
+                                        <td>{% trans "Number of images processed in each training iteration" %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans "Accumulation Steps" %}</td>
+                                        <td>3</td>
+                                        <td>{% trans "Steps for gradient accumulation (effective batch size: 576)" %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans "Learning Rate" %}</td>
+                                        <td>{% trans "Adaptive" %}</td>
+                                        <td>{% trans "Warm-up for first 5 epochs, then cosine annealing" %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans "Optimizer" %}</td>
+                                        <td>AdamW</td>
+                                        <td>{% trans "Adam with weight decay for better generalization" %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans "Weight Decay" %}</td>
+                                        <td>0.01</td>
+                                        <td>{% trans "L2 regularization factor" %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans "Dropout Rates" %}</td>
+                                        <td>0.3-0.4</td>
+                                        <td>{% trans "Varying dropout rates in classifier layers" %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans "Early Stopping Patience" %}</td>
+                                        <td>10</td>
+                                        <td>{% trans "Epochs to wait before stopping if no improvement" %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans "Min/Max Epochs" %}</td>
+                                        <td>30/100</td>
+                                        <td>{% trans "Minimum and maximum training epochs" %}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
