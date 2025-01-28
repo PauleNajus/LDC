@@ -165,8 +165,8 @@ PREFETCH_FACTOR = 4
 PATIENCE = 10  # Reduced since we're seeing good convergence by epoch 30
 MIN_EPOCHS = 30  # Reduced based on observed convergence
 MAX_EPOCHS = 100  # Reduced since we're unlikely to need 200 epochs
-TARGET_ACCURACY = 0.95  # Adjusted to a more realistic target based on observed performance
-CHECKPOINT_FREQ = 5  # Save checkpoint every 5 epochs
+TARGET_ACCURACY = 0.96  # Updated to 96% target accuracy
+CHECKPOINT_FREQ = 10  # Updated to save checkpoint every 10 epochs
 
 # Memory optimization settings
 torch.cuda.set_per_process_memory_fraction(0.95)  # Use 95% of available VRAM
@@ -388,8 +388,8 @@ def train_model(data_dir, epochs=MAX_EPOCHS, batch_size=BATCH_SIZE, n_folds=5):
 
     # Enhanced data augmentation
     train_transform = A.Compose([
-        A.Resize(height=256, width=256),
-        A.RandomCrop(height=224, width=224),
+        A.Resize(height=320, width=320),  # Increased from 256x256
+        A.RandomCrop(height=288, width=288),  # Increased from 224x224
         A.HorizontalFlip(p=0.5),
         A.Affine(
             translate_percent=0.1,
@@ -405,8 +405,8 @@ def train_model(data_dir, epochs=MAX_EPOCHS, batch_size=BATCH_SIZE, n_folds=5):
     ])
 
     val_transform = A.Compose([
-        A.Resize(height=256, width=256),
-        A.CenterCrop(height=224, width=224),
+        A.Resize(height=320, width=320),  # Increased from 256x256
+        A.CenterCrop(height=288, width=288),  # Increased from 224x224
         A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ToTensorV2(),
     ])
@@ -646,8 +646,8 @@ def main():
     
     # Data augmentation and preprocessing
     train_transform = A.Compose([
-        A.Resize(height=256, width=256),
-        A.RandomCrop(height=224, width=224),
+        A.Resize(height=320, width=320),  # Increased from 256x256
+        A.RandomCrop(height=288, width=288),  # Increased from 224x224
         A.HorizontalFlip(p=0.5),
         A.Affine(
             translate_percent=0.1,
@@ -663,8 +663,8 @@ def main():
     ])
     
     val_transform = A.Compose([
-        A.Resize(height=256, width=256),
-        A.CenterCrop(height=224, width=224),
+        A.Resize(height=320, width=320),  # Increased from 256x256
+        A.CenterCrop(height=288, width=288),  # Increased from 224x224
         A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ToTensorV2(),
     ])
