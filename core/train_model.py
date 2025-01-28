@@ -27,6 +27,10 @@ import seaborn as sns
 import time
 import json
 
+# Add at the very top of the file before other imports
+import os
+os.environ['NO_ALBUMENTATIONS_UPDATE'] = '1'  # Disable version check
+
 # Define the model architecture (copied from models.py to make it independent)
 class LungClassifierModel(nn.Module):
     def __init__(self):
@@ -387,7 +391,14 @@ def train_model(data_dir, epochs=MAX_EPOCHS, batch_size=BATCH_SIZE, n_folds=5):
         A.Resize(height=256, width=256),
         A.RandomCrop(height=224, width=224),
         A.HorizontalFlip(p=0.5),
-        A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.2, rotate_limit=20, p=0.5),
+        A.Affine(
+            translate_percent=0.1,
+            scale=0.1,
+            rotate=15,
+            shear=0,  # Add shear if needed
+            interpolation=cv2.INTER_LINEAR,
+            p=0.5
+        ),
         A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.3),
         A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ToTensorV2(),
@@ -638,7 +649,14 @@ def main():
         A.Resize(height=256, width=256),
         A.RandomCrop(height=224, width=224),
         A.HorizontalFlip(p=0.5),
-        A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.2, rotate_limit=20, p=0.5),
+        A.Affine(
+            translate_percent=0.1,
+            scale=0.1,
+            rotate=15,
+            shear=0,  # Add shear if needed
+            interpolation=cv2.INTER_LINEAR,
+            p=0.5
+        ),
         A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.3),
         A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ToTensorV2(),
