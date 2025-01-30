@@ -16,13 +16,13 @@
                         <div class="col-md-4 mb-4">
                             <div class="info-block">
                                 <h3 class="h5">{% trans "Framework" %}</h3>
-                                <p class="text-muted mb-0">{% trans "PyTorch 2.5.1" %}</p>
+                                <p class="text-muted mb-0">{% trans "PyTorch 2.0" %}</p>
                             </div>
                         </div>
                         <div class="col-md-4 mb-4">
                             <div class="info-block">
-                                <h3 class="h5">{% trans "Input Size" %}</h3>
-                                <p class="text-muted mb-0">{% trans "224x224 pixels" %}</p>
+                                <h3 class="h5">{% trans "Base Model" %}</h3>
+                                <p class="text-muted mb-0">{% trans "ResNet-50" %}</p>
                             </div>
                         </div>
                         <div class="col-md-4 mb-4">
@@ -57,49 +57,39 @@
                                             <td>0</td>
                                         </tr>
                                         <tr>
-                                            <td>Conv2D + ReLU</td>
-                                            <td>(224, 224, 32)</td>
-                                            <td>896</td>
+                                            <td>ResNet-50 Base</td>
+                                            <td>(7, 7, 2048)</td>
+                                            <td>23,587,712</td>
                                         </tr>
                                         <tr>
-                                            <td>MaxPooling2D</td>
-                                            <td>(112, 112, 32)</td>
+                                            <td>Global Average Pooling</td>
+                                            <td>(2048)</td>
                                             <td>0</td>
                                         </tr>
                                         <tr>
-                                            <td>Conv2D + ReLU</td>
-                                            <td>(112, 112, 64)</td>
-                                            <td>18,496</td>
-                                        </tr>
-                                        <tr>
-                                            <td>MaxPooling2D</td>
-                                            <td>(56, 56, 64)</td>
-                                            <td>0</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Flatten</td>
-                                            <td>(200,704)</td>
+                                            <td>Dropout (0.5)</td>
+                                            <td>(2048)</td>
                                             <td>0</td>
                                         </tr>
                                         <tr>
                                             <td>Dense + ReLU</td>
-                                            <td>(64)</td>
-                                            <td>12,845,120</td>
+                                            <td>(512)</td>
+                                            <td>1,049,088</td>
                                         </tr>
                                         <tr>
-                                            <td>Dropout (0.5)</td>
-                                            <td>(64)</td>
+                                            <td>Dropout (0.3)</td>
+                                            <td>(512)</td>
                                             <td>0</td>
                                         </tr>
                                         <tr>
                                             <td>Dense (Output)</td>
                                             <td>(2)</td>
-                                            <td>130</td>
+                                            <td>1,026</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <p class="text-muted mt-3">{% trans "Total trainable parameters: 12,864,642" %}</p>
+                            <p class="text-muted mt-3">{% trans "Total trainable parameters: 24,637,826" %}</p>
                         </div>
                     </div>
                 </div>
@@ -302,23 +292,18 @@
                                 <tbody>
                                     <tr>
                                         <td>{% trans "Batch Size" %}</td>
-                                        <td>192</td>
-                                        <td>{% trans "Number of images processed in each training iteration" %}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>{% trans "Accumulation Steps" %}</td>
-                                        <td>3</td>
-                                        <td>{% trans "Steps for gradient accumulation (effective batch size: 576)" %}</td>
+                                        <td>32</td>
+                                        <td>{% trans "Number of images processed in each training step" %}</td>
                                     </tr>
                                     <tr>
                                         <td>{% trans "Learning Rate" %}</td>
-                                        <td>{% trans "Adaptive" %}</td>
-                                        <td>{% trans "Warm-up for first 5 epochs, then cosine annealing" %}</td>
+                                        <td>1e-4</td>
+                                        <td>{% trans "Initial learning rate with cosine decay" %}</td>
                                     </tr>
                                     <tr>
                                         <td>{% trans "Optimizer" %}</td>
                                         <td>AdamW</td>
-                                        <td>{% trans "Adam with weight decay for better generalization" %}</td>
+                                        <td>{% trans "Optimizer with weight decay" %}</td>
                                     </tr>
                                     <tr>
                                         <td>{% trans "Weight Decay" %}</td>
@@ -327,13 +312,18 @@
                                     </tr>
                                     <tr>
                                         <td>{% trans "Dropout Rates" %}</td>
-                                        <td>0.3-0.4</td>
-                                        <td>{% trans "Varying dropout rates in classifier layers" %}</td>
+                                        <td>0.5, 0.3</td>
+                                        <td>{% trans "Dropout probabilities for regularization" %}</td>
                                     </tr>
                                     <tr>
-                                        <td>{% trans "Early Stopping Patience" %}</td>
-                                        <td>10</td>
-                                        <td>{% trans "Epochs to wait before stopping if no improvement" %}</td>
+                                        <td>{% trans "Data Augmentation" %}</td>
+                                        <td>Yes</td>
+                                        <td>{% trans "Random flips, rotations, brightness/contrast adjustments" %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{% trans "Loss Function" %}</td>
+                                        <td>BCE</td>
+                                        <td>{% trans "Binary Cross Entropy loss" %}</td>
                                     </tr>
                                     <tr>
                                         <td>{% trans "Min/Max Epochs" %}</td>
