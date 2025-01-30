@@ -450,5 +450,33 @@
         height: 300px !important;
     }
 }
+
+/* Dark theme table styles */
+[data-theme="dark"] .table {
+    color: #FFFFFF;
+    background-color: var(--card-bg);
+}
+
+[data-theme="dark"] .table-bordered {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .table th,
+[data-theme="dark"] .table td {
+    border-color: var(--border-color);
+    background-color: var(--card-bg);
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .table thead th {
+    background-color: rgba(75, 85, 99, 0.3);
+    border-bottom: 2px solid var(--border-color);
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .table tbody tr:hover td {
+    background-color: rgba(75, 85, 99, 0.2);
+    color: #FFFFFF;
+}
 </style>
 {% endblock %} 
