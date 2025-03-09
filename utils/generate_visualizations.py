@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from sklearn.metrics import roc_curve, auc, precision_recall_curve, average_precision_score
 
 def ensure_static_dir():
     """Ensure the static directory exists."""
@@ -98,28 +99,20 @@ def generate_confusion_matrices():
             )
             plt.close()
 
-def generate_roc_curves():
+def generate_roc_curves(fold_histories):
     """Generate interactive ROC curves for each fold."""
     static_dir = ensure_static_dir()
     
-    # Sample ROC curve data for each fold
-    fpr_tpr_data = [
-        (np.linspace(0, 1, 100), np.power(np.linspace(0, 1, 100), 0.3)),  # Fold 1
-        (np.linspace(0, 1, 100), np.power(np.linspace(0, 1, 100), 0.25)),  # Fold 2
-        (np.linspace(0, 1, 100), np.power(np.linspace(0, 1, 100), 0.28)),  # Fold 3
-        (np.linspace(0, 1, 100), np.power(np.linspace(0, 1, 100), 0.27)),  # Fold 4
-        (np.linspace(0, 1, 100), np.power(np.linspace(0, 1, 100), 0.26)),  # Fold 5
-    ]
-    
-    for i, (fpr, tpr) in enumerate(fpr_tpr_data, 1):
-        # Calculate AUC
-        auc = np.trapz(tpr, fpr)
+    for i, fold_history in enumerate(fold_histories, 1):
+        # Calculate ROC curve
+        fpr, tpr, _ = roc_curve(fold_history['true_labels'], fold_history['pred_probs'])
+        auc_score = auc(fpr, tpr)
         
         fig = go.Figure()
         fig.add_trace(go.Scatter(
             x=fpr, 
             y=tpr, 
-            name=f'ROC curve (AUC = {auc:.3f})',
+            name=f'ROC curve (AUC = {auc_score:.3f})',
             line=dict(color='royalblue', width=2)
         ))
         fig.add_trace(go.Scatter(
@@ -146,28 +139,20 @@ def generate_roc_curves():
             config={'responsive': True}
         )
 
-def generate_pr_curves():
+def generate_pr_curves(fold_histories):
     """Generate interactive precision-recall curves for each fold."""
     static_dir = ensure_static_dir()
     
-    # Sample precision-recall data for each fold
-    prec_recall_data = [
-        (np.linspace(1, 0, 100), np.power(np.linspace(1, 0, 100), 2)),  # Fold 1
-        (np.linspace(1, 0, 100), np.power(np.linspace(1, 0, 100), 1.9)),  # Fold 2
-        (np.linspace(1, 0, 100), np.power(np.linspace(1, 0, 100), 1.95)),  # Fold 3
-        (np.linspace(1, 0, 100), np.power(np.linspace(1, 0, 100), 1.85)),  # Fold 4
-        (np.linspace(1, 0, 100), np.power(np.linspace(1, 0, 100), 1.92)),  # Fold 5
-    ]
-    
-    for i, (precision, recall) in enumerate(prec_recall_data, 1):
-        # Calculate average precision
-        ap = np.trapz(precision, recall)
+    for i, fold_history in enumerate(fold_histories, 1):
+        # Calculate precision-recall curve
+        precision, recall, _ = precision_recall_curve(fold_history['true_labels'], fold_history['pred_probs'])
+        ap_score = average_precision_score(fold_history['true_labels'], fold_history['pred_probs'])
         
         fig = go.Figure()
         fig.add_trace(go.Scatter(
             x=recall, 
             y=precision, 
-            name=f'PR curve (AP = {ap:.3f})',
+            name=f'PR curve (AP = {ap_score:.3f})',
             line=dict(color='royalblue', width=2)
         ))
         
@@ -188,16 +173,12 @@ def generate_pr_curves():
             config={'responsive': True}
         )
 
-def generate_training_history():
+def generate_training_history(history):
     """Generate interactive training history plot."""
     static_dir = ensure_static_dir()
     
-    # Sample training history data
-    epochs = np.arange(1, 51)
-    train_acc = 1 / (1 + np.exp(-0.2 * (epochs - 10))) * 0.3 + 0.65
-    val_acc = train_acc + np.random.normal(0, 0.02, len(epochs))
-    train_loss = 0.8 * np.exp(-0.1 * epochs) + 0.2
-    val_loss = train_loss + np.random.normal(0, 0.05, len(epochs))
+    # Convert range to list if needed
+    epochs = list(range(1, len(history['train_acc']) + 1))
     
     fig = make_subplots(
         rows=2, 
@@ -210,7 +191,7 @@ def generate_training_history():
     fig.add_trace(
         go.Scatter(
             x=epochs, 
-            y=train_acc, 
+            y=history['train_acc'], 
             name='Train Accuracy',
             line=dict(color='royalblue', width=2)
         ), 
@@ -220,7 +201,7 @@ def generate_training_history():
     fig.add_trace(
         go.Scatter(
             x=epochs, 
-            y=val_acc, 
+            y=history['val_acc'], 
             name='Validation Accuracy',
             line=dict(color='coral', width=2)
         ), 
@@ -232,7 +213,7 @@ def generate_training_history():
     fig.add_trace(
         go.Scatter(
             x=epochs, 
-            y=train_loss, 
+            y=history['train_loss'], 
             name='Train Loss',
             line=dict(color='royalblue', width=2)
         ), 
@@ -242,7 +223,7 @@ def generate_training_history():
     fig.add_trace(
         go.Scatter(
             x=epochs, 
-            y=val_loss, 
+            y=history['val_loss'], 
             name='Validation Loss',
             line=dict(color='coral', width=2)
         ), 
@@ -271,18 +252,17 @@ def generate_training_history():
         config={'responsive': True}
     )
 
-def generate_lr_schedule():
+def generate_lr_schedule(history):
     """Generate interactive learning rate schedule plot."""
     static_dir = ensure_static_dir()
     
-    # Sample learning rate schedule data
-    epochs = np.arange(1, 51)
-    lr = 0.001 * np.exp(-0.05 * epochs)
+    # Convert range to list if needed
+    epochs = list(range(1, len(history['learning_rates']) + 1))
     
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=epochs, 
-        y=lr, 
+        y=history['learning_rates'], 
         name='Learning Rate',
         line=dict(color='royalblue', width=2)
     ))
@@ -306,26 +286,48 @@ def generate_lr_schedule():
     )
 
 def main():
-    """Generate all visualization files."""
+    """Generate all visualization files for testing/development."""
     print("Generating visualization files...")
     
-    # Generate all visualizations
+    # Generate confusion matrices
     generate_confusion_matrices()
     print("✓ Generated confusion matrices")
     
-    generate_roc_curves()
+    # Create sample data for testing
+    sample_fold_histories = []
+    for i in range(5):
+        n_samples = 1000
+        true_labels = np.random.randint(0, 2, n_samples)
+        pred_probs = np.clip(np.random.normal(true_labels, 0.2), 0, 1)
+        sample_fold_histories.append({
+            'true_labels': true_labels,
+            'predictions': (pred_probs > 0.5).astype(int),
+            'pred_probs': pred_probs
+        })
+    
+    # Create sample training history
+    sample_history = {
+        'train_acc': [0.7 + 0.02 * i for i in range(50)],
+        'val_acc': [0.65 + 0.02 * i + np.random.normal(0, 0.01) for i in range(50)],
+        'train_loss': [0.8 * np.exp(-0.05 * i) for i in range(50)],
+        'val_loss': [0.9 * np.exp(-0.05 * i) + 0.1 for i in range(50)],
+        'learning_rates': [0.001 * np.exp(-0.02 * i) for i in range(50)]
+    }
+    
+    # Generate visualizations with sample data
+    generate_roc_curves(sample_fold_histories)
     print("✓ Generated ROC curves")
     
-    generate_pr_curves()
+    generate_pr_curves(sample_fold_histories)
     print("✓ Generated PR curves")
     
-    generate_training_history()
+    generate_training_history(sample_history)
     print("✓ Generated training history")
     
-    generate_lr_schedule()
+    generate_lr_schedule(sample_history)
     print("✓ Generated learning rate schedule")
     
     print("\nAll visualization files have been generated successfully!")
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main() 

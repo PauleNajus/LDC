@@ -2,12 +2,12 @@
 
 # Cross-validation metrics
 CV_METRICS = {
-    'cv_avg_accuracy': 96.13,  # Average accuracy across 5 folds
-    'cv_avg_precision': 95.92,  # Average precision across 5 folds
-    'cv_avg_recall': 94.89,  # Average recall across 5 folds
-    'cv_avg_f1': 95.92,  # Average F1 score across 5 folds
-    'best_val_accuracy': 97.37,  # Best validation accuracy achieved
-    'total_training_time': 3.5,  # Total training time in hours
-    'gpu_memory_used_gb': 8.2,  # GPU memory used in GB (realistic for RTX 4080 12GB)
-    'convergence_epoch': 42,  # Epoch where model converged
+    'cv_avg_accuracy': 97.41,  # From latest training
+    'cv_avg_precision': 97.35,  # From latest training
+    'cv_avg_recall': 97.45,  # From latest training
+    'cv_avg_f1': 97.40,  # From latest training
+    'best_val_accuracy': 97.41,  # From latest training
+    'total_training_time': 0.90,  # From latest training (hours)
+    'gpu_memory_used_gb': 1.83,  # From latest training
+    'convergence_epoch': 53,  # From latest training
 } 

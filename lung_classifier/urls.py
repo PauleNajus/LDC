@@ -22,8 +22,8 @@ admin.site.login = user_passes_test(is_admin_user, login_url='core:login')(admin
 # Error handlers
 handler400 = 'core.views.handler400'
 handler403 = 'core.views.handler403'
-handler404 = 'core.views.handler404'
-handler500 = 'core.views.handler500'
+handler404 = 'core.views.custom_404'
+handler500 = 'core.views.custom_500'
 
 # Add media files serving pattern for production
 urlpatterns = [

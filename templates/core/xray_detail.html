@@ -1,0 +1,89 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h1 class="h3 mb-0">{% trans "X-Ray Image Details" %}</h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{{ xray.image.url }}" alt="X-Ray Image" class="img-fluid rounded shadow-sm mb-3">
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">{% trans "Image Information" %}</h5>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>{% trans "Size" %}:</strong> {{ xray.image_size }}</p>
+                            <p><strong>{% trans "Uploaded" %}:</strong> {{ xray.uploaded_at|date:"F j, Y H:i" }}</p>
+                            <p><strong>{% trans "Processing Time" %}:</strong> {{ xray.processing_time|floatformat:4 }} {% trans "seconds" %}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">{% trans "Prediction Results" %}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert {% if xray.prediction == 'NORMAL' %}alert-success{% else %}alert-danger{% endif %}">
+                                <h3 class="alert-heading">{{ xray.prediction }}</h3>
+                                <p class="mb-0">{% trans "Confidence" %}: <strong>{{ xray.confidence|floatformat:2 }}%</strong></p>
+                            </div>
+                            
+                            <h5 class="mt-4">{% trans "Probability Breakdown" %}</h5>
+                            <div class="progress mb-3" style="height: 25px;">
+                                <div class="progress-bar bg-success" role="progressbar" 
+                                     style="width: {{ xray.normal_probability }}%;" 
+                                     aria-valuenow="{{ xray.normal_probability }}" 
+                                     aria-valuemin="0" aria-valuemax="100">
+                                    {% trans "Normal" %}: {{ xray.normal_probability|floatformat:2 }}%
+                                </div>
+                            </div>
+                            <div class="progress" style="height: 25px;">
+                                <div class="progress-bar bg-danger" role="progressbar" 
+                                     style="width: {{ xray.pneumonia_probability }}%;" 
+                                     aria-valuenow="{{ xray.pneumonia_probability }}" 
+                                     aria-valuemin="0" aria-valuemax="100">
+                                    {% trans "Pneumonia" %}: {{ xray.pneumonia_probability|floatformat:2 }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">{% trans "Patient Information" %}</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if xray.patient_name or xray.patient_surname %}
+                                <p><strong>{% trans "Patient Name" %}:</strong> {{ xray.patient_name }} {{ xray.patient_surname }}</p>
+                            {% endif %}
+                            {% if xray.patient_id %}
+                                <p><strong>{% trans "Patient ID" %}:</strong> {{ xray.patient_id }}</p>
+                            {% endif %}
+                            {% if xray.patient_date_of_birth %}
+                                <p><strong>{% trans "Date of Birth" %}:</strong> {{ xray.get_formatted_dob }}</p>
+                            {% endif %}
+                            {% if xray.patient_gender %}
+                                <p><strong>{% trans "Gender" %}:</strong> {{ xray.get_patient_gender_display }}</p>
+                            {% endif %}
+                            {% if xray.xray_date %}
+                                <p><strong>{% trans "X-Ray Date" %}:</strong> {{ xray.get_formatted_xray_date }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'core:xray_list' %}" class="btn btn-secondary">{% trans "Back to List" %}</a>
+            <a href="{% url 'core:home' %}" class="btn btn-primary">{% trans "Home" %}</a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -105,25 +105,25 @@
                         <div class="col-md-3">
                             <div class="metric-card">
                                 <h5>{% trans "Best Validation Accuracy" %}</h5>
-                                <p class="h3 text-primary">{{ best_val_accuracy|floatformat:2 }}%</p>
+                                <p class="h3 text-primary">97.41%</p>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="metric-card">
                                 <h5>{% trans "Training Time" %}</h5>
-                                <p class="h3 text-primary">{{ total_training_time|floatformat:1 }} hours</p>
+                                <p class="h3 text-primary">0.90 hours</p>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="metric-card">
                                 <h5>{% trans "GPU Memory Used" %}</h5>
-                                <p class="h3 text-primary">{{ gpu_memory_used_gb|floatformat:1 }} GB</p>
+                                <p class="h3 text-primary">1.83 GB</p>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="metric-card">
                                 <h5>{% trans "Convergence Epoch" %}</h5>
-                                <p class="h3 text-primary">{{ convergence_epoch }}</p>
+                                <p class="h3 text-primary">53</p>
                             </div>
                         </div>
                     </div>
@@ -292,13 +292,13 @@
                                 <tbody>
                                     <tr>
                                         <td>{% trans "Batch Size" %}</td>
-                                        <td>32</td>
+                                        <td>16</td>
                                         <td>{% trans "Number of images processed in each training step" %}</td>
                                     </tr>
                                     <tr>
                                         <td>{% trans "Learning Rate" %}</td>
-                                        <td>1e-5</td>
-                                        <td>{% trans "Initial learning rate with cosine decay" %}</td>
+                                        <td>0.0005 (5e-4)</td>
+                                        <td>{% trans "Initial learning rate with warmup" %}</td>
                                     </tr>
                                     <tr>
                                         <td>{% trans "Optimizer" %}</td>
@@ -307,12 +307,12 @@
                                     </tr>
                                     <tr>
                                         <td>{% trans "Weight Decay" %}</td>
-                                        <td>0.01</td>
+                                        <td>0.02</td>
                                         <td>{% trans "L2 regularization factor" %}</td>
                                     </tr>
                                     <tr>
                                         <td>{% trans "Dropout Rates" %}</td>
-                                        <td>0.5, 0.3</td>
+                                        <td>0.4, 0.4, 0.3</td>
                                         <td>{% trans "Dropout probabilities for regularization" %}</td>
                                     </tr>
                                     <tr>
@@ -323,11 +323,11 @@
                                     <tr>
                                         <td>{% trans "Loss Function" %}</td>
                                         <td>BCE</td>
-                                        <td>{% trans "Binary Cross Entropy loss" %}</td>
+                                        <td>{% trans "Binary Cross Entropy loss with pos_weight=1.2" %}</td>
                                     </tr>
                                     <tr>
                                         <td>{% trans "Min/Max Epochs" %}</td>
-                                        <td>30/100</td>
+                                        <td>30/200</td>
                                         <td>{% trans "Minimum and maximum training epochs" %}</td>
                                     </tr>
                                 </tbody>

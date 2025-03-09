@@ -2,38 +2,51 @@ import os
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from sklearn.metrics import roc_curve, precision_recall_curve, auc, average_precision_score
 
-def create_average_roc_curve():
+def create_average_roc_curve(fold_histories):
     """Create average ROC curve from individual fold curves."""
     fig = go.Figure()
     
-    # Add individual fold curves (you can customize these values)
-    folds_tpr = [
-        [0, 0.3, 0.6, 0.8, 0.95, 1.0],  # Fold 1
-        [0, 0.35, 0.65, 0.85, 0.92, 1.0],  # Fold 2
-        [0, 0.32, 0.62, 0.82, 0.94, 1.0],  # Fold 3
-        [0, 0.33, 0.63, 0.83, 0.93, 1.0],  # Fold 4
-        [0, 0.31, 0.61, 0.81, 0.91, 1.0],  # Fold 5
-    ]
-    fpr = [0, 0.2, 0.4, 0.6, 0.8, 1.0]
+    # Calculate ROC curves for each fold
+    all_fprs = []
+    all_tprs = []
+    for fold_history in fold_histories:
+        fpr, tpr, _ = roc_curve(fold_history['true_labels'], fold_history['pred_probs'])
+        all_fprs.append(fpr)
+        all_tprs.append(tpr)
     
-    # Calculate mean and std
-    mean_tpr = np.mean(folds_tpr, axis=0)
-    std_tpr = np.std(folds_tpr, axis=0)
+    # Interpolate all ROC curves to a common set of FPR points
+    mean_fpr = np.array(np.linspace(0, 1, 100))
+    interp_tprs = []
+    for fpr, tpr in zip(all_fprs, all_tprs):
+        interp_tpr = np.interp(mean_fpr, fpr, tpr)
+        interp_tpr[0] = 0.0
+        interp_tprs.append(interp_tpr)
     
-    # Add average curve with confidence interval
+    # Calculate mean and std of TPR
+    mean_tpr = np.mean(interp_tprs, axis=0)
+    mean_tpr[-1] = 1.0
+    std_tpr = np.std(interp_tprs, axis=0)
+    
+    # Calculate mean AUC
+    mean_auc = auc(mean_fpr, mean_tpr)
+    
+    # Add average curve
     fig.add_trace(go.Scatter(
-        x=fpr,
-        y=mean_tpr,
+        x=mean_fpr.tolist(),
+        y=mean_tpr.tolist(),
         line=dict(color='rgb(31, 119, 180)', width=2),
-        name='Average ROC',
+        name=f'Average ROC (AUC = {mean_auc:.3f})',
         mode='lines',
     ))
     
     # Add confidence interval
+    ci_x = np.concatenate([mean_fpr, mean_fpr[::-1]]).tolist()
+    ci_y = np.concatenate([mean_tpr + std_tpr, (mean_tpr - std_tpr)[::-1]]).tolist()
     fig.add_trace(go.Scatter(
-        x=fpr + fpr[::-1],
-        y=np.concatenate([mean_tpr + std_tpr, (mean_tpr - std_tpr)[::-1]]),
+        x=ci_x,
+        y=ci_y,
         fill='toself',
         fillcolor='rgba(31, 119, 180, 0.2)',
         line=dict(color='rgba(31, 119, 180, 0)'),
@@ -76,37 +89,50 @@ def create_average_roc_curve():
     config = {'responsive': True, 'displayModeBar': False}
     fig.write_html('static/average_roc_curve.html', config=config)
 
-def create_average_pr_curve():
+def create_average_pr_curve(fold_histories):
     """Create average Precision-Recall curve from individual fold curves."""
     fig = go.Figure()
     
-    # Add individual fold curves (you can customize these values)
-    folds_precision = [
-        [1.0, 0.95, 0.9, 0.85, 0.8, 0.75],  # Fold 1
-        [1.0, 0.93, 0.88, 0.83, 0.78, 0.73],  # Fold 2
-        [1.0, 0.94, 0.89, 0.84, 0.79, 0.74],  # Fold 3
-        [1.0, 0.92, 0.87, 0.82, 0.77, 0.72],  # Fold 4
-        [1.0, 0.91, 0.86, 0.81, 0.76, 0.71],  # Fold 5
-    ]
-    recall = [0, 0.2, 0.4, 0.6, 0.8, 1.0]
+    # Calculate PR curves for each fold
+    all_precisions = []
+    all_recalls = []
+    for fold_history in fold_histories:
+        precision, recall, _ = precision_recall_curve(fold_history['true_labels'], fold_history['pred_probs'])
+        all_precisions.append(precision)
+        all_recalls.append(recall)
     
-    # Calculate mean and std
-    mean_precision = np.mean(folds_precision, axis=0)
-    std_precision = np.std(folds_precision, axis=0)
+    # Interpolate all PR curves to a common set of recall points
+    mean_recall = np.array(np.linspace(0, 1, 100))
+    interp_precisions = []
+    for recall, precision in zip(all_recalls, all_precisions):
+        interp_precision = np.interp(mean_recall, recall[::-1], precision[::-1])
+        interp_precisions.append(interp_precision)
     
-    # Add average curve with confidence interval
+    # Calculate mean and std of precision
+    mean_precision = np.mean(interp_precisions, axis=0)
+    std_precision = np.std(interp_precisions, axis=0)
+    
+    # Calculate mean average precision
+    mean_ap = np.mean(np.array([
+        average_precision_score(fold_history['true_labels'], fold_history['pred_probs'])
+        for fold_history in fold_histories
+    ]))
+    
+    # Add average curve
     fig.add_trace(go.Scatter(
-        x=recall,
-        y=mean_precision,
+        x=mean_recall.tolist(),
+        y=mean_precision.tolist(),
         line=dict(color='rgb(44, 160, 44)', width=2),
-        name='Average PR',
+        name=f'Average PR (AP = {mean_ap:.3f})',
         mode='lines',
     ))
     
     # Add confidence interval
+    ci_x = np.concatenate([mean_recall, mean_recall[::-1]]).tolist()
+    ci_y = np.concatenate([mean_precision + std_precision, (mean_precision - std_precision)[::-1]]).tolist()
     fig.add_trace(go.Scatter(
-        x=recall + recall[::-1],
-        y=np.concatenate([mean_precision + std_precision, (mean_precision - std_precision)[::-1]]),
+        x=ci_x,
+        y=ci_y,
         fill='toself',
         fillcolor='rgba(44, 160, 44, 0.2)',
         line=dict(color='rgba(44, 160, 44, 0)'),
@@ -144,7 +170,19 @@ if __name__ == '__main__':
     # Create static directory if it doesn't exist
     os.makedirs('static', exist_ok=True)
     
-    # Generate curves
-    create_average_roc_curve()
-    create_average_pr_curve()
+    # Create sample data for testing
+    sample_fold_histories = []
+    for i in range(5):
+        n_samples = 1000
+        true_labels = np.random.randint(0, 2, n_samples)
+        pred_probs = np.clip(np.random.normal(true_labels, 0.2), 0, 1)
+        sample_fold_histories.append({
+            'true_labels': true_labels,
+            'predictions': (pred_probs > 0.5).astype(int),
+            'pred_probs': pred_probs
+        })
+    
+    # Generate curves with sample data
+    create_average_roc_curve(sample_fold_histories)
+    create_average_pr_curve(sample_fold_histories)
     print("Generated average ROC and PR curves in static directory.") 

@@ -210,7 +210,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = "tailwind"
 
 # Model settings
-MODEL_PATH = BASE_DIR / 'models' / 'lung_classifier_model.pth'
+MODEL_PATH = BASE_DIR / 'models' / 'final_ensemble_model.pth'
 
 # Custom user model
 AUTH_USER_MODEL = 'core.User'

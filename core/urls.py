@@ -26,4 +26,14 @@ urlpatterns = [
     path('password_reset/complete/', auth_views.PasswordResetCompleteView.as_view(
         template_name='core/password_reset_complete.html'
     ), name='password_reset_complete'),
-] 
+    # X-Ray views
+    path('xrays/', views.XRayListView.as_view(), name='xray_list'),
+    path('xrays/<int:pk>/', views.XRayDetailView.as_view(), name='xray_detail'),
+    # API endpoints
+    path('api/test-prediction/', views.test_prediction, name='test_prediction'),
+    path('api-test/', views.api_test_view, name='api_test_view'),
+]
+
+# Error handlers should be defined in the main urls.py file, not here
+# handler404 = views.custom_404
+# handler500 = views.custom_500 
