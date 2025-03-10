@@ -120,10 +120,8 @@
     <div class="col-lg-8">
         <!-- Main Title and Description -->
         <div class="text-center mb-5">
-            <h1 class="display-4 mb-3">{% trans "Lung Disease Classifier" %}</h1>
+            <h1 class="display-4 mb-3">{% trans "Lung Disease Classifier - Pneumonia" %}</h1>
             <p class="lead text-muted">
-                {% trans "Upload a chest X-ray image to detect pneumonia using our advanced deep learning model" %}.
-                {% trans "Accuracy: 96.13% (validated through 5-fold cross-validation)" %}
             </p>
         </div>
 
@@ -376,7 +374,7 @@
                             </small>
                             <!-- Action Buttons -->
                             <div class="mt-2 d-flex">
-                                <button type="button" class="btn btn-outline-primary btn-sm me-2 edit-record" data-record-id="{{ prediction.id }}">
+                                <button type="button" class="btn btn-outline-danger btn-sm me-2 edit-record" data-record-id="{{ prediction.id }}">
                                     <i class="fas fa-edit me-1"></i>{% trans "Edit Record" %}
                                 </button>
                                 <form method="post" action="{% url 'core:delete_prediction' prediction.id %}" 
