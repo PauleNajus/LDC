@@ -5,6 +5,8 @@ import os
 from typing import Any, Callable
 from django.http import HttpRequest, HttpResponse
 from django.conf import settings
+from django.shortcuts import redirect
+from django.urls import resolve, reverse
 
 logger = logging.getLogger('django')
 
@@ -81,4 +83,30 @@ class SecurityMiddleware:
 
     def __call__(self, request: HttpRequest) -> HttpResponse:
         response = self.get_response(request)
-        return response 
+        return response
+
+class AuthenticationMiddleware:
+    def __init__(self, get_response: Callable):
+        self.get_response = get_response
+        self.logger = logging.getLogger('django.auth')
+        # Paths that don't require authentication
+        self.public_paths = [
+            reverse('core:login'),
+            '/admin/login/',
+            '/static/',
+            '/media/',
+        ]
+
+    def __call__(self, request: HttpRequest) -> HttpResponse:
+        # Skip middleware for paths that are public
+        path = request.path
+        if any(path.startswith(public_path) for public_path in self.public_paths):
+            return self.get_response(request)
+        
+        # Check if user is authenticated
+        if not request.user.is_authenticated:
+            # Redirect to login page
+            login_url = reverse('core:login')
+            return redirect(login_url)
+        
+        return self.get_response(request) 

@@ -176,7 +176,7 @@ class CustomLoginView(LoginView):
     template_name = 'core/login.html'
     
 class CustomLogoutView(LogoutView):
-    next_page = 'core:home'
+    next_page = 'core:login'
 
 # Prediction views
 class ResultView(LoginRequiredMixin, DetailView):

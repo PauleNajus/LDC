@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django_browser_reload.middleware.BrowserReloadMiddleware',
     'core.middleware.SecurityMiddleware',  # Custom security middleware
     'core.middleware.RequestLoggingMiddleware',  # Custom logging middleware
+    'core.middleware.AuthenticationMiddleware',  # Custom authentication middleware
     'axes.middleware.AxesMiddleware',  # Django Axes for login security
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
@@ -217,7 +218,7 @@ AUTH_USER_MODEL = 'core.User'
 
 # Login URLs
 LOGIN_REDIRECT_URL = 'core:home'
-LOGOUT_REDIRECT_URL = 'core:home'
+LOGOUT_REDIRECT_URL = 'core:login'
 LOGIN_URL = 'core:login'
 
 # Logging configuration
