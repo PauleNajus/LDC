@@ -471,8 +471,8 @@ msgstr "Confusion Matrix"
 msgid "Confusion matrix showing the model's classification performance across different categories."
 msgstr "Confusion matrix showing the model's classification performance across different categories."
 
-msgid "LDC"
-msgstr "LDC"
+msgid "LDCS"
+msgstr "LDCS"
 
 msgid "🌙"
 msgstr "🌙"
@@ -480,8 +480,8 @@ msgstr "🌙"
 msgid "☀️"
 msgstr "☀️"
 
-msgid "LDC Logo"
-msgstr "LDC Logo"
+msgid "LDCS Logo"
+msgstr "LDCS Logo"
 
 msgid "Change language"
 msgstr "Change language"

@@ -474,7 +474,7 @@ msgstr "Painiavos matrica"
 msgid "Confusion matrix showing the model's classification performance across different categories."
 msgstr "Painiavos matrica, rodanti modelio klasifikavimo rezultatus skirtingose kategorijose."
 
-msgid "LDC"
+msgid "LDCS"
 msgstr "PLK"
 
 msgid "🌙"
@@ -483,7 +483,7 @@ msgstr "🌙"
 msgid "☀️"
 msgstr "☀️"
 
-msgid "LDC Logo"
+msgid "LDCS Logo"
 msgstr "PLK Logotipas"
 
 msgid "Change language"
