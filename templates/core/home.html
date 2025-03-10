@@ -376,7 +376,7 @@
                             </small>
                             <!-- Action Buttons -->
                             <div class="mt-2 d-flex">
-                                <button type="button" class="btn btn-outline-primary btn-sm me-2 edit-record" data-record-id="{{ prediction.id }}">
+                                <button type="button" class="btn btn-outline-danger btn-sm me-2 edit-record" data-record-id="{{ prediction.id }}">
                                     <i class="fas fa-edit me-1"></i>{% trans "Edit Record" %}
                                 </button>
                                 <form method="post" action="{% url 'core:delete_prediction' prediction.id %}" 

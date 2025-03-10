@@ -4,6 +4,7 @@ import cv2
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
+import torchvision.models as models
 from pathlib import Path
 from PIL import Image
 import logging
@@ -50,32 +51,52 @@ class LungClassifier:
             model_logger.info(f'File Size: {self.model_path.stat().st_size / 1024 / 1024:.2f} MB')
             
             start_time = time.time()
-            self.model = torch.load(str(self.model_path), map_location=self.device)
+            
+            # Initialize DenseNet121 model with the correct number of classes (2 for binary classification)
+            base_model = models.densenet121(weights=None)
+            num_features = base_model.classifier.in_features
+            
+            # Replace classifier for binary classification (pneumonia vs normal)
+            base_model.classifier = nn.Sequential(  # type: ignore
+                nn.Dropout(p=0.2),
+                nn.Linear(num_features, 2)  # 2 classes: normal and pneumonia
+            )
+            
+            # Load the state dictionary
+            state_dict = torch.load(str(self.model_path), map_location=self.device)
+            
+            # Check if the loaded file is a state_dict or a full model
+            if isinstance(state_dict, dict) and 'state_dict' in state_dict:
+                # Handle checkpoint format where model weights are in 'state_dict' key
+                state_dict = state_dict['state_dict']
+            
+            # Apply the weights to our model
+            base_model.load_state_dict(state_dict)
+            self.model = base_model
+            
             load_time = time.time() - start_time
             
-            if isinstance(self.model, nn.Module):
-                self.model.to(self.device)
-                self.model.eval()
+            self.model.to(self.device)
+            self.model.eval()
+            
+            # Count model parameters
+            total_params = sum(p.numel() for p in self.model.parameters())
+            trainable_params = sum(p.numel() for p in self.model.parameters() if p.requires_grad)
+            
+            model_logger.info('\n=== Model Details ===')
+            model_logger.info(f'Model Type: {type(self.model).__name__}')
+            model_logger.info(f'Total Parameters: {total_params:,}')
+            model_logger.info(f'Trainable Parameters: {trainable_params:,}')
+            model_logger.info(f'Model Load Time: {load_time:.3f} seconds')
+            model_logger.info(f'Model Architecture:\n{self.model}')
+            
+            if torch.cuda.is_available():
+                model_logger.info('\n=== GPU Memory After Model Load ===')
+                model_logger.info(f'Allocated: {torch.cuda.memory_allocated() / 1024**2:.1f} MB')
+                model_logger.info(f'Reserved: {torch.cuda.memory_reserved() / 1024**2:.1f} MB')
+            
+            model_logger.info('Model loaded successfully')
                 
-                # Count model parameters
-                total_params = sum(p.numel() for p in self.model.parameters())
-                trainable_params = sum(p.numel() for p in self.model.parameters() if p.requires_grad)
-                
-                model_logger.info('\n=== Model Details ===')
-                model_logger.info(f'Model Type: {type(self.model).__name__}')
-                model_logger.info(f'Total Parameters: {total_params:,}')
-                model_logger.info(f'Trainable Parameters: {trainable_params:,}')
-                model_logger.info(f'Model Load Time: {load_time:.3f} seconds')
-                model_logger.info(f'Model Architecture:\n{self.model}')
-                
-                if torch.cuda.is_available():
-                    model_logger.info('\n=== GPU Memory After Model Load ===')
-                    model_logger.info(f'Allocated: {torch.cuda.memory_allocated() / 1024**2:.1f} MB')
-                    model_logger.info(f'Reserved: {torch.cuda.memory_reserved() / 1024**2:.1f} MB')
-                
-                model_logger.info('Model loaded successfully')
-            else:
-                raise TypeError("Loaded model is not an instance of nn.Module")
         except Exception as e:
             model_logger.error(f'Failed to load model: {str(e)}')
             model_logger.error(f'Error type: {type(e).__name__}')
@@ -171,7 +192,12 @@ class LungClassifier:
                 model_logger.info(f'Memory Allocated: {initial_memory / 1024**2:.1f} MB')
                 model_logger.info(f'Memory Reserved: {torch.cuda.memory_reserved() / 1024**2:.1f} MB')
                 model_logger.info(f'Max Memory Allocated: {torch.cuda.max_memory_allocated() / 1024**2:.1f} MB')
-                model_logger.info(f'GPU Utilization: {torch.cuda.utilization()}%')
+                try:
+                    model_logger.info(f'GPU Utilization: {torch.cuda.utilization()}%')
+                except ModuleNotFoundError:
+                    model_logger.warning('Could not get GPU utilization: pynvml module not found')
+                except Exception as e:
+                    model_logger.warning(f'Could not get GPU utilization: {str(e)}')
             
             # Preprocess image
             preprocess_start = time.time()
