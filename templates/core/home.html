@@ -245,6 +245,7 @@
                     </div>
                 </form>
 
+                <div class="prediction-container">
                 {% for prediction in recent_predictions %}
                 <div class="prediction-card mb-4" data-prediction="{{ prediction.prediction|lower }}">
                     <div class="row align-items-center">
@@ -390,11 +391,18 @@
                 {% endfor %}
                 {% if has_more %}
                     <div class="text-center mt-4">
-                        <a href="?page={{ recent_predictions.next_page_number }}{% if request.GET.search_query %}&search_query={{ request.GET.search_query }}{% endif %}{% if request.GET.prediction_type %}&prediction_type={{ request.GET.prediction_type }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}" class="btn btn-outline-primary">
+                        <button id="load-more-btn" 
+                                class="btn btn-outline-primary" 
+                                data-next-page="{{ recent_predictions.next_page_number }}"
+                                data-search-query="{{ request.GET.search_query|default:'' }}"
+                                data-prediction-type="{{ request.GET.prediction_type|default:'' }}"
+                                data-date-from="{{ request.GET.date_from|default:'' }}"
+                                data-date-to="{{ request.GET.date_to|default:'' }}">
                             <i class="fas fa-sync me-2"></i>{% trans "Load More Records" %}
-                        </a>
+                        </button>
                     </div>
                 {% endif %}
+                </div>
             </div>
         </div>
         {% endif %}
@@ -643,13 +651,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     // Refresh the page to show updated data
                     window.location.reload();
                 } else {
-                    alert(data.error || '{% trans "An error occurred while updating the record." %}');
+                    // Show specific errors if available
+                    if (data.errors) {
+                        const errorMessages = Object.entries(data.errors)
+                            .map(([field, error]) => `${field}: ${error}`)
+                            .join('\n');
+                        alert(`{% trans "Please correct the following errors:" %}\n${errorMessages}`);
+                    } else {
+                        alert(data.error || '{% trans "An error occurred while updating the record." %}');
+                    }
                 }
             })
             .catch(error => {
@@ -753,6 +774,152 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+
+    // Load More Records functionality
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function() {
+            // Get data from button attributes
+            const nextPage = this.dataset.nextPage;
+            const searchQuery = this.dataset.searchQuery;
+            const predictionType = this.dataset.predictionType;
+            const dateFrom = this.dataset.dateFrom;
+            const dateTo = this.dataset.dateTo;
+            
+            // Show loading state
+            loadMoreBtn.disabled = true;
+            loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>{% trans "Loading all records..." %}';
+            
+            // Build base URL with filters
+            let baseUrl = '?';
+            if (searchQuery) baseUrl += `&search_query=${searchQuery}`;
+            if (predictionType) baseUrl += `&prediction_type=${predictionType}`;
+            if (dateFrom) baseUrl += `&date_from=${dateFrom}`;
+            if (dateTo) baseUrl += `&date_to=${dateTo}`;
+            
+            // Add 'all=1' parameter to indicate to the server we want all records
+            baseUrl += '&all=1';
+            
+            // Add AJAX header for proper handling
+            fetch(baseUrl, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                // Parse the HTML response
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Get the prediction cards from the response
+                const newPredictionCards = Array.from(doc.querySelectorAll('.prediction-card'));
+                const predictionContainer = document.querySelector('.prediction-container');
+                
+                // Clear existing cards and add all new cards
+                if (predictionContainer && newPredictionCards.length > 0) {
+                    // Get existing cards
+                    const existingCards = Array.from(predictionContainer.querySelectorAll('.prediction-card'));
+                    
+                    // Clear existing cards
+                    predictionContainer.innerHTML = '';
+                    
+                    // Add all cards from response
+                    newPredictionCards.forEach(card => {
+                        predictionContainer.appendChild(card.cloneNode(true));
+                    });
+                    
+                    // Add event listeners to new cards
+                    initCardEventListeners();
+                }
+                
+                // Remove the load more button since we've loaded all records
+                loadMoreBtn.parentNode.remove();
+            })
+            .catch(error => {
+                console.error('Error loading more records:', error);
+                loadMoreBtn.disabled = false;
+                loadMoreBtn.innerHTML = '<i class="fas fa-sync me-2"></i>{% trans "Load More Records" %}';
+                alert('{% trans "Error loading more records. Please try again." %}');
+            });
+        });
+    }
+    
+    // Function to initialize event listeners for prediction cards
+    function initCardEventListeners() {
+        // Edit record functionality
+        document.querySelectorAll('.edit-record').forEach(button => {
+            button.addEventListener('click', function() {
+                const recordId = this.dataset.recordId;
+                const card = this.closest('.prediction-card');
+                const viewMode = card.querySelector('.view-mode');
+                const editForm = card.querySelector('.edit-form');
+                
+                viewMode.style.display = 'none';
+                editForm.style.display = 'block';
+                this.style.display = 'none';
+            });
+        });
+    
+        // Cancel edit functionality
+        document.querySelectorAll('.cancel-edit').forEach(button => {
+            button.addEventListener('click', function() {
+                const card = this.closest('.prediction-card');
+                const viewMode = card.querySelector('.view-mode');
+                const editForm = card.querySelector('.edit-form');
+                const editButton = card.querySelector('.edit-record');
+                
+                viewMode.style.display = 'flex';
+                editForm.style.display = 'none';
+                editButton.style.display = 'block';
+            });
+        });
+    
+        // Handle edit form submission
+        document.querySelectorAll('.edit-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Refresh the page to show updated data
+                        window.location.reload();
+                    } else {
+                        // Show specific errors if available
+                        if (data.errors) {
+                            const errorMessages = Object.entries(data.errors)
+                                .map(([field, error]) => `${field}: ${error}`)
+                                .join('\n');
+                            alert(`{% trans "Please correct the following errors:" %}\n${errorMessages}`);
+                        } else {
+                            alert(data.error || '{% trans "An error occurred while updating the record." %}');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('{% trans "An error occurred while updating the record." %}');
+                });
+            });
+        });
+    }
+    
+    // Initialize event listeners for initial cards
+    initCardEventListeners();
 });
 </script>
 {% endblock %} 

@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Update Patient Information" %}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">{% trans "Update Patient Information" %}</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="id_patient_name" class="form-label">{% trans "First Name" %}</label>
+                                <input type="text" name="patient_name" id="id_patient_name" class="form-control" value="{{ object.patient_name|default_if_none:'' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_patient_surname" class="form-label">{% trans "Last Name" %}</label>
+                                <input type="text" name="patient_surname" id="id_patient_surname" class="form-control" value="{{ object.patient_surname|default_if_none:'' }}">
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="id_patient_id" class="form-label">{% trans "Patient ID" %}</label>
+                                <input type="text" name="patient_id" id="id_patient_id" class="form-control" value="{{ object.patient_id|default_if_none:'' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_patient_gender" class="form-label">{% trans "Gender" %}</label>
+                                <select name="patient_gender" id="id_patient_gender" class="form-select">
+                                    <option value="">{% trans "Select Gender" %}</option>
+                                    <option value="M" {% if object.patient_gender == 'M' %}selected{% endif %}>{% trans "Male" %}</option>
+                                    <option value="F" {% if object.patient_gender == 'F' %}selected{% endif %}>{% trans "Female" %}</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="id_patient_date_of_birth" class="form-label">{% trans "Date of Birth" %}</label>
+                                <input type="text" name="patient_date_of_birth" id="id_patient_date_of_birth" 
+                                       class="form-control date-input" value="{{ object.patient_date_of_birth|default_if_none:'' }}"
+                                       maxlength="10" oninput="formatDate(this)" onkeypress="return isNumberOrDash(event)">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_xray_date" class="form-label">{% trans "X-Ray Date" %}</label>
+                                <input type="text" name="xray_date" id="id_xray_date" 
+                                       class="form-control date-input" value="{{ object.xray_date|default_if_none:'' }}"
+                                       maxlength="10" oninput="formatDate(this)" onkeypress="return isNumberOrDash(event)">
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>{% trans "Save Changes" %}
+                            </button>
+                            <a href="{% url 'core:result' object.id %}" class="btn btn-outline-secondary ms-2">
+                                <i class="fas fa-times me-2"></i>{% trans "Cancel" %}
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Date formatting function
+    function formatDate(input) {
+        let value = input.value.replace(/\D/g, '');
+        if (value.length >= 4) {
+            value = value.slice(0, 4) + '-' + value.slice(4);
+        }
+        if (value.length >= 7) {
+            value = value.slice(0, 7) + '-' + value.slice(7);
+        }
+        if (value.length > 10) {
+            value = value.slice(0, 10);
+        }
+        input.value = value;
+    }
+
+    function isNumberOrDash(evt) {
+        const charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode === 45) { // dash
+            return true;
+        }
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+</script>
+{% endblock %} 

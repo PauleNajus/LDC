@@ -43,8 +43,11 @@ class HomeView(TemplateView):
         search_form = PredictionSearchForm(self.request.GET or None)
         context['search_form'] = search_form
         
-        # Start with all predictions, ordered by upload time
-        predictions = XRayImage.objects.all().order_by('-uploaded_at')
+        # Start with predictions filtered by the current user if authenticated
+        if self.request.user.is_authenticated:
+            predictions = XRayImage.objects.filter(user=self.request.user).order_by('-uploaded_at')
+        else:
+            predictions = XRayImage.objects.none()  # No predictions for unauthenticated users
         
         # Apply filters if the form is valid
         if search_form.is_valid() and self.request.GET:
@@ -71,15 +74,30 @@ class HomeView(TemplateView):
             if date_to:
                 predictions = predictions.filter(uploaded_at__date__lte=date_to)
         
-        # Implement pagination
-        paginator = Paginator(predictions, 5)  # Show 5 predictions per page
-        page_number = self.request.GET.get('page', 1)
-        page_obj = paginator.get_page(page_number)
-        
-        context['recent_predictions'] = page_obj
-        context['has_more'] = page_obj.has_next()
+        # Check if we should return all records (for AJAX "Load All" request)
+        if self.request.GET.get('all') == '1' and self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            # Return all records without pagination
+            context['recent_predictions'] = predictions
+            context['has_more'] = False
+        else:
+            # Implement pagination as usual
+            paginator = Paginator(predictions, 5)  # Show 5 predictions per page
+            page_number = self.request.GET.get('page', 1)
+            page_obj = paginator.get_page(page_number)
+            
+            context['recent_predictions'] = page_obj
+            context['has_more'] = page_obj.has_next()
         
         return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        
+        # If this is an AJAX request, only return the predictions part
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return render(request, 'core/home.html', context)
+        
+        return self.render_to_response(context)
     
     def post(self, request, *args, **kwargs):
         try:
@@ -91,7 +109,7 @@ class HomeView(TemplateView):
                 # Save the image without committing to get the model instance
                 xray_image = form.save(commit=False)
                 
-                # Set the user if available
+                # Set the user if available, otherwise use the default
                 if request.user.is_authenticated:
                     xray_image.user = request.user
                 
@@ -193,11 +211,25 @@ class DeletePredictionView(LoginRequiredMixin, DeleteView):
 class UpdatePredictionView(LoginRequiredMixin, UpdateView):
     model = XRayImage
     template_name = 'core/update_prediction.html'
-    fields = ['patient_name', 'patient_surname', 'patient_id', 'patient_date_of_birth', 'patient_gender']
+    fields = ['patient_name', 'patient_surname', 'patient_id', 'patient_date_of_birth', 'patient_gender', 'xray_date']
     pk_url_kwarg = 'prediction_id'
     
     def get_success_url(self):
         return reverse_lazy('core:result', kwargs={'prediction_id': self.kwargs['prediction_id']})
+    
+    def form_valid(self, form):
+        self.object = form.save()
+        # Check if this is an AJAX request
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'success': True})
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        # Return errors for AJAX requests
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            errors = {field: errors[0] for field, errors in form.errors.items()}
+            return JsonResponse({'success': False, 'error': 'Form contains errors', 'errors': errors})
+        return super().form_invalid(form)
 
 # X-Ray views
 class XRayListView(LoginRequiredMixin, ListView):
