@@ -16,19 +16,46 @@
                         <div class="col-md-4 mb-4">
                             <div class="info-block">
                                 <h3 class="h5">{% trans "Framework" %}</h3>
-                                <p class="text-muted mb-0">{% trans "PyTorch 2.0" %}</p>
+                                <p class="text-muted mb-0">{% trans "PyTorch 2.1.2+cu118" %}</p>
                             </div>
                         </div>
                         <div class="col-md-4 mb-4">
                             <div class="info-block">
                                 <h3 class="h5">{% trans "Base Model" %}</h3>
-                                <p class="text-muted mb-0">{% trans "ResNet-50" %}</p>
+                                <p class="text-muted mb-0">{% trans "DenseNet-121" %}</p>
                             </div>
                         </div>
                         <div class="col-md-4 mb-4">
                             <div class="info-block">
                                 <h3 class="h5">{% trans "Classes" %}</h3>
                                 <p class="text-muted mb-0">{% trans "Normal, Pneumonia" %}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hardware & Environment Info -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title h4 mb-4">{% trans "Hardware & Environment" %}</h2>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="info-block">
+                                <h3 class="h5">{% trans "GPU" %}</h3>
+                                <p class="text-muted mb-0">{% trans "NVIDIA GeForce RTX 4080 Laptop GPU" %}</p>
+                                <p class="text-muted mb-0">{% trans "Compute Capability: 8.9" %}</p>
+                                <p class="text-muted mb-0">{% trans "Total Memory: 12.00 GB" %}</p>
+                                <p class="text-muted mb-0">{% trans "Peak Memory Usage: 4.56 GB" %}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="info-block">
+                                <h3 class="h5">{% trans "Software" %}</h3>
+                                <p class="text-muted mb-0">{% trans "PyTorch: 2.1.2+cu118" %}</p>
+                                <p class="text-muted mb-0">{% trans "CUDNN: 8700" %}</p>
+                                <p class="text-muted mb-0">{% trans "Python: 3.11.9" %}</p>
+                                <p class="text-muted mb-0">{% trans "OS: Windows 10.0.26100" %}</p>
                             </div>
                         </div>
                     </div>
@@ -57,39 +84,29 @@
                                             <td>0</td>
                                         </tr>
                                         <tr>
-                                            <td>ResNet-50 Base</td>
-                                            <td>(7, 7, 2048)</td>
-                                            <td>23,587,712</td>
+                                            <td>DenseNet-121 Base</td>
+                                            <td>(7, 7, 1024)</td>
+                                            <td>6,952,832</td>
                                         </tr>
                                         <tr>
                                             <td>Global Average Pooling</td>
-                                            <td>(2048)</td>
+                                            <td>(1024)</td>
                                             <td>0</td>
                                         </tr>
                                         <tr>
-                                            <td>Dropout (0.5)</td>
-                                            <td>(2048)</td>
-                                            <td>0</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Dense + ReLU</td>
-                                            <td>(512)</td>
-                                            <td>1,049,088</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Dropout (0.3)</td>
-                                            <td>(512)</td>
+                                            <td>Dropout (0.2)</td>
+                                            <td>(1024)</td>
                                             <td>0</td>
                                         </tr>
                                         <tr>
                                             <td>Dense (Output)</td>
                                             <td>(2)</td>
-                                            <td>1,026</td>
+                                            <td>2,050</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <p class="text-muted mt-3">{% trans "Total trainable parameters: 24,637,826" %}</p>
+                            <p class="text-muted mt-3">{% trans "Total trainable parameters: 6,955,906" %}</p>
                         </div>
                     </div>
                 </div>
@@ -105,234 +122,314 @@
                         <div class="col-md-3">
                             <div class="metric-card">
                                 <h5>{% trans "Best Validation Accuracy" %}</h5>
-                                <p class="h3 text-primary">97.41%</p>
+                                <p class="h3 text-primary">90.74%</p>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="metric-card">
                                 <h5>{% trans "Training Time" %}</h5>
-                                <p class="h3 text-primary">0.90 hours</p>
+                                <p class="h3 text-primary">1.02 hours</p>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="metric-card">
-                                <h5>{% trans "GPU Memory Used" %}</h5>
-                                <p class="h3 text-primary">1.83 GB</p>
+                                <h5>{% trans "Best Epoch" %}</h5>
+                                <p class="h3 text-primary">11</p>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="metric-card">
-                                <h5>{% trans "Convergence Epoch" %}</h5>
-                                <p class="h3 text-primary">53</p>
+                                <h5>{% trans "Early Stopping" %}</h5>
+                                <p class="h3 text-primary">26 epochs</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Interactive Training History -->
+                    <!-- Training History Visualization -->
                     <div class="mb-5">
                         <h3 class="h5 mb-3">{% trans "Training History" %}</h3>
-                        <div class="iframe-container">
-                            <div class="loading-spinner">
-                                <div class="spinner"></div>
-                                <p>{% trans "Loading visualization..." %}</p>
-                            </div>
-                            <iframe src="{% static 'training_history_interactive.html' %}" 
-                                    width="100%" height="800px" frameborder="0" 
-                                    class="training-plot"
-                                    onload="this.parentElement.classList.add('loaded')"></iframe>
+                        <div class="text-center">
+                            <img src="{% static 'visualizations/train_val_curves_20250310_000224.png' %}" 
+                                 alt="{% trans 'Training and Validation Curves' %}" 
+                                 class="img-fluid mb-2 training-plot">
+                            <p class="text-muted">{% trans "Training and validation accuracy/loss curves over epochs" %}</p>
                         </div>
                     </div>
 
                     <!-- Learning Rate Schedule -->
                     <div class="mb-5">
                         <h3 class="h5 mb-3">{% trans "Learning Rate Schedule" %}</h3>
-                        <div class="iframe-container">
-                            <div class="loading-spinner">
-                                <div class="spinner"></div>
-                                <p>{% trans "Loading visualization..." %}</p>
-                            </div>
-                            <iframe src="{% static 'lr_schedule_interactive.html' %}" 
-                                    width="100%" height="400px" frameborder="0" 
-                                    class="training-plot"
-                                    onload="this.parentElement.classList.add('loaded')"></iframe>
+                        <div class="text-center">
+                            <img src="{% static 'visualizations/learning_rate_schedule_20250310_000226.png' %}" 
+                                 alt="{% trans 'Learning Rate Schedule' %}" 
+                                 class="img-fluid mb-2 training-plot">
+                            <p class="text-muted">{% trans "Learning rate adjustments during training with ReduceLROnPlateau scheduler" %}</p>
                         </div>
                     </div>
 
-                    <!-- Cross-Validation Results -->
+                    <!-- Test Evaluation Results -->
                     <div class="mb-5">
-                        <h3 class="h5 mb-3">{% trans "5-Fold Cross-Validation Results" %}</h3>
+                        <h3 class="h5 mb-4">{% trans "Test Set Evaluation" %}</h3>
                         <div class="row">
-                            {% for i in '12345'|make_list %}
-                            <div class="col-md-6 mb-4">
-                                <div class="validation-fold-card">
-                                    <h4 class="h6 mb-3">{% trans "Fold" %} {{ i }}</h4>
-                                    
-                                    <!-- ROC Curve -->
-                                    <div class="mb-4">
-                                        <div class="iframe-container">
-                                            <div class="loading-spinner">
-                                                <div class="spinner"></div>
-                                                <p>{% trans "Loading ROC curve..." %}</p>
-                                            </div>
-                                            <iframe src="{% static 'roc_curve_fold_'|add:i|add:'.html' %}" 
-                                                    width="100%" height="400px" frameborder="0" 
-                                                    class="training-plot"
-                                                    onload="this.parentElement.classList.add('loaded')"></iframe>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Precision-Recall Curve -->
-                                    <div class="mb-4">
-                                        <div class="iframe-container">
-                                            <div class="loading-spinner">
-                                                <div class="spinner"></div>
-                                                <p>{% trans "Loading PR curve..." %}</p>
-                                            </div>
-                                            <iframe src="{% static 'pr_curve_fold_'|add:i|add:'.html' %}" 
-                                                    width="100%" height="400px" frameborder="0" 
-                                                    class="training-plot"
-                                                    onload="this.parentElement.classList.add('loaded')"></iframe>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Confusion Matrix -->
+                            <div class="col-md-6">
+                                <!-- ROC Curve -->
+                                <div class="mb-4">
+                                    <h4 class="h6 mb-3">{% trans "ROC Curve" %}</h4>
                                     <div class="text-center">
-                                        <img src="{% static 'confusion_matrix_fold_'|add:i|add:'.png' %}" 
-                                             alt="{% trans 'Confusion Matrix' %} {{ i }}" 
-                                             class="img-fluid mb-2 light-theme-only confusion-matrix">
-                                        <img src="{% static 'confusion_matrix_fold_'|add:i|add:'_dark.png' %}" 
-                                             alt="{% trans 'Confusion Matrix' %} {{ i }}" 
-                                             class="img-fluid mb-2 dark-theme-only confusion-matrix">
+                                        <img src="{% static 'visualizations/roc_curve_20250310_000225.png' %}" 
+                                             alt="{% trans 'ROC Curve' %}" 
+                                             class="img-fluid mb-2 training-plot">
                                     </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <!-- Cross-Validation Averages -->
-                    <div class="mb-5">
-                        <h3 class="h5 mb-4">{% trans "5-Fold Cross-Validation Averages" %}</h3>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <!-- Average ROC Curve -->
-                                <div class="mb-4">
-                                    <h4 class="h6 mb-3">{% trans "Average ROC Curve" %}</h4>
-                                    <div class="iframe-container">
-                                        <div class="loading-spinner">
-                                            <div class="spinner"></div>
-                                            <p>{% trans "Loading average ROC curve..." %}</p>
-                                        </div>
-                                        <iframe src="{% static 'average_roc_curve.html' %}" 
-                                                width="100%" height="400px" frameborder="0" 
-                                                class="training-plot"
-                                                onload="this.parentElement.classList.add('loaded')"></iframe>
-                                    </div>
+                                    <p class="text-muted text-center">{% trans "ROC AUC: 0.9958" %}</p>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <!-- Average Precision-Recall Curve -->
+                                <!-- Precision-Recall Curve -->
                                 <div class="mb-4">
-                                    <h4 class="h6 mb-3">{% trans "Average Precision-Recall Curve" %}</h4>
-                                    <div class="iframe-container">
-                                        <div class="loading-spinner">
-                                            <div class="spinner"></div>
-                                            <p>{% trans "Loading average PR curve..." %}</p>
-                                        </div>
-                                        <iframe src="{% static 'average_pr_curve.html' %}" 
-                                                width="100%" height="400px" frameborder="0" 
-                                                class="training-plot"
-                                                onload="this.parentElement.classList.add('loaded')"></iframe>
+                                    <h4 class="h6 mb-3">{% trans "Precision-Recall Curve" %}</h4>
+                                    <div class="text-center">
+                                        <img src="{% static 'visualizations/precision_recall_curve_20250310_000226.png' %}" 
+                                             alt="{% trans 'Precision-Recall Curve' %}" 
+                                             class="img-fluid mb-2 training-plot">
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Cross-Validation Metrics -->
+                        <!-- Confusion Matrix -->
+                        <div class="mb-4">
+                            <h4 class="h6 mb-3">{% trans "Confusion Matrix" %}</h4>
+                            <div class="text-center">
+                                <img src="{% static 'visualizations/confusion_matrix_heatmap_20250310_000225.png' %}" 
+                                     alt="{% trans 'Confusion Matrix' %}" 
+                                     class="img-fluid mb-2 confusion-matrix">
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-md-6 text-center">
+                                    <p class="mb-1"><strong>{% trans "True Negatives:" %}</strong> 1818</p>
+                                    <p class="mb-1"><strong>{% trans "False Positives:" %}</strong> 84</p>
+                                </div>
+                                <div class="col-md-6 text-center">
+                                    <p class="mb-1"><strong>{% trans "False Negatives:" %}</strong> 25</p>
+                                    <p class="mb-1"><strong>{% trans "True Positives:" %}</strong> 1877</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Threshold Analysis -->
+                        <div class="mb-4">
+                            <h4 class="h6 mb-3">{% trans "Threshold Analysis" %}</h4>
+                            <div class="text-center">
+                                <img src="{% static 'visualizations/threshold_analysis_20250310_000226.png' %}" 
+                                     alt="{% trans 'Threshold Analysis' %}" 
+                                     class="img-fluid mb-2 training-plot">
+                            </div>
+                            <p class="text-muted text-center">{% trans "Best threshold: 0.90 (based on balanced accuracy)" %}</p>
+                        </div>
+                        
+                        <!-- Final Metrics -->
                         <div class="row mt-4">
                             <div class="col-md-3">
                                 <div class="metric-card">
-                                    <h5>{% trans "Average Accuracy" %}</h5>
-                                    <p class="h3 text-primary">{{ cv_avg_accuracy|floatformat:2 }}%</p>
+                                    <h5>{% trans "Test Accuracy" %}</h5>
+                                    <p class="h3 text-primary">97.13%</p>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="metric-card">
-                                    <h5>{% trans "Average Precision" %}</h5>
-                                    <p class="h3 text-primary">{{ cv_avg_precision|floatformat:2 }}%</p>
+                                    <h5>{% trans "Sensitivity" %}</h5>
+                                    <p class="h3 text-primary">98.69%</p>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="metric-card">
-                                    <h5>{% trans "Average Recall" %}</h5>
-                                    <p class="h3 text-primary">{{ cv_avg_recall|floatformat:2 }}%</p>
+                                    <h5>{% trans "Specificity" %}</h5>
+                                    <p class="h3 text-primary">95.58%</p>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="metric-card">
-                                    <h5>{% trans "Average F1 Score" %}</h5>
-                                    <p class="h3 text-primary">{{ cv_avg_f1|floatformat:2 }}%</p>
+                                    <h5>{% trans "F1 Score" %}</h5>
+                                    <p class="h3 text-primary">99.27%</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Hyperparameters -->
-                    <div class="mb-5">
-                        <h3 class="h5 mb-4">{% trans "Model Hyperparameters" %}</h3>
+                </div>
+            </div>
+            
+            <!-- Data & Preprocessing -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title h4 mb-4">{% trans "Data & Preprocessing" %}</h2>
+                    
+                    <!-- Dataset Information -->
+                    <div class="mb-4">
+                        <h3 class="h5 mb-3">{% trans "Dataset" %}</h3>
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>{% trans "Parameter" %}</th>
-                                        <th>{% trans "Value" %}</th>
-                                        <th>{% trans "Description" %}</th>
+                                        <th>{% trans "Split" %}</th>
+                                        <th>{% trans "Normal" %}</th>
+                                        <th>{% trans "Pneumonia" %}</th>
+                                        <th>{% trans "Total" %}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>{% trans "Batch Size" %}</td>
-                                        <td>16</td>
-                                        <td>{% trans "Number of images processed in each training step" %}</td>
+                                        <td>Training</td>
+                                        <td>8,937</td>
+                                        <td>6,018</td>
+                                        <td>14,955</td>
                                     </tr>
                                     <tr>
-                                        <td>{% trans "Learning Rate" %}</td>
-                                        <td>0.0005 (5e-4)</td>
-                                        <td>{% trans "Initial learning rate with warmup" %}</td>
+                                        <td>Validation</td>
+                                        <td>2,870</td>
+                                        <td>2,355</td>
+                                        <td>5,225</td>
                                     </tr>
                                     <tr>
-                                        <td>{% trans "Optimizer" %}</td>
-                                        <td>AdamW</td>
-                                        <td>{% trans "Optimizer with weight decay" %}</td>
+                                        <td>Test</td>
+                                        <td>3,239</td>
+                                        <td>1,902</td>
+                                        <td>5,141</td>
                                     </tr>
                                     <tr>
-                                        <td>{% trans "Weight Decay" %}</td>
-                                        <td>0.02</td>
-                                        <td>{% trans "L2 regularization factor" %}</td>
+                                        <td><strong>Balanced</strong> Training</td>
+                                        <td>6,018</td>
+                                        <td>6,018</td>
+                                        <td>12,036</td>
                                     </tr>
                                     <tr>
-                                        <td>{% trans "Dropout Rates" %}</td>
-                                        <td>0.4, 0.4, 0.3</td>
-                                        <td>{% trans "Dropout probabilities for regularization" %}</td>
+                                        <td><strong>Balanced</strong> Validation</td>
+                                        <td>2,355</td>
+                                        <td>2,355</td>
+                                        <td>4,710</td>
                                     </tr>
                                     <tr>
-                                        <td>{% trans "Data Augmentation" %}</td>
-                                        <td>Yes</td>
-                                        <td>{% trans "Random flips, rotations, brightness/contrast adjustments" %}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>{% trans "Loss Function" %}</td>
-                                        <td>BCE</td>
-                                        <td>{% trans "Binary Cross Entropy loss with pos_weight=1.2" %}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>{% trans "Min/Max Epochs" %}</td>
-                                        <td>30/200</td>
-                                        <td>{% trans "Minimum and maximum training epochs" %}</td>
+                                        <td><strong>Balanced</strong> Test</td>
+                                        <td>1,902</td>
+                                        <td>1,902</td>
+                                        <td>3,804</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                    
+                    <!-- Data Preprocessing -->
+                    <div class="mb-4">
+                        <h3 class="h5 mb-3">{% trans "Data Preprocessing" %}</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-block">
+                                    <h4 class="h6">{% trans "Normalization" %}</h4>
+                                    <p class="text-muted mb-0">{% trans "Mean: [0.485, 0.456, 0.406]" %}</p>
+                                    <p class="text-muted mb-0">{% trans "Std: [0.229, 0.224, 0.225]" %}</p>
+                                    <p class="text-muted mb-0"><small>{% trans "(ImageNet statistics)" %}</small></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-block">
+                                    <h4 class="h6">{% trans "Image Size" %}</h4>
+                                    <p class="text-muted mb-0">{% trans "224 × 224 pixels" %}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Augmentation Techniques -->
+                    <div class="mb-4">
+                        <h3 class="h5 mb-3">{% trans "Data Augmentation" %}</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-group">
+                                    <li class="list-group-item">{% trans "Random Affine (scale: 0.85-1.15, translate: ±10%, rotate: ±20°)" %}</li>
+                                    <li class="list-group-item">{% trans "Random Brightness/Contrast (±20%)" %}</li>
+                                    <li class="list-group-item">{% trans "Horizontal Flip (50% probability)" %}</li>
+                                    <li class="list-group-item">{% trans "Gaussian Noise (30% probability)" %}</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group">
+                                    <li class="list-group-item">{% trans "Gaussian Blur (20% probability)" %}</li>
+                                    <li class="list-group-item">{% trans "Grid Distortion (30% probability)" %}</li>
+                                    <li class="list-group-item">{% trans "Mixup Augmentation (50% probability, alpha=0.2)" %}</li>
+                                    <li class="list-group-item">{% trans "Test-Time Augmentation: 5 transforms with flips and small rotations" %}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hyperparameters -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title h4 mb-4">{% trans "Model Hyperparameters" %}</h2>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>{% trans "Parameter" %}</th>
+                                    <th>{% trans "Value" %}</th>
+                                    <th>{% trans "Description" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{% trans "Batch Size" %}</td>
+                                    <td>64</td>
+                                    <td>{% trans "Number of images processed in each training step" %}</td>
+                                </tr>
+                                <tr>
+                                    <td>{% trans "Initial Learning Rate" %}</td>
+                                    <td>0.0002 (2e-4)</td>
+                                    <td>{% trans "Starting learning rate" %}</td>
+                                </tr>
+                                <tr>
+                                    <td>{% trans "Optimizer" %}</td>
+                                    <td>AdamW</td>
+                                    <td>{% trans "Optimizer with weight decay and amsgrad=True" %}</td>
+                                </tr>
+                                <tr>
+                                    <td>{% trans "Weight Decay" %}</td>
+                                    <td>0.0001</td>
+                                    <td>{% trans "L2 regularization factor" %}</td>
+                                </tr>
+                                <tr>
+                                    <td>{% trans "LR Scheduler" %}</td>
+                                    <td>ReduceLROnPlateau</td>
+                                    <td>{% trans "Reduces learning rate by factor of 0.5 with 5 epochs patience" %}</td>
+                                </tr>
+                                <tr>
+                                    <td>{% trans "Dropout Rate" %}</td>
+                                    <td>0.2</td>
+                                    <td>{% trans "Dropout probability for regularization" %}</td>
+                                </tr>
+                                <tr>
+                                    <td>{% trans "Loss Function" %}</td>
+                                    <td>CrossEntropyLoss</td>
+                                    <td>{% trans "With class balancing" %}</td>
+                                </tr>
+                                <tr>
+                                    <td>{% trans "Early Stopping" %}</td>
+                                    <td>15</td>
+                                    <td>{% trans "Patience in epochs before stopping training" %}</td>
+                                </tr>
+                                <tr>
+                                    <td>{% trans "Mixup Alpha" %}</td>
+                                    <td>0.2</td>
+                                    <td>{% trans "Alpha parameter for mixup augmentation" %}</td>
+                                </tr>
+                                <tr>
+                                    <td>{% trans "Max Epochs" %}</td>
+                                    <td>100</td>
+                                    <td>{% trans "Maximum number of training epochs" %}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -349,60 +446,23 @@
     text-align: center;
 }
 
-.validation-fold-card {
+.info-block {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 1.5rem;
+    padding: 1rem;
+    height: 100%;
 }
 
 .training-plot {
     max-width: 100%;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: transform 0.2s ease;
 }
 
-.iframe-container {
-    position: relative;
-    width: 100%;
-    background-color: var(--card-bg);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.iframe-container.loaded .training-plot {
-    opacity: 1;
-}
-
-.iframe-container.loaded .loading-spinner {
-    display: none;
-}
-
-.loading-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    z-index: 1;
-}
-
-.spinner {
-    width: 40px;
-    height: 40px;
-    margin: 0 auto 1rem;
-    border: 3px solid var(--border-color);
-    border-top-color: var(--primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+.training-plot:hover {
+    transform: scale(1.01);
 }
 
 .confusion-matrix {
@@ -424,21 +484,6 @@
 
 [data-theme="dark"] .light-theme-only {
     display: none;
-}
-
-.training-plot {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-}
-
-@media (max-width: 768px) {
-    .validation-fold-card {
-        padding: 1rem;
-    }
-    
-    .training-plot {
-        height: 300px !important;
-    }
 }
 
 /* Dark theme table styles */
@@ -467,6 +512,16 @@
 [data-theme="dark"] .table tbody tr:hover td {
     background-color: rgba(75, 85, 99, 0.2);
     color: #FFFFFF;
+}
+
+@media (max-width: 768px) {
+    .training-plot {
+        height: auto;
+    }
+    
+    .table-responsive {
+        font-size: 0.85rem;
+    }
 }
 </style>
 {% endblock %} 
