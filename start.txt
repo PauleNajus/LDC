@@ -1,9 +1,12 @@
 Dev: python manage.py runserver
 Prod:  .venv_new\Scripts\activate && python run_prod_windows.py
-
+-----------------------------------------------------------------------------
 Dev: http://127.0.0.1:8000
 Prod: http://[::1]:8000
-
+-----------------------------------------------------------------------------
 Run the full training: python core/train_model.py or python -m core.train_model
-
 Run fast training: python core/train_model.py --target_accuracy 0.70 --epochs 1
+--------------------------------------------------------------------------------
+username: admin, password: Admin2025!, email: admin@gmail.com, firstname: Adminfirst, lastname: Adminlast
+username: paubun, password: PauBun2025!, email: paubun@gmail.com, firstname: Paulius, lastname: Bundza
+username: justri, password: JusTri2025!, email: justri@gmail.com, firstname: Justas, lastname: Trinkūnas
