@@ -175,6 +175,21 @@
         padding: 0.5rem;
     }
 
+    .prediction-card .row {
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+    .prediction-card .col-md-3 {
+        padding-right: 0.5rem;
+        padding-left: 0;
+    }
+
+    .prediction-card .col-md-9 {
+        padding-right: 0;
+        padding-left: 0.5rem;
+    }
+
     .prediction-card h6 {
         margin-bottom: 0.25rem;
         font-size: 0.75rem;
@@ -195,6 +210,12 @@
     .prediction-card .progress {
         height: 14px;
         margin: 0.125rem 0;
+    }
+
+    .prediction-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 2px;
     }
 
     @media (max-width: 768px) {
@@ -226,6 +247,15 @@
         .btn {
             padding: 0.125rem 0.375rem;
             font-size: 0.625rem;
+        }
+
+        .prediction-card .col-md-3 {
+            padding-right: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .prediction-card .col-md-9 {
+            padding-left: 0;
         }
     }
 </style>
