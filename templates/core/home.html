@@ -258,6 +258,20 @@
             padding-left: 0;
         }
     }
+
+    /* Button press effect styles */
+    .btn-press-effect {
+        transition: background-color 0.1s ease;
+    }
+    
+    .btn-press-effect:active {
+        background-color: #ffebee !important;  /* Light red color */
+    }
+    
+    /* Dark theme button press effect */
+    [data-theme="dark"] .btn-press-effect:active {
+        background-color: #311111 !important;  /* Dark red color for dark theme */
+    }
 </style>
 
 <!-- Overlay -->
@@ -343,7 +357,7 @@
                              src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
                              alt="{% trans 'Preview' %}">
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">
+                    <button type="submit" class="btn btn-primary w-100 btn-press-effect">
                         <i class="fas fa-microscope me-2"></i>{% trans "Analyze Image" %}
                     </button>
                 </form>
@@ -385,7 +399,7 @@
                             {{ search_form.date_to }}
                         </div>
                         <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-primary w-100 btn-press-effect">
                                 <i class="fas fa-search me-2"></i>{% trans "Search" %}
                             </button>
                         </div>
