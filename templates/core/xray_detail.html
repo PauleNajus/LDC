@@ -31,7 +31,7 @@
                         </div>
                         <div class="card-body">
                             <div class="alert {% if xray.prediction == 'NORMAL' %}alert-success{% else %}alert-danger{% endif %}">
-                                <h3 class="alert-heading">{{ xray.prediction }}</h3>
+                                <h3 class="alert-heading"><strong>{{ xray.prediction }}</strong></h3>
                                 <p class="mb-0">{% trans "Confidence" %}: <strong>{{ xray.confidence|floatformat:2 }}%</strong></p>
                             </div>
                             

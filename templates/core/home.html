@@ -156,7 +156,7 @@
 
     .form-label {
         margin-bottom: 0.125rem;
-        font-size: 0.625rem;
+        font-size: 0.8125rem;
     }
 
     .form-control, .form-select {
@@ -192,19 +192,19 @@
 
     .prediction-card h6 {
         margin-bottom: 0.25rem;
-        font-size: 0.75rem;
+        font-size: 0.975rem;
     }
 
     .prediction-card .text-muted {
-        font-size: 0.625rem;
+        font-size: 0.8125rem;
     }
 
     .prediction-card .patient-data {
-        font-size: 0.75rem;
+        font-size: 0.975rem;
     }
 
     .prediction-card small {
-        font-size: 0.625rem;
+        font-size: 0.8125rem;
     }
 
     .prediction-card .progress {
@@ -478,9 +478,9 @@
                             <!-- Prediction Results -->
                             <h6 class="mb-2">{% trans "Prediction:" %} 
                                 {% if prediction.prediction == 'NORMAL' %}
-                                <span class="text-success">{% trans prediction.prediction %}</span>
+                                <span class="text-success"><strong>{% trans prediction.prediction %}</strong></span>
                                 {% else %}
-                                <span class="text-danger">{% trans prediction.prediction %}</span>
+                                <span class="text-danger"><strong>{% trans prediction.prediction %}</strong></span>
                                 {% endif %}
                             </h6>
                             <div class="mb-2">

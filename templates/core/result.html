@@ -33,7 +33,7 @@
                             <h5 class="mb-3">Primary Diagnosis</h5>
                             <div class="prediction-result p-3 rounded {% if prediction.prediction == 'NORMAL' %}bg-success bg-opacity-10{% else %}bg-danger bg-opacity-10{% endif %}">
                                 <h3 class="mb-2 {% if prediction.prediction == 'NORMAL' %}text-success{% else %}text-danger{% endif %}">
-                                    {{ prediction.prediction }}
+                                    <strong>{{ prediction.prediction }}</strong>
                                 </h3>
                                 <p class="mb-0 text-muted">
                                     Confidence: {{ prediction.confidence|floatformat:2 }}%
