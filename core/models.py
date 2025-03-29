@@ -230,6 +230,7 @@ class XRayImage(models.Model):
     pneumonia_probability = models.FloatField(default=0.0)
     processing_time = models.FloatField(default=0.0)
     image_size = models.CharField(max_length=50, default="No data")
+    error_message = models.TextField(default="", blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True, db_index=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -483,7 +484,7 @@ class LungClassifier:
             logger.error(f"Error building model: {str(e)}")
             raise
 
-    def preprocess_image(self, image_path):
+    def preprocess_image(self, image_path: str) -> torch.Tensor:
         try:
             # Open and convert image to RGB
             image = Image.open(image_path).convert('RGB')
@@ -493,7 +494,8 @@ class LungClassifier:
             logger.info(f"Original image dimensions: {image.width}x{image.height}, channels: {original_array.shape[-1] if len(original_array.shape) > 2 else 1}")
             
             # Apply transformations (resize, normalize, etc.)
-            transformed_image = self.transform(image)
+            # type: ignore[reportAssignmentType, reportAttributeAccessIssue] - transform pipeline returns torch.Tensor
+            transformed_image: torch.Tensor = torch.as_tensor(self.transform(image))
             
             # Log transformed tensor stats
             logger.info(f"Transformed tensor shape: {transformed_image.shape}, min: {transformed_image.min().item()}, max: {transformed_image.max().item()}")

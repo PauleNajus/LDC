@@ -113,6 +113,9 @@ class HomeView(TemplateView):
                 if request.user.is_authenticated:
                     xray_image.user = request.user
                 
+                # Initialize error_message as empty string
+                xray_image.error_message = ""
+                
                 # Save to get the image file
                 xray_image.save()
                 
@@ -147,6 +150,10 @@ class HomeView(TemplateView):
                 
         except Exception as e:
             logger.error(f"Error processing image: {str(e)}", exc_info=True)
+            # If we have an xray_image instance, update its error_message
+            if 'xray_image' in locals():
+                xray_image.error_message = str(e)
+                xray_image.save()
             return JsonResponse({'errors': f"An error occurred: {str(e)}"}, status=500)
     
     def predict_xray(self, image_path):
@@ -177,6 +184,13 @@ class HomeView(TemplateView):
                 prediction = "PNEUMONIA"
                 pneumonia_prob = confidence
                 normal_prob = 1.0 - confidence
+            
+            # Normalize probabilities to ensure they sum to 1.0
+            total_prob = normal_prob + pneumonia_prob
+            if total_prob != 1.0:
+                normal_prob = normal_prob / total_prob
+                pneumonia_prob = pneumonia_prob / total_prob
+                confidence = max(normal_prob, pneumonia_prob)
             
             logger.info(f"REAL MODEL PREDICTION: {prediction}, confidence: {confidence:.4f}, normal_prob: {normal_prob:.4f}, pneumonia_prob: {pneumonia_prob:.4f}")
             return prediction, confidence, normal_prob, pneumonia_prob
