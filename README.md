@@ -24,14 +24,14 @@ A deep learning-based web application for classifying lung X-ray images as norma
 
 - Python 3.11 or higher
 - For GPU acceleration: NVIDIA GPU with CUDA support
-- 8GB RAM (16GB+ recommended for training)
+- 8GB RAM (12GB+ recommended for training)
 - 500MB free disk space (more for dataset storage)
 
 ## Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/lung-disease-classifier.git
+git clone https://github.com/PauleNajus/LDC
 cd lung-disease-classifier
 ```
 
@@ -114,15 +114,6 @@ dataset/
 ```bash
 python core/train_model.py --data_dir path/to/dataset
 ```
-
-## Production Deployment
-
-For production deployment, the project includes:
-- Gunicorn configuration
-- Nginx setup files
-- WSGI for Windows (Waitress)
-- Production settings with security enhancements
-- Environment variable management
 
 ## License
 
