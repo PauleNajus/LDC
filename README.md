@@ -16,7 +16,7 @@ A deep learning-based web application for classifying lung X-ray images as norma
 - **Backend:** Python 3.11+, Django 5.0.1
 - **AI/ML:** PyTorch 2.1.2+, TorchVision, NumPy, OpenCV
 - **Frontend:** Bootstrap 5, Font Awesome, JavaScript
-- **Database:** SQLite (development), PostgreSQL (production ready)
+- **Database:** SQLite (development)
 - **Caching:** Redis
 - **Security:** Django-CSP, Django-Axes, Argon2 password hashing
 
