@@ -32,7 +32,7 @@ A deep learning-based web application for classifying lung X-ray images as norma
 1. Clone the repository:
 ```bash
 git clone https://github.com/PauleNajus/LDC
-cd lung-disease-classifier
+cd LDC
 ```
 
 2. Create and activate a virtual environment:
