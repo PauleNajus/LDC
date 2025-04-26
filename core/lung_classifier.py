@@ -35,7 +35,7 @@ class LungClassifier:
         pytorch_logger.info(f'PyTorch Version: {torch.__version__}')
         
         self.model: Optional[nn.Module] = None
-        self.scaler = amp.GradScaler()
+        self.scaler = amp.GradScaler() # type: ignore[attr-defined]
         self.transform = transforms.Compose([
             transforms.Resize(self.image_size),
             transforms.ToTensor(),
@@ -52,15 +52,12 @@ class LungClassifier:
             
             start_time = time.time()
             
-            # Initialize DenseNet121 model with the correct number of classes (2 for binary classification)
-            base_model = models.densenet121(weights=None)
+            # Initialize DenseNet169 model (instead of DenseNet121) with the correct number of classes
+            base_model = models.densenet169(weights=None)
             num_features = base_model.classifier.in_features
             
-            # Replace classifier for binary classification (pneumonia vs normal)
-            base_model.classifier = nn.Sequential(  # type: ignore
-                nn.Dropout(p=0.2),
-                nn.Linear(num_features, 2)  # 2 classes: normal and pneumonia
-            )
+            # Replace classifier for binary classification (abnormal vs normal)
+            base_model.classifier = nn.Linear(num_features, 2)  # 2 classes: normal and abnormal
             
             # Load the state dictionary
             state_dict = torch.load(str(self.model_path), map_location=self.device)
@@ -205,7 +202,7 @@ class LungClassifier:
             preprocess_time = time.time() - preprocess_start
             
             # Run inference
-            with amp.autocast(enabled=torch.cuda.is_available()):
+            with amp.autocast(enabled=torch.cuda.is_available()): # type: ignore[attr-defined]
                 model_logger.info('\n=== Running Inference ===')
                 inference_start = time.time()
                 outputs = self.model(img_tensor)

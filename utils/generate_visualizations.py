@@ -77,8 +77,8 @@ def generate_confusion_matrices():
             )
             
             # Set labels manually
-            ax.set_xticklabels(['Normal', 'Pneumonia'])
-            ax.set_yticklabels(['Normal', 'Pneumonia'])
+            ax.set_xticklabels(['Normal', 'Abnormal'])
+            ax.set_yticklabels(['Normal', 'Abnormal'])
             
             # Customize text colors
             plt.title(f'Confusion Matrix - Fold {i}', color=text_color)

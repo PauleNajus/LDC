@@ -15,8 +15,8 @@
     .progress-bar-normal {
         width: var(--normal-probability);
     }
-    .progress-bar-pneumonia {
-        width: var(--pneumonia-probability);
+    .progress-bar-abnormal {
+        width: var(--abnormal-probability);
     }
     .loading-spinner {
         display: none;
@@ -511,15 +511,15 @@
                                 </div>
                             </div>
                             <div class="mb-2">
-                                <small class="text-muted">{% trans "Pneumonia Probability:" %}</small>
+                                <small class="text-muted">{% trans "Abnormal Probability:" %}</small>
                                 <div class="progress">
                                     <div class="progress-bar bg-danger" 
                                          role="progressbar"
-                                         style="width: {{ prediction.pneumonia_probability|floatformat:2 }}%"
-                                         aria-valuenow="{{ prediction.pneumonia_probability|floatformat:2 }}"
+                                         style="width: {{ prediction.abnormal_probability|floatformat:2 }}%"
+                                         aria-valuenow="{{ prediction.abnormal_probability|floatformat:2 }}"
                                          aria-valuemin="0"
                                          aria-valuemax="100">
-                                        {{ prediction.pneumonia_probability|floatformat:2 }}%
+                                        {{ prediction.abnormal_probability|floatformat:2 }}%
                                     </div>
                                 </div>
                             </div>

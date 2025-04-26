@@ -18,6 +18,7 @@ from tqdm import tqdm  # type: ignore
 import torch.cuda.amp as amp
 import torch.multiprocessing as mp
 import albumentations as A
+from albumentations import Compose
 from albumentations.pytorch import ToTensorV2
 import cv2
 import numpy as np
@@ -37,20 +38,20 @@ os.environ['NO_ALBUMENTATIONS_UPDATE'] = '1'
 
 # Configuration constants
 MAX_EPOCHS = 100
-MIN_EPOCHS = 5
-BATCH_SIZE = 64  # Reduced batch size for better generalization
-NUM_WORKERS = 0  # Changed from 14 to 0 to avoid shared memory issues on Windows
+MIN_EPOCHS = 20
+BATCH_SIZE = 64
+NUM_WORKERS = 8
 PIN_MEMORY = True
-PATIENCE = 15  # Increased patience
+PATIENCE = 10
 DEFAULT_TARGET_ACCURACY = 0.98
-CHECKPOINT_FREQ = 5
+CHECKPOINT_FREQ = 1
 LEARNING_RATE = 2e-4  # Increased initial learning rate
 WEIGHT_DECAY = 1e-4  # Increased weight decay for better regularization
 IMAGE_SIZE = 224  # Input image size
 ACCUMULATION_STEPS = 1
 MIXUP_ALPHA = 0.2
 CHECKPOINT_DIR = os.path.join(project_root, 'models')
-EARLY_STOPPING_PATIENCE = 15
+EARLY_STOPPING_PATIENCE = 10
 RANDOM_SEED = 42
 
 # Set random seeds for reproducibility
@@ -97,7 +98,7 @@ def get_device_info():
 device_info = get_device_info()
 
 class XRayDataset(Dataset):
-    def __init__(self, root_dir, transform=None, cache_size=1000):
+    def __init__(self, root_dir, transform: Compose | None = None, cache_size=1000):
         if not os.path.exists(root_dir):
             raise ValueError(f"Dataset directory not found: {root_dir}")
         self.dataset = datasets.ImageFolder(root_dir)
@@ -229,7 +230,7 @@ def train_epoch(model, train_loader, criterion, optimizer, scaler, epoch, device
             inputs, labels_a, labels_b, lam = mixup_data(inputs, labels, mixup_alpha)
         
         # Forward pass with mixed precision
-        with amp.autocast():
+        with amp.autocast(): # type: ignore[attr-defined]
             outputs = model(inputs)
             if use_mixup:
                 loss = mixup_criterion(criterion, outputs, labels_a, labels_b, lam) / accumulation_steps
@@ -245,7 +246,7 @@ def train_epoch(model, train_loader, criterion, optimizer, scaler, epoch, device
             scaler.unscale_(optimizer)
             
             # Clip gradients to prevent exploding gradients
-            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0) # type: ignore[attr-defined]
             
             # Update weights with scaled gradients
             scaler.step(optimizer)
@@ -419,183 +420,238 @@ def evaluate_model(model, test_loader, device, use_tta=True, tta_transforms=5, t
     }
 
 def save_training_metrics(history, test_metrics, model_dir):
-    """Save training metrics and generate visualization plots"""
+    """Save training history and test metrics to JSON files and generate plots."""
     os.makedirs(model_dir, exist_ok=True)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
-    # Save detailed training history
-    history_path = os.path.join(model_dir, f'training_history_{timestamp}.json')
+    # Save history to JSON
+    history_path = os.path.join(model_dir, f'training_history_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json')
     with open(history_path, 'w') as f:
         json.dump(history, f, indent=4)
-    
-    # Save test metrics
-    test_metrics_path = os.path.join(model_dir, f'test_metrics_{timestamp}.json')
-    test_metrics_save = {}
-    for k, v in test_metrics.items():
-        if k == 'confusion_matrix':
-            if isinstance(v, np.ndarray):
-                test_metrics_save[k] = v.tolist()
-        elif isinstance(v, (float, int, list, dict)):
-            test_metrics_save[k] = v
-        elif isinstance(v, (np.ndarray, np.generic)):
-            # Convert scalar NumPy values to Python float using .item()
-            if hasattr(v, 'size') and v.size == 1:
-                test_metrics_save[k] = float(v.item())
-            else:
-                # For non-scalar arrays, convert to a list
-                test_metrics_save[k] = v.tolist()
+    print(f"Training history saved to {history_path}")
+
+    # Convert numpy arrays in metrics to lists for JSON serialization
+    def convert_np_to_list(data):
+        if isinstance(data, dict):
+            return {k: convert_np_to_list(v) for k, v in data.items()}
+        elif isinstance(data, list):
+            return [convert_np_to_list(item) for item in data]
+        elif isinstance(data, np.ndarray):
+            return data.tolist()
+        elif isinstance(data, (np.integer)):
+            return int(data)
+        elif isinstance(data, (np.floating)):
+            return float(data)
+        elif isinstance(data, (np.bool_)):
+            return bool(data)
         else:
-            test_metrics_save[k] = str(v)
+            return data
+
+    test_metrics_serializable = convert_np_to_list(test_metrics)
+
+    # Save metrics to JSON
+    metrics_path = os.path.join(model_dir, f'test_metrics_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json')
+    with open(metrics_path, 'w') as f:
+        json.dump(test_metrics_serializable, f, indent=4)
+    print(f"Test metrics saved to {metrics_path}")
     
-    with open(test_metrics_path, 'w') as f:
-        json.dump(test_metrics_save, f, indent=4)
-    
-    # Generate and save plots
+    # Generate and save visualization plots
+    generate_visualization_plots(history_path, metrics_path, model_dir)
+
+# Ensure visualization functions exist or are defined elsewhere
+# Add dummy functions if needed for testing
+def generate_visualization_plots(history_path, metrics_path, output_dir):
+    print("\n========== GENERATING ADDITIONAL VISUALIZATION PLOTS ==========")
     try:
-        # Training curves
-        plt.figure(figsize=(12, 10))
+        # Load data
+        with open(history_path, 'r') as f:
+            history = json.load(f)
+        print(f"Using training history: {history_path}")
         
-        # Plot training and validation loss
-        plt.subplot(2, 2, 1)
-        plt.plot(history['train_loss'], label='Train Loss')
-        plt.plot(history['val_loss'], label='Validation Loss')
+        with open(metrics_path, 'r') as f:
+            test_metrics = json.load(f)
+        print(f"Using test metrics: {metrics_path}")
+
+        print("Generating plots...")
+        
+        # Ensure output directory exists
+        vis_dir = os.path.join(output_dir, 'visualizations')
+        os.makedirs(vis_dir, exist_ok=True)
+
+        # Plot Training & Validation Curves
+        plt.figure(figsize=(12, 5))
+        plt.subplot(1, 2, 1)
+        plt.plot(history['epoch'], history['train_loss'], label='Train Loss')
+        plt.plot(history['epoch'], history['val_loss'], label='Validation Loss')
+        plt.title('Loss Curves')
         plt.xlabel('Epoch')
         plt.ylabel('Loss')
-        plt.title('Training and Validation Loss')
         plt.legend()
         plt.grid(True)
         
-        # Plot training and validation accuracy
-        plt.subplot(2, 2, 2)
-        plt.plot(history['train_acc'], label='Train Accuracy')
-        plt.plot(history['val_acc'], label='Validation Accuracy')
+        plt.subplot(1, 2, 2)
+        plt.plot(history['epoch'], history['train_acc'], label='Train Accuracy')
+        plt.plot(history['epoch'], history['val_acc'], label='Validation Accuracy')
+        plt.title('Accuracy Curves')
         plt.xlabel('Epoch')
         plt.ylabel('Accuracy')
-        plt.title('Training and Validation Accuracy')
         plt.legend()
         plt.grid(True)
-        
-        # Plot learning rate
-        plt.subplot(2, 2, 3)
-        plt.plot(history['lr'])
-        plt.xlabel('Epoch')
-        plt.ylabel('Learning Rate')
-        plt.title('Learning Rate Schedule')
-        plt.grid(True)
-        
-        # Plot epoch times
-        if 'epoch_time' in history:
-            plt.subplot(2, 2, 4)
-            plt.plot(history['epoch_time'])
-            plt.xlabel('Epoch')
-            plt.ylabel('Time (seconds)')
-            plt.title('Epoch Training Time')
-            plt.grid(True)
-        
         plt.tight_layout()
-        plt.savefig(os.path.join(model_dir, f'training_curves_{timestamp}.png'), dpi=300)
-        
-        # ROC and Precision-Recall curves
-        plt.figure(figsize=(12, 5))
-        
-        # ROC curve
-        plt.subplot(1, 2, 1)
-        if 'roc_curve' in test_metrics and test_metrics['roc_curve']['fpr']:
-            plt.plot(test_metrics['roc_curve']['fpr'], test_metrics['roc_curve']['tpr'], 
-                    label=f'ROC curve (AUC = {test_metrics["roc_auc"]:.4f})')
-            plt.plot([0, 1], [0, 1], 'k--')
-            plt.xlabel('False Positive Rate')
-            plt.ylabel('True Positive Rate')
-            plt.title('ROC Curve')
-            plt.legend(loc='lower right')
-            plt.grid(True)
-        
-        # Precision-Recall curve
-        plt.subplot(1, 2, 2)
-        if 'pr_curve' in test_metrics and test_metrics['pr_curve']['recall']:
-            plt.plot(test_metrics['pr_curve']['recall'], test_metrics['pr_curve']['precision'],
-                    label=f'PR curve (AUC = {test_metrics["pr_auc"]:.4f})')
-            plt.xlabel('Recall')
-            plt.ylabel('Precision')
-            plt.title('Precision-Recall Curve')
-            plt.legend(loc='lower left')
-            plt.grid(True)
-        
-        plt.tight_layout()
-        plt.savefig(os.path.join(model_dir, f'roc_pr_curves_{timestamp}.png'), dpi=300)
-        
-        # Confusion matrix heatmap
-        plt.figure(figsize=(8, 6))
+        plt.savefig(os.path.join(vis_dir, 'train_val_curves.png'))
+        plt.close()
+        print(f"Training and validation curves saved to {vis_dir}")
+
+        # Plot Confusion Matrix Heatmap
         if 'confusion_matrix' in test_metrics:
-            cm = test_metrics['confusion_matrix']
-            if isinstance(cm, list):
-                cm = np.array(cm)
-            
-            # Create heatmap without specifying labels in sns.heatmap
-            sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
-            
-            # Set labels using plt.xticks and plt.yticks instead
-            plt.xticks([0.5, 1.5], ['Normal', 'Pneumonia'])
-            plt.yticks([0.5, 1.5], ['Normal', 'Pneumonia'])
+            cm = np.array(test_metrics['confusion_matrix'])
+            plt.figure(figsize=(8, 6))
+            sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
+                        xticklabels=['Normal', 'Abnormal'], yticklabels=['Normal', 'Abnormal'])
             plt.xlabel('Predicted Label')
             plt.ylabel('True Label')
-            plt.title('Confusion Matrix')
-            plt.tight_layout()
-            plt.savefig(os.path.join(model_dir, f'confusion_matrix_{timestamp}.png'), dpi=300)
-            
-        # Close all plots to free memory
-        plt.close('all')
+            plt.title(f'Confusion Matrix (Threshold: {test_metrics.get("best_threshold", "N/A"):.2f})')
+            plt.savefig(os.path.join(vis_dir, 'confusion_matrix.png'))
+            plt.close()
+            print(f"Confusion matrix heatmap saved to {vis_dir}")
+
+        # Plot ROC Curve
+        print(f"Test metrics keys: {list(test_metrics.keys())}") # Debug print
+        if 'roc_curve' in test_metrics and isinstance(test_metrics['roc_curve'], dict):
+            roc_data = test_metrics['roc_curve']
+            print(f"ROC curve keys: {list(roc_data.keys())}") # Debug print
+            if all(k in roc_data for k in ['fpr', 'tpr']):
+                fpr = np.array(roc_data['fpr'])
+                tpr = np.array(roc_data['tpr'])
+                roc_auc = test_metrics.get('roc_auc', None)
+                
+                # Check data types
+                print("ROC curve data types:")
+                print(f"  fpr: {type(fpr)}")
+                if len(fpr) > 0: print(f"    First element type: {type(fpr[0])}")
+                print(f"  tpr: {type(tpr)}")
+                if len(tpr) > 0: print(f"    First element type: {type(tpr[0])}")
+                if 'thresholds' in roc_data: print(f"  thresholds: {type(roc_data['thresholds'])}")
+                if 'thresholds' in roc_data and len(roc_data['thresholds']) > 0: print(f"    First element type: {type(roc_data['thresholds'][0])}")
+
+                plt.figure()
+                plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (AUC = {roc_auc:.4f})' if roc_auc is not None else 'ROC curve')
+                plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+                plt.xlim([0.0, 1.0])
+                plt.ylim([0.0, 1.05])
+                plt.xlabel('False Positive Rate')
+                plt.ylabel('True Positive Rate')
+                plt.title('Receiver Operating Characteristic (ROC) Curve')
+                plt.legend(loc="lower right")
+                plt.grid(True)
+                plt.savefig(os.path.join(vis_dir, 'roc_curve.png'))
+                plt.close()
+                print(f"ROC curve saved to {vis_dir}")
+            else:
+                 print("Warning: Missing 'fpr' or 'tpr' keys in roc_curve data.")
+        else:
+            print("Warning: 'roc_curve' data not found or not in expected format in test_metrics.")
+
+        # Plot Precision-Recall Curve
+        if 'pr_curve' in test_metrics and isinstance(test_metrics['pr_curve'], dict):
+            pr_data = test_metrics['pr_curve']
+            if all(k in pr_data for k in ['precision', 'recall']):
+                precision = np.array(pr_data['precision'])
+                recall = np.array(pr_data['recall'])
+                pr_auc = test_metrics.get('pr_auc', None)
+                plt.figure()
+                plt.plot(recall, precision, color='blue', lw=2, label=f'PR curve (AUC = {pr_auc:.4f})' if pr_auc is not None else 'PR curve')
+                plt.xlabel('Recall')
+                plt.ylabel('Precision')
+                plt.title('Precision-Recall Curve')
+                plt.legend(loc="lower left")
+                plt.grid(True)
+                plt.savefig(os.path.join(vis_dir, 'precision_recall_curve.png'))
+                plt.close()
+                print(f"Precision-Recall curve saved to {vis_dir}")
+            else:
+                print("Warning: Missing 'precision' or 'recall' keys in pr_curve data.")
+        else:
+             print("Warning: 'pr_curve' data not found or not in expected format in test_metrics.")
+
+        # Plot Learning Rate Schedule
+        if 'lr' in history:
+            plt.figure()
+            plt.plot(history['epoch'], history['lr'])
+            plt.title('Learning Rate Schedule')
+            plt.xlabel('Epoch')
+            plt.ylabel('Learning Rate')
+            plt.grid(True)
+            plt.savefig(os.path.join(vis_dir, 'lr_schedule.png'))
+            plt.close()
+            print(f"Learning rate schedule plot saved to {vis_dir}")
+
+        # Plot Threshold Analysis (if available)
+        if 'threshold_analysis' in test_metrics and isinstance(test_metrics['threshold_analysis'], dict):
+             analysis = test_metrics['threshold_analysis']
+             if all(k in analysis for k in ['thresholds', 'balanced_accuracies', 'best_threshold', 'best_balanced_accuracy']):
+                 thresholds = np.array(analysis['thresholds'])
+                 balanced_accuracies = np.array(analysis['balanced_accuracies'])
+                 best_threshold = analysis['best_threshold']
+                 best_balanced_accuracy = analysis['best_balanced_accuracy']
+                 
+                 print(f"Best threshold: {best_threshold} (type: {type(best_threshold)})")
+                 print(f"Best balanced accuracy: {best_balanced_accuracy} (type: {type(best_balanced_accuracy)})")
+
+                 plt.figure()
+                 plt.plot(thresholds, balanced_accuracies, label='Balanced Accuracy')
+                 plt.scatter([best_threshold], [best_balanced_accuracy], color='red', label=f'Best ({best_threshold:.2f}, {best_balanced_accuracy:.4f})', zorder=5)
+                 plt.xlabel('Threshold')
+                 plt.ylabel('Balanced Accuracy')
+                 plt.title('Threshold vs. Balanced Accuracy')
+                 plt.legend()
+                 plt.grid(True)
+                 plt.savefig(os.path.join(vis_dir, 'threshold_analysis.png'))
+                 plt.close()
+                 print(f"Threshold analysis plot saved to {vis_dir}")
+             else:
+                 print("Warning: Missing required keys in 'threshold_analysis' data.")
+        else:
+            print("Warning: 'threshold_analysis' data not found or not in expected format.")
+
+
+        print("\nAll plots generated successfully!")
+        print(f"Plots saved to: {vis_dir}")
         
     except Exception as e:
-        print(f"Error generating plots: {str(e)}")
-    
-    print(f"Training metrics and visualizations saved to {model_dir}")
-    return history_path, test_metrics_path
+        print(f"Error generating visualization plots: {e}")
+        import traceback
+        traceback.print_exc()
 
-def create_densenet121_model(num_classes=2):
-    """
-    Create and return a modified DenseNet-121 model for pneumonia classification
-    
-    This implementation adds a dropout layer before the final classification layer
-    to reduce overfitting and improve generalization.
-    """
-    # Load pre-trained DenseNet-121
-    model = models.densenet121(weights='IMAGENET1K_V1')
-    
-    # Modify the classifier for binary classification
-    num_features = model.classifier.in_features
-    
-    # Replace classifier with a custom classification head including dropout
-    model.classifier = nn.Sequential(  # type: ignore
-        nn.Dropout(p=0.2),  # Add dropout layer with 0.2 probability
-        nn.Linear(num_features, num_classes)
-    )  # Valid in PyTorch: replacing Linear with Sequential
-    
-    # Ensure we're tracking parameters for proper metrics reporting
-    total_params = sum(p.numel() for p in model.parameters())
-    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    
-    print(f"\nModel architecture summary:")
-    print(f"- Base model: DenseNet-121")
-    print(f"- Input size: {IMAGE_SIZE}x{IMAGE_SIZE}x3")
-    print(f"- Total parameters: {total_params:,}")
-    print(f"- Trainable parameters: {trainable_params:,}")
-    print(f"- Classification head: Dropout(0.2) -> Linear({num_features}, {num_classes})")
-    
-    return model
+
+def create_densenet169_model(num_classes=2):
+    """Create a DenseNet-169 model with pre-trained weights."""
+    # Use DenseNet-169 with updated weights API
+    weights = models.DenseNet169_Weights.IMAGENET1K_V1
+    model = models.densenet169(weights=weights)
+
+    # Replace the final classifier layer
+    num_ftrs = model.classifier.in_features
+    model.classifier = nn.Linear(num_ftrs, num_classes)
+
+    # Optional: Add dropout for regularization
+    # model.classifier = nn.Sequential(
+    #     nn.Dropout(0.5),
+    #     nn.Linear(num_ftrs, num_classes)
+    # )
+
+    print("Using DenseNet-169 model with ImageNet pre-trained weights.")
+    return model, weights.transforms()
 
 def create_model_ensemble(checkpoint_files, num_classes=2, device=None):
     """Create an ensemble of models from checkpoint files."""
-    if device is None:
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    
-    models = []
+    models_list = []
+    print(f"Creating ensemble from {len(checkpoint_files)} models...")
     for checkpoint_file in checkpoint_files:
-        # Create a new model instance
-        model = create_densenet121_model(num_classes)
+        # Create a new model instance - unpack the tuple
+        model, _ = create_densenet169_model(num_classes)
         
         try:
-            # Try loading the state dict directly
+            # Load state dictionary from checkpoint
             state_dict = torch.load(checkpoint_file)
             model.load_state_dict(state_dict)
         except:
@@ -613,10 +669,10 @@ def create_model_ensemble(checkpoint_files, num_classes=2, device=None):
         
         model = model.to(device)
         model.eval()
-        models.append(model)
+        models_list.append(model)
     
-    print(f"Successfully loaded {len(models)} models for the ensemble")
-    return models
+    print(f"Successfully loaded {len(models_list)} models for the ensemble")
+    return models_list
 
 def evaluate_ensemble(models, test_loader, device, use_tta=True, tta_transforms=5, threshold=0.65):
     """Evaluate an ensemble of models."""
@@ -631,7 +687,7 @@ def evaluate_ensemble(models, test_loader, device, use_tta=True, tta_transforms=
         A.Resize(height=224, width=224),
         A.HorizontalFlip(p=0.5),
         A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
-        A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
         ToTensorV2(),
     ])
     
@@ -707,7 +763,7 @@ def evaluate_ensemble(models, test_loader, device, use_tta=True, tta_transforms=
     all_probs = np.array(all_probs)
     
     # Calculate sensitivity and specificity
-    # Assuming 1 is positive (pneumonia) and 0 is negative (normal)
+    # Assuming 1 is positive (abnormal) and 0 is negative (normal)
     cm = confusion_matrix(all_labels, all_preds)
     sensitivity = cm[1, 1] / (cm[1, 1] + cm[1, 0]) if (cm[1, 1] + cm[1, 0]) > 0 else 0
     specificity = cm[0, 0] / (cm[0, 0] + cm[0, 1]) if (cm[0, 0] + cm[0, 1]) > 0 else 0
@@ -730,20 +786,94 @@ def evaluate_ensemble(models, test_loader, device, use_tta=True, tta_transforms=
 def train_model(data_dir, epochs=MAX_EPOCHS, batch_size=BATCH_SIZE, target_accuracy=DEFAULT_TARGET_ACCURACY, 
              lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY, patience=PATIENCE, 
              scheduler_patience=5, scheduler_factor=0.5):
-    """Train a DenseNet-121 model for pneumonia classification"""
-    start_time = time.time()
-    print(f"Training DenseNet-121 model for pneumonia detection")
-    print(f"Device info:\n{device_info}")
+    """Train the model with specified hyperparameters."""
     
-    # Print system information for reproducibility
+    start_time = time.time()
+    
+    # Create necessary directories
+    model_dir = os.path.join(project_root, 'train_results_logs')
+    os.makedirs(model_dir, exist_ok=True)
+    os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+
+    print("Training DenseNet-169 model for abnormal detection")
+    print("Device info:")
+    print(device_info)
+
+    # Print reproducibility info
     print("\n========== REPRODUCIBILITY INFO ==========")
     print(f"Date and Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"OS: {platform.system()} {platform.version()}")
+    print(f"OS: {platform.system()} {platform.release()}")
     print(f"Python Version: {platform.python_version()}")
     print(f"Random Seed: {RANDOM_SEED}")
     print(f"Deterministic Mode: {torch.backends.cudnn.deterministic}")
     
-    # Print hyperparameters
+    # Create model - unpack the tuple
+    model, default_transforms = create_densenet169_model(num_classes=2)
+    model = model.to(device)
+
+    # Define data augmentations using Albumentations
+    train_transform = A.Compose([
+        A.Resize(IMAGE_SIZE, IMAGE_SIZE),
+        A.RandomScale(scale_limit=0.15, p=0.5),  # Scale +/- 15%
+        A.PadIfNeeded(min_height=IMAGE_SIZE, min_width=IMAGE_SIZE, border_mode=cv2.BORDER_CONSTANT),
+        A.RandomCrop(height=IMAGE_SIZE, width=IMAGE_SIZE), # Ensure output size is IMAGE_SIZE
+        A.Affine(
+            scale=(0.85, 1.15),       # Zoom in/out by 15%
+            translate_percent=(-0.1, 0.1), # Translate by +/- 10%
+            rotate=(-20, 20),         # Rotate by +/- 20 degrees
+            shear=(-10, 10),          # Shear by +/- 10 degrees
+            p=0.7                     # Apply Affine 70% of the time
+        ),
+        A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.7), # Adjust brightness/contrast by +/- 20%
+        A.HorizontalFlip(p=0.5),
+        A.OneOf([
+            A.GaussNoise(p=0.5),
+            A.GaussianBlur(blur_limit=(3, 7), p=0.5),
+        ], p=0.5), # Apply Noise or Blur 50% of the time
+        A.GridDistortion(p=0.3), # Apply Grid Distortion 30% of the time
+        A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)), # Use tuple for mean/std
+        ToTensorV2() # Convert image and mask to PyTorch tensors
+    ])
+
+    val_transform = A.Compose([
+        A.Resize(IMAGE_SIZE, IMAGE_SIZE),
+        A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)), # Use tuple for mean/std
+        ToTensorV2()
+    ])
+
+    test_transform = val_transform # Use same basic transform for testing
+
+    # Create datasets and dataloaders
+    train_dataset = XRayDataset(os.path.join(data_dir, 'train'), transform=train_transform)
+    val_dataset = XRayDataset(os.path.join(data_dir, 'val'), transform=val_transform)
+    test_dataset = XRayDataset(os.path.join(data_dir, 'test'), transform=test_transform)
+
+    # Balance training and validation datasets
+    train_dataset.balance_classes(max_ratio=1.0)
+    val_dataset.balance_classes(max_ratio=1.0)
+
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=NUM_WORKERS, pin_memory=PIN_MEMORY, drop_last=True)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=NUM_WORKERS, pin_memory=PIN_MEMORY)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=NUM_WORKERS, pin_memory=PIN_MEMORY)
+
+    # Define loss function with class balancing (if needed, though datasets are now balanced)
+    # Example: Calculate weights based on balanced dataset if still desired
+    # class_counts = train_dataset.class_counts
+    # total_samples = sum(class_counts.values())
+    # weights = [total_samples / class_counts[train_dataset.classes[i]] for i in range(len(train_dataset.classes))]
+    # class_weights = torch.tensor(weights, dtype=torch.float).to(device)
+    # criterion = nn.CrossEntropyLoss(weight=class_weights)
+    
+    # Since we balanced the datasets, standard CrossEntropyLoss is fine
+    criterion = nn.CrossEntropyLoss() 
+
+    # Define optimizer and learning rate scheduler
+    optimizer = optim.AdamW(model.parameters(), lr=lr, weight_decay=weight_decay, amsgrad=True)
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=scheduler_factor, patience=scheduler_patience, verbose=True)
+    
+    # Initialize GradScaler for mixed precision training
+    scaler = amp.GradScaler() # type: ignore[attr-defined]
+
     print("\n========== HYPERPARAMETERS ==========")
     print(f"Optimizer: AdamW with amsgrad=True")
     print(f"Initial Learning Rate: {lr}")
@@ -753,539 +883,160 @@ def train_model(data_dir, epochs=MAX_EPOCHS, batch_size=BATCH_SIZE, target_accur
     print(f"Accumulation Steps: {ACCUMULATION_STEPS}")
     print(f"Image Size: {IMAGE_SIZE}x{IMAGE_SIZE}")
     print(f"Max Epochs: {epochs}")
-    print(f"Early Stopping Patience: {patience}")
+    print(f"Early Stopping Patience: {EARLY_STOPPING_PATIENCE}")
     print(f"Mixup Alpha: {MIXUP_ALPHA}")
-    print(f"Loss Function: CrossEntropyLoss with class balancing")
-    
-    # Print preprocessing and augmentation details
+    print(f"Loss Function: CrossEntropyLoss") # Updated as weights are not needed now
+
     print("\n========== DATA PREPROCESSING & AUGMENTATION ==========")
-    print("Normalization: mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225] (ImageNet)")
+    print(f"Normalization: mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225] (ImageNet)")
     print("Training Augmentations:")
-    print("  - Resize to 224x224")
-    print("  - Random Affine (scale: 0.85-1.15, translate: ±10%, rotate: ±20°)")
-    print("  - Random Brightness/Contrast (±20%)")
-    print("  - Horizontal Flip (50% probability)")
-    print("  - Gaussian Noise (30% probability)")
-    print("  - Gaussian Blur (20% probability)")
-    print("  - Grid Distortion (30% probability)")
-    print("  - Mixup Augmentation (50% probability, alpha=0.2)")
+    for t in train_transform.transforms: print(f"  - {t.__class__.__name__}")
     print("Validation/Test Transforms:")
-    print("  - Resize to 224x224")
-    print("  - Normalization only")
-    print("Test-Time Augmentation: 5 transforms with flips and small rotations")
-    
-    # Create directories for logging
-    log_dir = os.path.join(project_root, 'train_results_logs')
-    os.makedirs(log_dir, exist_ok=True)
-    
-    # Set up enhanced data augmentation for training
-    train_transform = A.Compose([
-        A.Resize(height=IMAGE_SIZE, width=IMAGE_SIZE),
-        A.Affine(scale=(0.85, 1.15), translate_percent=(0.1, 0.1), rotate=(-20, 20), p=0.8),
-        A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.8),
-        A.HorizontalFlip(p=0.5),
-        A.GaussNoise(p=0.3),
-        A.GaussianBlur(blur_limit=3, p=0.2),
-        A.GridDistortion(p=0.3),
-        A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-        ToTensorV2(),
-    ])
-    
-    # Simple transforms for validation and testing
-    val_test_transform = A.Compose([
-        A.Resize(height=IMAGE_SIZE, width=IMAGE_SIZE),
-        A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-        ToTensorV2(),
-    ])
-    
-    # Load datasets with balanced classes
-    train_dataset = XRayDataset(
-        os.path.join(data_dir, 'train'), 
-        transform=train_transform,
-        cache_size=3000  # Cache more images for faster training
-    )
-    
-    val_dataset = XRayDataset(
-        os.path.join(data_dir, 'val'), 
-        transform=val_test_transform
-    )
-    
-    test_dataset = XRayDataset(
-        os.path.join(data_dir, 'test'), 
-        transform=val_test_transform
-    )
-    
-    # Ensure class balance in training set
-    train_dataset.balance_classes(max_ratio=1.0)  # Perfect balance
-    val_dataset.balance_classes(max_ratio=1.0)    # Perfect balance
-    test_dataset.balance_classes(max_ratio=1.0)   # Perfect balance
-    
-    # Create data loaders
-    train_loader = DataLoader(
-        train_dataset,
-        batch_size=batch_size,
-        shuffle=True,
-        num_workers=NUM_WORKERS,
-        pin_memory=PIN_MEMORY,
-        prefetch_factor=2 if NUM_WORKERS > 0 else None
-    )
-    
-    val_loader = DataLoader(
-        val_dataset,
-        batch_size=batch_size*2,  # Larger batch size for validation
-        shuffle=False,
-        num_workers=NUM_WORKERS,
-        pin_memory=PIN_MEMORY,
-        prefetch_factor=2 if NUM_WORKERS > 0 else None
-    )
-    
-    test_loader = DataLoader(
-        test_dataset,
-        batch_size=batch_size*2,  # Larger batch size for testing
-        shuffle=False,
-        num_workers=NUM_WORKERS,
-        pin_memory=PIN_MEMORY,
-        prefetch_factor=2 if NUM_WORKERS > 0 else None
-    )
-    
-    # Create model
-    model = create_densenet121_model(num_classes=2)
-    model = model.to(device)
-    
-    # Count trainable parameters
-    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    
-    # Print model architecture details
-    print("\n========== MODEL ARCHITECTURE ==========")
-    print("Base Architecture: DenseNet-121")
-    print(f"Num Classes: 2 (NORMAL, PNEUMONIA)")
-    print(f"Total Trainable Parameters: {trainable_params:,}")
-    print(f"Modifications: Custom classification head with dropout")
-    print(f"Checkpoint Directory: {CHECKPOINT_DIR}")
-    print(f"Checkpoint Frequency: Every {CHECKPOINT_FREQ} epochs")
-    
-    # Calculate class weights - using 1:1 ratio since we've balanced the dataset
-    class_weights = torch.tensor([1.0, 1.0], device=device)  
-    
-    # Define loss function and optimizer
-    criterion = nn.CrossEntropyLoss(weight=class_weights)
-    
-    # Use AdamW optimizer with weight decay
-    optimizer = optim.AdamW(
-        model.parameters(),
-        lr=lr,
-        weight_decay=weight_decay,
-        amsgrad=True
-    )
-    
-    # Learning rate scheduler
-    scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer,
-        mode='max',
-        factor=scheduler_factor,
-        patience=scheduler_patience,
-        verbose=True
-    )
-    
-    # Setup mixed precision training
-    scaler = amp.GradScaler()
-    
-    # Track best model and metrics
-    best_acc = 0.0
-    best_epoch = 0
-    history = {
-        'train_loss': [],
-        'train_acc': [],
-        'val_loss': [],
-        'val_acc': [],
-        'lr': [],
-        'epoch_time': []
-    }
-    
+    for t in val_transform.transforms: print(f"  - {t.__class__.__name__}")
+    print(f"Test-Time Augmentation: {5} transforms with flips and small rotations") # Placeholder value, TTA logic in evaluate_model
+
     # Training loop
+    best_acc = 0.0
+    epochs_no_improve = 0
+    history = {'epoch': [], 'train_loss': [], 'train_acc': [], 'val_loss': [], 'val_acc': [], 'lr': []}
+
     print(f"\nStarting training for {epochs} epochs")
-    train_start_time = time.time()
-    
     for epoch in range(epochs):
         epoch_start_time = time.time()
         
-        # Train and validate for one epoch
         train_loss, train_acc = train_epoch(model, train_loader, criterion, optimizer, scaler, epoch, device, accumulation_steps=ACCUMULATION_STEPS, mixup_alpha=MIXUP_ALPHA)
         val_loss, val_acc = validate(model, val_loader, criterion, device)
-        
-        # Update learning rate
-        scheduler.step(val_acc)
         current_lr = optimizer.param_groups[0]['lr']
         
-        # Calculate epoch time
-        epoch_time = time.time() - epoch_start_time
-        history['epoch_time'].append(epoch_time)
-        
-        # Update history
+        # Log metrics
+        history['epoch'].append(epoch + 1)
         history['train_loss'].append(train_loss)
         history['train_acc'].append(train_acc)
         history['val_loss'].append(val_loss)
         history['val_acc'].append(val_acc)
         history['lr'].append(current_lr)
         
-        # Get GPU memory usage
-        if torch.cuda.is_available():
-            gpu_memory_used = torch.cuda.max_memory_allocated() / 1e9  # Convert to GB
-            torch.cuda.reset_peak_memory_stats()
-        else:
-            gpu_memory_used = 0
-            
-        # Print epoch summary
+        epoch_end_time = time.time()
+        epoch_duration = epoch_end_time - epoch_start_time
+        gpu_memory = torch.cuda.max_memory_allocated() / 1e9 if torch.cuda.is_available() else 0
+
         print(f"Epoch {epoch+1}/{epochs}:")
         print(f"  Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f}")
         print(f"  Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}")
         print(f"  Learning Rate: {current_lr:.8f}")
         print(f"  Best Val Acc: {best_acc:.4f}")
-        print(f"  Epoch Time: {epoch_time:.2f}s, GPU Memory: {gpu_memory_used:.2f} GB")
+        print(f"  Epoch Time: {epoch_duration:.2f}s, GPU Memory: {gpu_memory:.2f} GB")
         
-        # Save checkpoint
+        # Update learning rate scheduler
+        scheduler.step(val_acc)
+
+        # Save checkpoint and check for early stopping
         is_best = val_acc > best_acc
         if is_best:
             best_acc = val_acc
-            best_epoch = epoch
-            
-            # Save checkpoint
+            epochs_no_improve = 0
             save_checkpoint({
                 'epoch': epoch + 1,
                 'state_dict': model.state_dict(),
                 'best_acc': best_acc,
                 'optimizer': optimizer.state_dict(),
-            }, is_best)
+                'scheduler': scheduler.state_dict()
+            }, is_best, filename=f'densenet169_epoch_{epoch+1}_acc_{val_acc:.4f}.pth')
+        else:
+            epochs_no_improve += 1
+            print(f"Validation accuracy did not improve for {epochs_no_improve} epochs.")
+            if epochs_no_improve >= EARLY_STOPPING_PATIENCE and epoch >= MIN_EPOCHS:
+                print(f"Early stopping triggered after {epoch+1} epochs")
+                break
         
-        # Early stopping
-        if epoch - best_epoch >= patience:
-            print(f"Early stopping triggered after {epoch+1} epochs")
-            break
-        
-        # Save checkpoint every CHECKPOINT_FREQ epochs
+        # Save regular checkpoint
         if (epoch + 1) % CHECKPOINT_FREQ == 0:
             save_checkpoint({
                 'epoch': epoch + 1,
                 'state_dict': model.state_dict(),
                 'best_acc': best_acc,
                 'optimizer': optimizer.state_dict(),
-            }, False, f'checkpoint_epoch_{epoch+1}.pth')
-    
-    # Calculate training time
-    training_time = time.time() - train_start_time
-    m, s = divmod(training_time, 60)
-    h, m = divmod(m, 60)
-    print(f"Training completed in {int(h)}h {int(m)}m {int(s)}s")
+                  'scheduler': scheduler.state_dict()
+             }, False, filename=f'checkpoint_epoch_{epoch+1}.pth')
+
+    end_time = time.time()
+    total_time = end_time - start_time
+    print(f"\nTraining completed in {time.strftime('%Hh %Mm %Ss', time.gmtime(total_time))}")
     print(f"Best validation accuracy: {best_acc:.4f}")
     
     # Load best model for evaluation
-    best_model_path = os.path.join(project_root, 'models', 'best_model.pth')
-    model.load_state_dict(torch.load(best_model_path))
+    best_model_path = os.path.join(CHECKPOINT_DIR, 'best_model.pth')
+    if os.path.exists(best_model_path):
+        print(f"Loading best model from {best_model_path} for evaluation...")
+        # Load single best model - unpack the tuple
+        model, _ = create_densenet169_model(num_classes=2)
+        model.load_state_dict(torch.load(best_model_path))
+        model = model.to(device)
+        # evaluate_model(model, test_loader, device, use_tta=True) # Moved evaluation outside the if block
+    else:
+        print("Warning: Best model checkpoint not found. Evaluating the final model.")
+        # If best model not found, maybe evaluate the last state? Or skip? For now, just print warning.
+        # Need to decide how to handle this case. Let's assume we still have the model object from the last epoch.
+
+    # Evaluate on test set (using the model loaded from best checkpoint, or the last state if checkpoint missing)
+    print("\nEvaluating model on test set...")
+    test_metrics = evaluate_model(model, test_loader, device, use_tta=True)
+
+    # Save metrics and generate plots
+    save_training_metrics(history, test_metrics, model_dir)
     
-    # Evaluate on test set with multiple thresholds to find the best
-    print("Evaluating model on test set...")
-    
-    # Try different thresholds to find the best
-    thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-    best_threshold = 0.5
-    best_metrics = None
-    best_f1 = 0
-    
-    # Track all metrics for each threshold
-    threshold_metrics = {}
-    
-    for threshold in thresholds:
-        test_metrics = evaluate_model(model, test_loader, device, use_tta=True, threshold=threshold)
-        # Calculate balanced accuracy instead of F1 score
-        balanced_acc = (test_metrics['sensitivity'] + test_metrics['specificity']) / 2
-        
-        # Calculate additional metrics
-        precision = test_metrics['sensitivity'] * test_metrics['accuracy'] / (test_metrics['sensitivity'] * test_metrics['accuracy'] + (1 - test_metrics['specificity']) * (1 - test_metrics['accuracy']))
-        f1 = 2 * precision * test_metrics['sensitivity'] / (precision + test_metrics['sensitivity']) if (precision + test_metrics['sensitivity']) > 0 else 0
-        
-        print(f"Threshold: {threshold:.2f}, Accuracy: {test_metrics['accuracy']:.4f}, Sensitivity: {test_metrics['sensitivity']:.4f}, Specificity: {test_metrics['specificity']:.4f}")
-        print(f"  Precision: {precision:.4f}, F1-Score: {f1:.4f}")
-        
-        # Store all metrics
-        threshold_metrics[threshold] = {
-            'accuracy': test_metrics['accuracy'],
-            'sensitivity': test_metrics['sensitivity'],
-            'specificity': test_metrics['specificity'],
-            'precision': precision,
-            'f1_score': f1,
-            'balanced_acc': balanced_acc
-        }
-        
-        if balanced_acc > best_f1:
-            best_f1 = balanced_acc
-            best_threshold = threshold
-            best_metrics = test_metrics
-    
-    # Make sure we have metrics even if none of the thresholds improved F1
-    if best_metrics is None:
-        best_metrics = evaluate_model(model, test_loader, device, use_tta=True, threshold=0.5)
-    
-    # Print best threshold results
-    print(f"\n========== THRESHOLD SELECTION ==========")
-    print(f"Best threshold: {best_threshold:.2f} (based on balanced accuracy)")
-    print(f"Test accuracy: {best_metrics['accuracy']:.4f}")
-    print(f"Sensitivity (Recall): {best_metrics['sensitivity']:.4f}")
-    print(f"Specificity: {best_metrics['specificity']:.4f}")
-    print(f"ROC AUC: {best_metrics['roc_auc']:.4f}")
-    
-    # Print confusion matrix
-    print("\n========== CONFUSION MATRIX ==========")
-    conf_matrix = best_metrics['confusion_matrix']
-    print(f"TN: {conf_matrix[0, 0]}, FP: {conf_matrix[0, 1]}")
-    print(f"FN: {conf_matrix[1, 0]}, TP: {conf_matrix[1, 1]}")
-    
-    # Performance summary
-    total_time = time.time() - start_time
-    m, s = divmod(total_time, 60)
-    h, m = divmod(m, 60)
+    # Print performance summary
+    avg_epoch_time = total_time / (epoch + 1) if epoch >= 0 else 0
+    peak_gpu_memory = torch.cuda.max_memory_reserved() / 1e9 if torch.cuda.is_available() else 0
     
     print("\n========== PERFORMANCE SUMMARY ==========")
-    print(f"Total Time: {int(h)}h {int(m)}m {int(s)}s")
-    print(f"Average Epoch Time: {sum(history['epoch_time'])/len(history['epoch_time']):.2f}s")
-    print(f"Total Epochs: {len(history['train_loss'])}")
-    if torch.cuda.is_available():
-        print(f"Peak GPU Memory Usage: {torch.cuda.max_memory_allocated() / 1e9:.2f} GB")
-    
-    # Save all metrics including threshold analysis
-    best_metrics['threshold_analysis'] = threshold_metrics
-    
-    # Save all metrics
-    history_path, test_metrics_path = save_training_metrics(history, best_metrics, log_dir)
-    print(f"Training metrics saved to {log_dir}")
-    
-    return model, history, test_metrics
+    print(f"Total Time: {time.strftime('%Hh %Mm %Ss', time.gmtime(total_time))}")
+    print(f"Average Epoch Time: {avg_epoch_time:.2f}s")
+    print(f"Total Epochs: {epoch + 1}")
+    print(f"Peak GPU Memory Usage: {peak_gpu_memory:.2f} GB") # Using max_memory_reserved
+    print(f"Training metrics and visualizations saved to {model_dir}")
+    print(f"Training metrics saved to {model_dir}") # Redundant print?
+
+    return best_acc
+
 
 def main():
     # Set data directory
-    data_dir = os.path.join(project_root, 'data', 'Chest_X-Ray_Images_(Pneumonia)_2_classes', 'chest_xray')
+    data_dir = os.path.join(project_root, 'data', 'CXR8', 'chest_xray') # Corrected data directory path
+
+    # Check if the directory exists
+    if not os.path.isdir(data_dir):
+        print(f"Error: Data directory not found at {data_dir}")
+        print("Please ensure the dataset is processed and located in the 'data/processed' folder.")
+        sys.exit(1)
+
+    # Train the model
+    best_acc = train_model(data_dir=data_dir, epochs=MAX_EPOCHS, batch_size=BATCH_SIZE, lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY, patience=EARLY_STOPPING_PATIENCE)
+
+    # Optionally, evaluate the best model saved during training
+    print("\n========== FINAL EVALUATION ==========")
     models_dir = os.path.join(project_root, 'models')
+    best_model_path = os.path.join(models_dir, 'best_model.pth')
     
-    # Read command line arguments
-    import argparse
-    parser = argparse.ArgumentParser(description='Train and evaluate a pneumonia detection model')
-    parser.add_argument('--eval_only', action='store_true', help='Skip training and only evaluate model')
-    parser.add_argument('--tta', action='store_true', help='Use test-time augmentation during evaluation')
-    parser.add_argument('--ensemble', action='store_true', help='Use model ensembling during evaluation')
-    parser.add_argument('--epochs', type=int, default=MAX_EPOCHS, help='Number of epochs to train')
-    parser.add_argument('--batch_size', type=int, default=BATCH_SIZE, help='Batch size for training')
-    parser.add_argument('--threshold', type=float, default=0.65, help='Threshold for classifying as positive class')
-    parser.add_argument('--target_accuracy', type=float, default=DEFAULT_TARGET_ACCURACY, help='Target accuracy for early stopping')
-    parser.add_argument('--lr', type=float, default=LEARNING_RATE, help='Initial learning rate')
-    parser.add_argument('--weight_decay', type=float, default=WEIGHT_DECAY, help='Weight decay for optimizer')
-    parser.add_argument('--patience', type=int, default=PATIENCE, help='Patience for early stopping')
-    parser.add_argument('--scheduler_patience', type=int, default=5, help='Patience for learning rate scheduler')
-    parser.add_argument('--scheduler_factor', type=float, default=0.5, help='Factor for learning rate scheduler')
-    parser.add_argument('--seed', type=int, default=RANDOM_SEED, help='Random seed for reproducibility')
-    args = parser.parse_args()
-    
-    # Set random seed if specified
-    if args.seed != RANDOM_SEED:
-        torch.manual_seed(args.seed)
-        np.random.seed(args.seed)
-        random.seed(args.seed)
-        if torch.cuda.is_available():
-            torch.cuda.manual_seed(args.seed)
-            torch.cuda.manual_seed_all(args.seed)
-        print(f"Random seed set to {args.seed}")
-    
-    # Log information about available hardware
-    get_device_info()
+    # Set up test data loader
+    test_transform = A.Compose([
+        A.Resize(IMAGE_SIZE, IMAGE_SIZE),
+        A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+        ToTensorV2()
+    ])
+    test_dataset = XRayDataset(os.path.join(data_dir, 'test'), transform=test_transform)
+    test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_WORKERS, pin_memory=PIN_MEMORY)
 
-    # Create models directory if it doesn't exist
-    os.makedirs(models_dir, exist_ok=True)
-    
-    if args.eval_only:
-        # Only evaluate existing model
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        
-        # Create data loaders
-        test_transform = A.Compose([
-            A.Resize(height=224, width=224),
-            A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-            ToTensorV2(),
-        ])
-        
-        test_dataset = XRayDataset(
-            os.path.join(data_dir, 'test'),
-            transform=test_transform
-        )
-        
-        test_loader = DataLoader(
-            test_dataset,
-            batch_size=args.batch_size*2,
-            shuffle=False,
-            num_workers=NUM_WORKERS,
-            pin_memory=PIN_MEMORY,
-            prefetch_factor=2 if NUM_WORKERS > 0 else None
-        )
-        
-        if args.ensemble:
-            # Find checkpoint files
-            model_files = []
-
-            # Check if best model exists
-            best_model_path = os.path.join(models_dir, 'best_model.pth')
-            if os.path.exists(best_model_path):
-                model_files.append(best_model_path)
-
-            # Add checkpoint files
-            checkpoint_files = [os.path.join(models_dir, f) for f in os.listdir(models_dir) if f.startswith('checkpoint_') and f.endswith('.pth')]
-            checkpoint_files.sort(key=lambda x: os.path.getmtime(x), reverse=True)
-            model_files.extend(checkpoint_files[:3])  # Use 3 most recent checkpoints
-            
-            print(f"Creating ensemble from {len(model_files)} models...")
-            ensemble_models = create_model_ensemble(model_files, device=device)
-            
-            print("Evaluating ensemble on test set...")
-            test_metrics = evaluate_ensemble(ensemble_models, test_loader, device, use_tta=args.tta, threshold=args.threshold)
-            print(f"Test accuracy: {test_metrics['accuracy']:.4f}")
-            print(f"Sensitivity: {test_metrics['sensitivity']:.4f}")
-            print(f"Specificity: {test_metrics['specificity']:.4f}")
-            print(f"ROC AUC: {test_metrics['roc_auc']:.4f}")
-            
-            # Save test metrics
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            train_logs_dir = os.path.join(project_root, 'train_results_logs')
-            os.makedirs(train_logs_dir, exist_ok=True)
-            metrics_path = os.path.join(train_logs_dir, f'test_metrics_{timestamp}.json')
-            
-            # Prepare metrics for saving (convert numpy arrays to lists)
-            test_metrics_save = {}
-            for k, v in test_metrics.items():
-                if k == 'confusion_matrix':
-                    if isinstance(v, np.ndarray):
-                        test_metrics_save[k] = v.tolist()
-                    else:
-                        test_metrics_save[k] = v
-                elif k in ['roc_curve', 'pr_curve']:
-                    if isinstance(v, dict):
-                        test_metrics_save[k] = {}
-                        for curve_k, curve_v in v.items():
-                            if isinstance(curve_v, np.ndarray):
-                                test_metrics_save[k][curve_k] = curve_v.tolist()
-                            else:
-                                test_metrics_save[k][curve_k] = curve_v
-                    else:
-                        # Skip if not a dict
-                        continue
-                elif isinstance(v, (np.ndarray, np.generic)):
-                    # Convert scalar NumPy values to Python float using .item()
-                    if hasattr(v, 'size') and v.size == 1:
-                        test_metrics_save[k] = float(v.item())
-                    else:
-                        # For non-scalar arrays, convert to a list
-                        test_metrics_save[k] = v.tolist()
-                else:
-                    test_metrics_save[k] = v
-            
-            with open(metrics_path, 'w') as f:
-                json.dump(test_metrics_save, f, indent=4)
-            print(f"Test metrics saved to {metrics_path}")
-            
-            # Create dummy history for plotting
-            history = {
-                'train_loss': [0.5, 0.4, 0.3, 0.2],
-                'val_loss': [0.6, 0.5, 0.4, 0.3],
-                'train_acc': [0.7, 0.8, 0.85, 0.9],
-                'val_acc': [0.65, 0.75, 0.8, 0.85],
-                'lr': [0.001, 0.0005, 0.0001, 0.00005]
-            }
-            history_path = os.path.join(train_logs_dir, f'training_history_{timestamp}.json')
-            with open(history_path, 'w') as f:
-                json.dump(history, f, indent=4)
-        else:
-            # Load single best model
-            best_model_path = os.path.join(models_dir, 'best_model.pth')
-            model = create_densenet121_model(num_classes=2)
-            model.load_state_dict(torch.load(best_model_path))
-            model = model.to(device)
-            
-            print("Evaluating model on test set...")
-            test_metrics = evaluate_model(model, test_loader, device, use_tta=args.tta, threshold=args.threshold)
-            print(f"Test accuracy: {test_metrics['accuracy']:.4f}")
-            print(f"Sensitivity: {test_metrics['sensitivity']:.4f}")
-            print(f"Specificity: {test_metrics['specificity']:.4f}")
-            print(f"ROC AUC: {test_metrics['roc_auc']:.4f}")
-            
-            # Save test metrics
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            train_logs_dir = os.path.join(project_root, 'train_results_logs')
-            os.makedirs(train_logs_dir, exist_ok=True)
-            metrics_path = os.path.join(train_logs_dir, f'test_metrics_{timestamp}.json')
-            
-            # Prepare metrics for saving (convert numpy arrays to lists)
-            test_metrics_save = {}
-            for k, v in test_metrics.items():
-                if k == 'confusion_matrix':
-                    if isinstance(v, np.ndarray):
-                        test_metrics_save[k] = v.tolist()
-                    else:
-                        test_metrics_save[k] = v
-                elif k in ['roc_curve', 'pr_curve']:
-                    if isinstance(v, dict):
-                        test_metrics_save[k] = {}
-                        for curve_k, curve_v in v.items():
-                            if isinstance(curve_v, np.ndarray):
-                                test_metrics_save[k][curve_k] = curve_v.tolist()
-                            else:
-                                test_metrics_save[k][curve_k] = curve_v
-                    else:
-                        # Skip if not a dict
-                        continue
-                elif isinstance(v, (np.ndarray, np.generic)):
-                    # Convert scalar NumPy values to Python float using .item()
-                    if hasattr(v, 'size') and v.size == 1:
-                        test_metrics_save[k] = float(v.item())
-                    else:
-                        # For non-scalar arrays, convert to a list
-                        test_metrics_save[k] = v.tolist()
-                else:
-                    test_metrics_save[k] = v
-            
-            with open(metrics_path, 'w') as f:
-                json.dump(test_metrics_save, f, indent=4)
-            print(f"Test metrics saved to {metrics_path}")
-            
-            # Create dummy history for plotting
-            history = {
-                'train_loss': [0.5, 0.4, 0.3, 0.2],
-                'val_loss': [0.6, 0.5, 0.4, 0.3],
-                'train_acc': [0.7, 0.8, 0.85, 0.9],
-                'val_acc': [0.65, 0.75, 0.8, 0.85],
-                'lr': [0.001, 0.0005, 0.0001, 0.00005]
-            }
-            history_path = os.path.join(train_logs_dir, f'training_history_{timestamp}.json')
-            with open(history_path, 'w') as f:
-                json.dump(history, f, indent=4)
-        
-        return test_metrics, history
+    if os.path.exists(best_model_path):
+        print(f"Loading best model from {best_model_path} for final evaluation...")
+        # Load single best model - Ensure model creation and loading uses the correct architecture
+        model, _ = create_densenet169_model(num_classes=2) # Unpack tuple
+        model.load_state_dict(torch.load(best_model_path)) # Load state dict into the model object
+        model = model.to(device) # Move model to device
+        evaluate_model(model, test_loader, device, use_tta=True)
     else:
-        # Train the model
-        model, history, test_metrics = train_model(
-            data_dir=data_dir,
-            epochs=args.epochs,
-            batch_size=args.batch_size,
-            target_accuracy=args.target_accuracy,
-            lr=args.lr,
-            weight_decay=args.weight_decay,
-            patience=args.patience,
-            scheduler_patience=args.scheduler_patience,
-            scheduler_factor=args.scheduler_factor
-        )
-        return model, history, test_metrics
+        print("Best model checkpoint not found. Cannot perform final evaluation.")
 
-if __name__ == "__main__":
-    try:
-        main()
-        
-        # Generate additional plots after training
-        print("\n========== GENERATING ADDITIONAL VISUALIZATION PLOTS ==========")
-        from core.generate_plots import generate_all_plots
-        generate_all_plots()
-    except Exception as e:
-        print(f"Error: {str(e)}")
+if __name__ == '__main__':
+    mp.set_start_method('spawn', force=True) # Set start method for multiprocessing
+    main()

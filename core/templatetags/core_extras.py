@@ -80,7 +80,7 @@ def prediction_badge(prediction, confidence):
             color_class = 'bg-green-100 text-green-800'
             if confidence < 60:
                 color_class = 'bg-yellow-100 text-yellow-800'
-        else:  # PNEUMONIA
+        else:  # ABNORMAL
             color_class = 'bg-red-100 text-red-800'
             if confidence < 60:
                 color_class = 'bg-yellow-100 text-yellow-800'

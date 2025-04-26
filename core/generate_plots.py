@@ -141,8 +141,8 @@ def plot_confusion_matrix_heatmap(test_metrics, output_dir):
     plt.title('Confusion Matrix', fontsize=14)
     
     # Set tick labels
-    ax.set_xticklabels(['Normal', 'Pneumonia'])
-    ax.set_yticklabels(['Normal', 'Pneumonia'])
+    ax.set_xticklabels(['Normal', 'Abnormal'])
+    ax.set_yticklabels(['Normal', 'Abnormal'])
     
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, f'confusion_matrix_heatmap_{timestamp}.png'), dpi=300)

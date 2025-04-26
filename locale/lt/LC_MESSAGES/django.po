@@ -36,7 +36,7 @@ msgstr "Pradinis - Plaučių ligų klasifikatorius"
 msgid "Lung Disease Classifier"
 msgstr "Plaučių ligų klasifikatorius"
 
-msgid "Upload a chest X-ray image to detect pneumonia using our advanced deep learning model"
+msgid "Upload a chest X-ray image to detect abnormal using our advanced deep learning model"
 msgstr "Įkelkite krūtinės rentgeno nuotrauką pneumonijai aptikti naudojant mūsų pažangų giliojo mokymosi modelį"
 
 msgid "Accuracy: 96.13% (validated through 5-fold cross-validation)"
@@ -120,7 +120,7 @@ msgstr "Visi"
 msgid "Normal"
 msgstr "Normalus"
 
-msgid "Pneumonia"
+msgid "Abnormal"
 msgstr "Pneumonija"
 
 msgid "X-ray"
@@ -153,7 +153,7 @@ msgstr "Prognozė:"
 msgid "Normal Probability:"
 msgstr "Normalumo tikimybė:"
 
-msgid "Pneumonia Probability:"
+msgid "Abnormal Probability:"
 msgstr "Pneumonijos tikimybė:"
 
 msgid "ago"
@@ -399,7 +399,7 @@ msgstr "1.0.0 (2023 m. birželis)"
 msgid "Classes:"
 msgstr "Klasės:"
 
-msgid "Normal, Pneumonia"
+msgid "Normal, Abnormal"
 msgstr "Normalus, Pneumonija"
 
 msgid "Input Size"
@@ -444,10 +444,10 @@ msgstr "Mokymo rezultatai"
 msgid "Overall Training History"
 msgstr "Bendra mokymo istorija"
 
-msgid "Lung disease classifier uses a deep learning model based on Convolutional Neural Networks (CNN) to analyze chest X-ray images and detect signs of pneumonia."
+msgid "Lung disease classifier uses a deep learning model based on Convolutional Neural Networks (CNN) to analyze chest X-ray images and detect signs of abnormal."
 msgstr "Plaučių ligų klasifikatorius naudoja gilaus mokymosi modelį, pagrįstą konvoliuciniais neuroniniais tinklais (CNN), krūtinės rentgeno nuotraukoms analizuoti ir pneumonijos požymiams aptikti."
 
-msgid "The model has been trained on a large dataset of chest X-ray images, learning to identify patterns and features that are indicative of pneumonia. When you upload an image, it goes through the following process:"
+msgid "The model has been trained on a large dataset of chest X-ray images, learning to identify patterns and features that are indicative of abnormal. When you upload an image, it goes through the following process:"
 msgstr "Modelis buvo apmokytas naudojant didelį krūtinės rentgeno nuotraukų rinkinį, mokydamasis atpažinti pneumonijai būdingus šablonus ir požymius. Kai įkeliate nuotrauką, ji pereina šį procesą:"
 
 msgid "Model's learning progression showing accuracy and loss metrics over training epochs."

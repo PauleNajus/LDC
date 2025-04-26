@@ -1,6 +1,6 @@
 # Lung Disease Classification System
 
-A deep learning-based web application for classifying lung X-ray images as normal or pneumonia-affected using a PyTorch Convolutional Neural Network (CNN).
+A deep learning-based web application for classifying lung X-ray images as normal or abnormal-affected using a PyTorch Convolutional Neural Network (CNN).
 
 ## Features
 
@@ -96,18 +96,18 @@ dataset/
 ├── train/
 │   ├── normal/
 │   │   └── (normal X-ray images)
-│   └── pneumonia/
-│       └── (pneumonia X-ray images)
+│   └── abnormal/
+│       └── (abnormal X-ray images)
 ├── val/
 │   ├── normal/
 │   │   └── (normal X-ray images)
-│   └── pneumonia/
-│       └── (pneumonia X-ray images)
+│   └── abnormal/
+│       └── (abnormal X-ray images)
 └── test/
     ├── normal/
     │   └── (normal X-ray images)
-    └── pneumonia/
-        └── (pneumonia X-ray images)
+    └── abnormal/
+        └── (abnormal X-ray images)
 ```
 
 ### Run Training

@@ -220,7 +220,7 @@ class PredictionSearchForm(forms.Form):
         choices=[
             ('', _('All')),
             ('NORMAL', _('Normal')),
-            ('PNEUMONIA', _('Pneumonia'))
+            ('ABNORMAL', _('Abnormal'))
         ],
         widget=forms.Select(attrs={'class': 'form-select'})
     )

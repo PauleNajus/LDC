@@ -123,13 +123,13 @@ class HomeView(TemplateView):
                 image_file = request.FILES['image']
                 
                 # Perform prediction logic
-                prediction, confidence, normal_prob, pneumonia_prob = self.predict_xray(xray_image.image.path)
+                prediction, confidence, normal_prob, abnormal_prob = self.predict_xray(xray_image.image.path)
                 
                 # Update the record with prediction results
                 xray_image.prediction = prediction
                 xray_image.confidence = confidence
                 xray_image.normal_probability = normal_prob * 100.0  # Convert to percentage
-                xray_image.pneumonia_probability = pneumonia_prob * 100.0  # Convert to percentage
+                xray_image.abnormal_probability = abnormal_prob * 100.0  # Convert to percentage
                 xray_image.processing_time = time.time() - start_time
                 
                 # Get image dimensions and set image_size
@@ -157,43 +157,42 @@ class HomeView(TemplateView):
             return JsonResponse({'errors': f"An error occurred: {str(e)}"}, status=500)
     
     def predict_xray(self, image_path):
-        """Use the trained model to predict if the X-ray shows pneumonia or normal lungs."""
+        """Use the trained model to predict if the X-ray shows abnormal or normal lungs."""
         try:
             # If classifier is not available, use dummy values
             if classifier is None:
                 logger.warning("Classifier not available, using dummy prediction values")
                 import random
                 normal_prob = random.uniform(0.3, 0.7)
-                pneumonia_prob = 1.0 - normal_prob
-                prediction = "NORMAL" if normal_prob > pneumonia_prob else "PNEUMONIA"
-                confidence = max(normal_prob, pneumonia_prob)
-                logger.info(f"DUMMY PREDICTION: {prediction}, confidence: {confidence:.4f}, normal_prob: {normal_prob:.4f}, pneumonia_prob: {pneumonia_prob:.4f}")
-                return prediction, confidence, normal_prob, pneumonia_prob
+                abnormal_prob = 1.0 - normal_prob
+                prediction = "NORMAL" if normal_prob > abnormal_prob else "ABNORMAL"
+                confidence = max(normal_prob, abnormal_prob)
+                logger.info(f"DUMMY PREDICTION: {prediction}, confidence: {confidence:.4f}, normal_prob: {normal_prob:.4f}, abnormal_prob: {abnormal_prob:.4f}")
+                return prediction, confidence, normal_prob, abnormal_prob
             
             # Use the actual classifier for prediction
             logger.info(f"Using real classifier to predict image: {image_path}")
             class_idx, confidence = classifier.predict(image_path)
             
-            # Class 0 is typically NORMAL, Class 1 is PNEUMONIA
-            # But verify based on your model training
-            if class_idx == 0:
+            # Class 0 is NORMAL, Class 1 is ABNORMAL
+            if class_idx == 1:
                 prediction = "NORMAL"
                 normal_prob = confidence
-                pneumonia_prob = 1.0 - confidence
+                abnormal_prob = 1.0 - confidence
             else:
-                prediction = "PNEUMONIA"
-                pneumonia_prob = confidence
+                prediction = "ABNORMAL"
+                abnormal_prob = confidence
                 normal_prob = 1.0 - confidence
             
             # Normalize probabilities to ensure they sum to 1.0
-            total_prob = normal_prob + pneumonia_prob
+            total_prob = normal_prob + abnormal_prob
             if total_prob != 1.0:
                 normal_prob = normal_prob / total_prob
-                pneumonia_prob = pneumonia_prob / total_prob
-                confidence = max(normal_prob, pneumonia_prob)
+                abnormal_prob = abnormal_prob / total_prob
+                confidence = max(normal_prob, abnormal_prob)
             
-            logger.info(f"REAL MODEL PREDICTION: {prediction}, confidence: {confidence:.4f}, normal_prob: {normal_prob:.4f}, pneumonia_prob: {pneumonia_prob:.4f}")
-            return prediction, confidence, normal_prob, pneumonia_prob
+            logger.info(f"REAL MODEL PREDICTION: {prediction}, confidence: {confidence:.4f}, normal_prob: {normal_prob:.4f}, abnormal_prob: {abnormal_prob:.4f}")
+            return prediction, confidence, normal_prob, abnormal_prob
             
         except Exception as e:
             logger.error(f"Error in prediction: {str(e)}", exc_info=True)

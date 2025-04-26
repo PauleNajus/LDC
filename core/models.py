@@ -227,7 +227,7 @@ class XRayImage(models.Model):
     prediction = models.CharField(max_length=20, blank=True, default="No data")
     confidence = models.FloatField(default=0.0)
     normal_probability = models.FloatField(default=0.0)
-    pneumonia_probability = models.FloatField(default=0.0)
+    abnormal_probability = models.FloatField(default=0.0)
     processing_time = models.FloatField(default=0.0)
     image_size = models.CharField(max_length=50, default="No data")
     error_message = models.TextField(default="", blank=True)
@@ -277,8 +277,8 @@ class XRayImage(models.Model):
         if self.normal_probability and (self.normal_probability < 0 or self.normal_probability > 100):
             raise ValidationError({'normal_probability': 'Probability must be between 0 and 100'})
         
-        if self.pneumonia_probability and (self.pneumonia_probability < 0 or self.pneumonia_probability > 100):
-            raise ValidationError({'pneumonia_probability': 'Probability must be between 0 and 100'})
+        if self.abnormal_probability and (self.abnormal_probability < 0 or self.abnormal_probability > 100):
+            raise ValidationError({'abnormal_probability': 'Probability must be between 0 and 100'})
 
     def save(self, *args, **kwargs):
         """Override save method to perform additional operations."""
@@ -413,7 +413,7 @@ class LungClassifier:
     def __init__(self):
         self.model = None
         self.image_size = (224, 224)
-        self.classes = ['NORMAL', 'PNEUMONIA']
+        self.classes = ['NORMAL', 'ABNORMAL']
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.transform = transforms.Compose([
             transforms.Resize((224, 224)),
@@ -573,23 +573,23 @@ class LungClassifier:
                 adjusted_logit = min(max(adjusted_logit, -10), 10)
                 
                 # Apply sigmoid to the adjusted logit
-                pneumonia_prob = torch.sigmoid(torch.tensor(adjusted_logit)).item()
+                abnormal_prob = torch.sigmoid(torch.tensor(adjusted_logit)).item()
                 
-                # Calculate normal probability (complement of pneumonia)
-                normal_prob = 1.0 - pneumonia_prob
+                # Calculate normal probability (complement of abnormal)
+                normal_prob = 1.0 - abnormal_prob
                 
                 # Determine class based on probability threshold
-                predicted_class = 'NORMAL' if normal_prob > pneumonia_prob else 'PNEUMONIA'
+                predicted_class = 'NORMAL' if normal_prob > abnormal_prob else 'ABNORMAL'
                 
                 # Convert probabilities to percentages
                 normal_prob_pct = normal_prob * 100
-                pneumonia_prob_pct = pneumonia_prob * 100
-                confidence = max(normal_prob_pct, pneumonia_prob_pct)
+                abnormal_prob_pct = abnormal_prob * 100
+                confidence = max(normal_prob_pct, abnormal_prob_pct)
                 
                 # Log detailed info for debugging
                 logger.info(f"Raw model output: {raw_logit}")
                 logger.info(f"Adjusted logit: {adjusted_logit}")
-                logger.info(f"Pneumonia probability: {pneumonia_prob}")
+                logger.info(f"Abnormal probability: {abnormal_prob}")
                 logger.info(f"Normal probability: {normal_prob}")
             
             # Calculate processing time
@@ -600,7 +600,7 @@ class LungClassifier:
             if img_mean > 200 and img_std < 50:
                 # Likely a clear, normal lung X-ray
                 normal_prob_pct = min(normal_prob_pct + 20, 95)
-                pneumonia_prob_pct = 100 - normal_prob_pct
+                abnormal_prob_pct = 100 - normal_prob_pct
                 predicted_class = 'NORMAL'
                 logger.info("Applied normal lung brightness heuristic")
             # For images with normal in the name, apply a strong bias towards normal
@@ -608,38 +608,38 @@ class LungClassifier:
             elif hasattr(image_path, 'name') and str(image_path.name).lower().find('normal') >= 0:
                 # Increase normal probability but still allow model to influence
                 normal_prob_pct = min(normal_prob_pct + 30, 90)
-                pneumonia_prob_pct = 100 - normal_prob_pct
+                abnormal_prob_pct = 100 - normal_prob_pct
                 predicted_class = 'NORMAL'
                 logger.info("Applied filename-based normal heuristic")
             # If the path is a string that contains 'normal'
             elif isinstance(image_path, str) and 'normal' in image_path.lower():
                 # Increase normal probability but still allow model to influence
                 normal_prob_pct = min(normal_prob_pct + 30, 90)
-                pneumonia_prob_pct = 100 - normal_prob_pct
+                abnormal_prob_pct = 100 - normal_prob_pct
                 predicted_class = 'NORMAL'
                 logger.info("Applied filename-based normal heuristic (string path)")
             
-            # Pneumonia typically appears as opacity in lungs
-            # Check if the image has typical pneumonia characteristics
+            # Abnormal typically appears as opacity in lungs
+            # Check if the image has typical abnormal characteristics
             elif img_mean < 150 and img_std > 50:
-                # Potentially pneumonia pattern - darker with more variation
-                pneumonia_prob_pct = min(pneumonia_prob_pct + 10, 90)
-                normal_prob_pct = 100 - pneumonia_prob_pct
-                if pneumonia_prob_pct > normal_prob_pct:
-                    predicted_class = 'PNEUMONIA'
-                    logger.info("Applied pneumonia image characteristic heuristic")
+                # Potentially abnormal pattern - darker with more variation
+                abnormal_prob_pct = min(abnormal_prob_pct + 10, 90)
+                normal_prob_pct = 100 - abnormal_prob_pct
+                if abnormal_prob_pct > normal_prob_pct:
+                    predicted_class = 'ABNORMAL'
+                    logger.info("Applied abnormal image characteristic heuristic")
             
             result = {
                 'class': predicted_class,
                 'confidence': float(confidence),
                 'normal_probability': float(normal_prob_pct),
-                'pneumonia_probability': float(pneumonia_prob_pct),
+                'abnormal_probability': float(abnormal_prob_pct),
                 'processing_time': float(processing_time),
                 'image_size': original_size
             }
             
             logger.info(f"Successfully processed image. Prediction: {result['class']}, Confidence: {result['confidence']}%")
-            logger.info(f"Normal Probability: {normal_prob_pct:.2f}%, Pneumonia Probability: {pneumonia_prob_pct:.2f}%")
+            logger.info(f"Normal Probability: {normal_prob_pct:.2f}%, Abnormal Probability: {abnormal_prob_pct:.2f}%")
             
             return result
             
