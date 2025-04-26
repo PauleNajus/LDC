@@ -49,7 +49,7 @@ static/
 Thumbs.db
 
 # Dataset
-Chest_X-Ray_Images_(Pneumonia)_2_classes/
+data/
 
 # Model files
 models/*.pth
