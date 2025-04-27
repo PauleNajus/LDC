@@ -56,7 +56,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='xrayimage',
-            name='pneumonia_probability',
+            name='abnormal_probability',
             field=models.FloatField(default=0.0),
         ),
         migrations.AlterField(

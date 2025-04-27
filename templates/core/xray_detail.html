@@ -46,10 +46,10 @@
                             </div>
                             <div class="progress" style="height: 25px;">
                                 <div class="progress-bar bg-danger" role="progressbar" 
-                                     style="width: {{ xray.pneumonia_probability }}%;" 
-                                     aria-valuenow="{{ xray.pneumonia_probability }}" 
+                                     style="width: {{ xray.abnormal_probability }}%;" 
+                                     aria-valuenow="{{ xray.abnormal_probability }}" 
                                      aria-valuemin="0" aria-valuemax="100">
-                                    {% trans "Pneumonia" %}: {{ xray.pneumonia_probability|floatformat:2 }}%
+                                    {% trans "Abnormal" %}: {{ xray.abnormal_probability|floatformat:2 }}%
                                 </div>
                             </div>
                         </div>

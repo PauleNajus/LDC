@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ('prediction', models.CharField(blank=True, max_length=20)),
                 ('confidence', models.FloatField(default=0.0)),
                 ('normal_probability', models.FloatField(default=0.0)),
-                ('pneumonia_probability', models.FloatField(default=0.0)),
+                ('abnormal_probability', models.FloatField(default=0.0)),
                 ('processing_time', models.FloatField(default=0.0)),
                 ('image_size', models.CharField(blank=True, max_length=50)),
                 ('uploaded_at', models.DateTimeField(auto_now_add=True)),

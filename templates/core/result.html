@@ -60,16 +60,16 @@
                                 </div>
                             </div>
                             
-                            <!-- Pneumonia Probability -->
+                            <!-- Abnormal Probability -->
                             <div>
                                 <div class="d-flex justify-content-between mb-1">
-                                    <span>Pneumonia</span>
-                                    <span>{{ prediction.pneumonia_probability|floatformat:2 }}%</span>
+                                    <span>Abnormal</span>
+                                    <span>{{ prediction.abnormal_probability|floatformat:2 }}%</span>
                                 </div>
                                 <div class="progress" style="height: 10px;">
                                     <div class="progress-bar bg-danger" role="progressbar" 
-                                         style="width: {{ prediction.pneumonia_probability }}%" 
-                                         aria-valuenow="{{ prediction.pneumonia_probability }}" 
+                                         style="width: {{ prediction.abnormal_probability }}%" 
+                                         aria-valuenow="{{ prediction.abnormal_probability }}" 
                                          aria-valuemin="0" aria-valuemax="100">
                                     </div>
                                 </div>
