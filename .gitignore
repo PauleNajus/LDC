@@ -74,3 +74,12 @@ train_results_logs/
 *.swp
 *.swo
 *~
+.cursor/
+*.cursor
+*.cursorignore
+*.cursorrules
+*.cursorconfig
+*.cursorignorerules
+*.cursorignoreconfig
+*.cursorignoreconfigrules
+
